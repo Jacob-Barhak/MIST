@@ -1,0 +1,189 @@
+<html lang="en">
+<head>
+<title>Getting Started with MIST - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Setup.html#Setup" title="Setup">
+<link rel="next" href="Simulation.html#Simulation" title="Simulation">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Getting-Started-with-MIST"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Simulation.html#Simulation">Simulation</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Setup.html#Setup">Setup</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">5 Getting Started with MIST</h2>
+
+<h3 class="section">5.1 Running the Software</h3>
+
+<p>Open the folder created during installation and double-click <span class="file">Main.py</span>. The form, 'MIcroSimulation Tool (MIST)', will open.
+
+   <p><br><img src='Images/mainform.jpg'><br>
+
+   <p>Using this form the user can load and save data and access all system parameters. Here is a short description of the basic operations that one can perform with this form:
+
+<h4 class="subsection">5.1.1 Handling Data Files</h4>
+
+<p>The system holds its data in files in a <span class="file">zip</span> archive. Each file can contain many Projects / Models / Populations using the same or different terminology. The system can load this information and at the end of work the user can save the modified information back to a file. Note that while working with the system the information is never saved to a file until the user specifies the save in this form.
+
+<h4 class="subheading">Loading a Data File</h4>
+
+     <ol type=1 start=1>
+<li>From the menu bar at the top of the main form, select <strong>File</strong>. 
+<li>From the <strong>File</strong> menu select <strong>Open</strong>. 
+<li>Select the requested filename/path of the data file from the new window that appeared and press the Open Button. 
+<li>The label at the top of the windows should show the path of the file and the project list (A) should show projects held within the loaded file.
+     </ol>
+
+<h4 class="subheading">Saving a Data File</h4>
+
+     <ol type=1 start=1>
+<li>From the menu bar at the top of the main form, select <strong>File</strong>. 
+<li>From the <strong>File</strong> menu select <strong>Save</strong> to save under a default file name. Select <strong>Save As</strong> to modify filename/path. 
+<li>The label at the top of the windows should show the updated path of the file if this was changed. Note that if a system overwrites an existing file it will maintain a copy of the old file under a file name with an extension of a numerical timestamp representing the time/date of the new file created. This backup file can be loaded into the system.
+     </ol>
+
+   <p>In the event the system does not close properly any modifications made will be lost. A proper exit of the system will ask the user to save the information to file. The automatic backup mechanism during file saving helps track back changes in data and helps maintain integrity.
+
+   <p>Note that the system does not lock files after loading them during work. Also note that saving records in the system is not the same as saving the file. Records and entities in other forms are saved to memory rather than to a file. The only way to save to a file is through the main form menu.
+
+<h4 class="subsection">5.1.2 Projects</h4>
+
+<p>A project is the main entity defined in the system. Projects define the <a href="Simulation.html#Simulation">Simulation</a> that the system will run and can share information such as models or parameters.
+
+   <p>All the projects currently loaded in the system are listed in the main form in the project list (A).
+
+   <p>To view a project, double click its entry in the list (A) in the main form. The appropriate form will open.
+
+   <p>To add a new project to the system, double click the text Add New Project at the top of the list (A). Then select the type of the project from the window that will open. The appropriate form will open.
+
+<h4 class="subsection">5.1.3 The First Time Running the System</h4>
+
+<p>One way to familiarize yourself with the system is to load the test examples file <span class="file">Testing.Zip</span> created by the system during installation. This file provides an implementation of all the simulation examples provided in the test example document <span class="file">SimulationExamples.pdf</span> that is also created by the installation.
+
+   <p>Each project is an example from this document. Double clicking on projects listed in (A) will open the project clicked upon. Clicking the buttons marked as (B,C,D,E,F) will allow exploring the underlying data that created these projects.
+
+<h3 class="section">5.2 Work Flow with the System</h3>
+
+<p>Before working with the computer system, some preparation is required. This page describes the preparation stages and the workflow with the system from a more abstract view.
+
+<h4 class="subsection">5.2.1 Literature Review</h4>
+
+<p>When developing a new model or modifying an existing model, it is essential to perform an extensive literature review and to consult with clinical experts who can describe the progression of the disease. During the literature review, it is important to identify studies that provide estimates of the transition probabilities for the progression of the disease through time.
+
+<h4 class="subsection">5.2.2 Building the Disease Model</h4>
+
+<h4 class="subheading">Understanding the Disease Structure</h4>
+
+<p>The information from the literature review must be translated into system terminology. This involves identification of important keywords that describe disease progression; these are then used in different categories defined by the computer system:
+     <ul>
+<li><a href="States.html#States">States</a> - define the condition of the individual
+<li>Sub-process - a collection of states that describe a condition and may consistent of a sequence of several states. Subprocesses may occur in parallel to each other, or may be nested within a different subprocess. 
+<li><a href="Parameters.html#Parameters">Parameters</a> - characteristics such as age, blood pressure, costs, and other parameters that affect the progression of the disease or change due to its progression. 
+<li>Rules - Logic statements that describe changes in the disease or in associated parameters
+</ul>
+
+<h4 class="subheading">Building the Model Diagram</h4>
+
+<p>The identified states and sub-processes should be depicted as boxes in a diagram; the boxes should be connected with arrows to signify transitions between states. The output of this may look like:
+<br><img src='Images/modeldiagram.jpg'><br>Also, the user should collect all known rules that describe parameter change such as Age increase and write those down.
+
+<h4 class="subsection">5.2.3 Simulating Disease Progression</h4>
+
+<h4 class="subheading">Define a Simulation Population Set</h4>
+
+<p>It is necessary to specify the population of individuals to whom the simulation should apply. The population should contain information about the initial states of each individual. Also, parameters to be used in the simulation should be defined in this set. Populations can be defined as data table or as formulas describing distributions.
+
+<h4 class="subheading">Update and Enhance the Model</h4>
+
+<p>The model can be enhanced by adding rules for updating parameters used in the simulation. Examples of rules include:
+     <ul>
+<li>Increase age every time period
+<li>Update blood pressure value
+<li>Calculate Quality of Life according to current health state
+<li>Calculate cost of treatment
+<li>Decide if treatment is applied
+</ul>
+
+<h4 class="subheading">Run the Simulation</h4>
+
+<p>The simulation can then be performed to predict outcomes of disease progression over the defined population set. After analyzing the results, the simulation can be repeated after changing parameters or using a different population set to reflect different model conditions. Each change in the simulation may require creating a new simulation project. This can be easily done by copying the existing project.
+
+   <p>For further details, please see <a href="Simulation.html#Simulation">Simulation</a> for details.
+
+   </body></html>
+

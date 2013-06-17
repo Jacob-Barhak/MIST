@@ -1,0 +1,133 @@
+<html lang="en">
+<head>
+<title>Transitions - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Model.html#Model" title="Model">
+<link rel="next" href="Populations.html#Populations" title="Populations">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Transitions"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Populations.html#Populations">Populations</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Model.html#Model">Model</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">9 Transitions</h2>
+
+<p>Transitions connect states/processes within a model. Below, they are indicated by solid arrows and indicate the paths that subjects can take through the model and the probabilities to take a path in a certain time step. 
+<br><br><img src='Images/modeldiagram.jpg'><br><br>
+
+<h3 class="section">9.1 Creating Transitions</h3>
+
+     <ol type=1 start=1>
+<li>From the main window, click 'Transitions' on the left navigation pane. This form can also be reached from a Model form by selecting the transition button for a certain Model. 
+<br><br><img src='Images/transitionsmodel.jpg'><br><br><li>This form shows the transitions for a given Model. Select the Model to be used from the drop-down box (A). Note: if the Transitions page was opened from the Model page, that Model will be selected and the combo box will be grayed out. 
+<li>Click the 'Add' button (B). 
+<li>Select the origin state for the transition (D). 
+<li>Select the destination state for the transition (E). 
+<li>Enter the transition probability in the box (F) as an expression, which may or may not include Parameters and State Indicators. 
+<li>It is recommended you add notes regarding the transition in (J). It is a good idea to write down the source of the information in the notes to improve model traceability. 
+<li>Close the form to save the entry.
+     </ol>
+
+<h3 class="section">9.2 Removing Transitions</h3>
+
+<p>Identify the row that will be removed, and click the 'X' button (C) in that row. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+
+<h3 class="section">9.3 Copying Transitions from Another Model</h3>
+
+<p>It may be desirable to build or modify a model by copying transition information from another model. The systems support this sort of copy using the following steps:
+
+     <ol type=1 start=1>
+<li>Initiate the transitions copy by pressing the <strong>Copy From Model</strong> button (K). The following form will appear:
+<br><br><img src='Images/copytransitions.jpg'><br><br>
+
+     <li>Select the model you wish to copy the transitions from by clicking on it. 
+<li>Press <strong>OK</strong> to initiate the copy or <strong>Cancel</strong> to abort the copy operation. 
+<li>If the operation was not aborted, the system will bring a message indicating how many transitions were successfully copied. Dismiss this dialog box by pressing <strong>OK</strong> and the transitions form will display the copied transitions.
+        </ol>
+
+   <p>Note that this operation is useful while creating variations of a specific model that change the state/sub-process hierarchy. The copy transitions operation will try to copy all the transitions from the source model to the destination model. However, some transitions may not be copied as these may violate validation rules. Here are examples of transitions that will not be copied:
+
+     <ul>
+<li>Transitions that are already defined by states in the destination model will not be copied from the source model. 
+<li>Transitions where at least one of the states does not exist in the destination Model will not be copied. 
+<li>Transitions that will violate the sub-process hierarchy will not be copied. For example if the to/from states are not in the same sub-process in the destination model. 
+</ul>
+
+   </body></html>
+

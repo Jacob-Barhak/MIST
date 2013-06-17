@@ -1,0 +1,187 @@
+<html lang="en">
+<head>
+<title>Reports - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Expressions.html#Expressions" title="Expressions">
+<link rel="next" href="Utilities.html#Utilities" title="Utilities">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Reports"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Utilities.html#Utilities">Utilities</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Expressions.html#Expressions">Expressions</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">13 Reports</h2>
+
+<p>The reports option provides users with the ability to view the information in textual form. Reports can include information about parameters, states, studies/models, transitions, population sets, projects, and results.
+
+<h3 class="section">13.1 Generating a Report</h3>
+
+<p>Reports are generated in the context of the topmost open window. For example a report generated from the Model window will generate a report describing a Model and a report generated from the project window will describe the project.
+
+   <p>To generate a report for a single entry in any form:
+     <ol type=1 start=1>
+<li>Select the row/record of interest. 
+<li>From the menu bar at the top of the form, select <strong>File</strong>. 
+<li>From the <strong>File</strong> menu select <strong>Single Report</strong>.
+        </ol>
+
+   <p>To generate a report regarding all the records in the form:
+     <ol type=1 start=1>
+<li>From the menu bar at the top of the form, select <strong>File</strong>. 
+<li>From the <strong>File</strong> menu select <strong>Report All</strong>.
+        </ol>
+
+   <p>Either of these actions will open the Report Viewer form with the generated report:
+<br><br><img src='Images/reportviewer.jpg'><br><br>
+
+   <p>The user can view the report in the text area (B). Note that the reports are usually very wide and may not fit the screen and using the scroll bars to view the results may be necessary.
+
+<h3 class="section">13.2 Saving the Report File</h3>
+
+<p>To save the report as text:
+     <ol type=1 start=1>
+<li>From the menu bar at the top of the Report viewer form, select <strong>File</strong>. 
+<li>From the File menu select Save to save under a default file name. Select Save As to allow the user to modify filename/path.
+        </ol>
+
+   <p>Also note that portions of the report can be highlighted and copied into the clipboard to be pasted into other applications.
+
+<h3 class="section">13.3 Changing Report Options</h3>
+
+<p>The report that first appears uses default options defined by the system. The context/formatting of most reports can be controlled by the user. Specifically the simulation results report is very extensive and has many options, whereas other reports use the Detail Level option.
+
+   <p>To change report options, from the report viewer form select the Report Option tab (A). The following options form will replace the result tab:
+<br><br><img src='Images/reportvieweroptions.jpg'><br><br>
+
+   <p>The user can now change report options using according to the following instructions:
+     <ol type=1 start=1>
+
+     <li>Choose the appropriate <strong>Details Level</strong> from the drop box (A), or leave blank for a default of 0. This report option affects the reports for most entities. The higher the number the more details will be provided on the entity. In some cases, higher details level will drill down into other entities associated with the reported entity. Higher Detail Level will indicate more levels of drilling down.
+
+     <li>Choose the appropriate <strong>Show Dependency</strong> from the drop box (B), or leave blank for a default of <em>No</em>. This report option affects the reports for most entities. If <em>Yes</em> is selected, the  report will contain additional information regarding dependencies between entities, such as states and the associated state indicators etc. In addition, some expressions will be explained in a more readable fashion to the user.
+
+     <li>Define an appropriate Summary Intervals (C) for a simulation results report, or leave blank for the default. This option defines a list of simulation step intervals for summary statistics in the report enclosed in brackets [a,b,c…]. Summary interval members can be defined as an integer such as 2 meaning a summary will be generated for every 2 simulation steps. Alternatively, a summary interval member can be specified by a nested set of [] in a [min,max] format such as [1,3] meaning the interval starts at simulation step 1 and ends at simulation step 3. The number 0 refers to the initial condition. Also if the number 0 is defined as a single member at the beginning of the list, this means simulation steps will be counted from the initial state rather from the first simulation step. Note the difference between 0 as a number compared to the range [0,0]. The first one means that counting time intervals starts at 0 instead or at the first simulation step, whereas the latter means to report the initial condition as a summary interval. Finally, the maximal interval of [0/1, Max] is always automatically included by the system at the end of the list. Where Max stands for the maximal number of simulation steps as defined in the project and 0/1 is dictated by the appearance of 0 in the list. If no specification is made, then the following default results are presented: each cycle, sequential five-cycle interval, sequential 10-cycle intervals and a summary of the entire range of cycles. To help understand these concepts, here are a few examples:
+          <ul>
+<li>When there are two nonzero entries [a,b], then first each sequential 'a' cycles will be summarized followed by each sequential 'b' cycles. For example, the list [1,2] will mean generating summaries for every year starting at 1, i.e. equivalent to [1,1],[2,2],[3,3] etc. and then generating all summary intervals 2 years apart, i.e. equivalent to [1,2],[3,4],[4,6] etc. Finally the system will add the overall interval of [1, Max]. 
+<li>When an interval is embedded in a second set of [] such as [[a,b]], then the interval of cycle 'a' to 'b' will be summarized. For example, the list [[1,2]] will generate a single summary interval [1,2] and the system will add the overall interval of [1, Max]. 
+<li>When zero is specified, it modifies the summaries to start from cycle zero (the initial state. For example, the list [0,2] will generate the following summary intervals two years apart [0,1], [2,3],[4,5] etc. and then the system will add the overall interval of [0, Max]. 
+<li>The list [[0,2]] will generate a single summary interval [0,2] and the system will add the overall interval of [1, Max]. 
+<li>The number 1 alone will be recognized by the system as [1] meaning a summary interval for each simulation step i.e. [1,1] ,[2,2],[3,3] etc. and  the system will add the overall interval of [1, Max]. 
+</ul>
+     <li>Define appropriate <strong>Float Column Number Format</strong> (D) and <strong>Integer Column Number Format</strong> (E) for a report of the simulation results, or leave blank for the default. If one of these options is defined, the other one is required as well. These two options define how numbers will look at the summary section of the report. The format is based on the format available in the Python Language as defined in
+<a href='http://docs.python.org/lib/typesseq-strings.html'> http://docs.python.org/lib/typesseq-strings.html </a><li>Define an appropriate <strong>Column Separator</strong> (F) for a simulation results report or leave blank for the default of '|'. This allows the user to define the character that separates columns. This is useful when importing the report text to a spreadsheet as this allows automatic separation of columns. 
+<li>Define columns of interest to display in the simulation results report. This involves several operations as follows:
+          <ol type=1 start=1>
+<li>Select a column/group from the candidate group list (G). Column names are parameters that exist in the result set and can be selected by name. This includes all state indicators of all types and all parameters defined in the initial population set and in the simulation rules. For ease of selecting entire groups of columns, these parameters are grouped by the system in several groups such as &lt;Number&gt; or &lt;State Indicator&gt;. A user can select a column or a group to allow flexibility. Note that the Group &lt;Heading&gt; has special treatment as it creates the header for the report.
+
+          <li>Select the calculation method to apply to the column from the drop box (H) or leave it as Auto Detect. In most cases the system will be able to deduce the desired calculation method from the list, which is the default. Yet the user can force a specific calculation method overriding the system auto detection mechanism. Possible calculation methods are:
+
+               <ul>
+<li><strong>Auto Detect</strong>: System automatically selects the calculation method from the list below according to the parameter characteristics and its use in the project. If this option is selected and there is ambiguity as to the calculation method required, the system will place an * in the report on this column and place a warning at the end of the report. A user should then verify that the calculation is proper and if needed manually select the calculation method for this column. 
+<li><em>Func</em><strong> Over All Records</strong> - will apply <em>Func</em> to values from all the records in the summary interval. When <em>Func</em>=Sum, the system will sum the column values for all the records in the summary interval. It is useful to count the number of occurrences of a state in a population in a given summary interval. This is the default option for Booleans that are not demographics, e.g. State indicators. When <em>Func</em>=Average, the system will average the column values for all the records in the summary interval. It is useful to find the average value of a covariate changing during simulation in a given summary interval. It is equivalent to dividing the sum over all records by the total number of all records in the interval. This is the default option for non-Booleans that are not demographics, i.e. may be affected during the simulation. When <em>Func</em> = STD, sample standard deviation is calculated using the method of provisional means. When <em>Func</em> = Min or when <em>Func</em> = Max then the minimal or maximal value of all records in the interval is reported. <em>Func</em> = Valid Count will return the non NaN count. 
+<li><em>Func</em><strong> Over Demographics</strong> - will apply <em>Func</em> to values in records entering the summary interval. When <em>Func</em>=Sum, the system will sum the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographics values should not change during simulation steps. This option can be used to represent the number of occurrences of a state in a population entering the summary interval. This is the default option for Booleans that are unaffected by the simulation i.e. non state indicators not in the affected list of the simulation project. When <em>Func</em> = Average, the system will average the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographic values should not change during simulation steps. This option can be used to represent the average of a covariate in a population entering the summary interval. It is equivalent to dividing the sum over demographics by the total number of records entering the interval. This is the default option for non-Boolean parameters that are in the affected list of the simulation. When <em>Func</em> = STD, sample standard deviation is calculated using the method of provisional means. When <em>Func</em> = Min or when <em>Func</em> = Max then the minimal/maximal value of demographics records entering the interval is reported. <em>Func</em> = Valid Count will return the non NaN count. 
+<li><em>Func</em><strong> Over Last Observations Carried Forward</strong> - will apply <em>Func</em> to the last record of each individual. The max time record, i.e. either the record in the year of termination, or the last year record, is considered. Note that every individual will have exactly one record for each repetition. <em>Func</em> can be Sum, Average, STD, Min, Max, Valid Count. 
+<li><strong>Record Count</strong> - This calculation option will count the number of records within the summary interval. It is useful to show the denominator used for Average Over All Records defined above, in case it is of interest to the user. 
+<li><strong>Demographic count</strong> - This calculation option will count the number of records within the first year of a summary interval. In other words it will return the number of individuals entering the summary interval. It is useful to show the denominator used for Average Over Demographics defined above, in case it is of interest to the user. 
+<li><strong>Interval Start</strong>: This option will return the simulation step number defining the summary interval start. This option ignores the column numbers and will work with any column the same. Note that this is used by the system in the &lt;Header&gt; column group and in most cases will not be needed for the user again. 
+<li><strong>Interval End</strong>: Similar to <strong>Interval Start</strong> above with the difference that it returns the last simulation step number in the summary interval. 
+<li><strong>Interval Length</strong>: Similar to <strong>Interval Start</strong> above with the difference that it returns the number of simulation steps represented in the summary interval such that <strong>Interval Length = Interval End - Interval Start +1</strong>
+<li><strong>No Summary</strong> - No summary is returned for the column. It can be used to create spaces in a report. 
+</ul>
+
+          <li>Optionally select an alternative label for the column name (I) or leave blank. By Default blank means that the column name will not change in the report.
+
+          <li>Add the column/group, calculation method, and label to the selected columns list (L) by pressing the button (J). The column will be added before the column selected in the selected column list (L), if none were selected, it will be added at the end. Pressing the x button (K) will remove a selected column from the selected columns list (L). Note that the order that appears in the selected columns list (L) will allow users to control the order the columns appear in the report as well as their calculation methods. Note that the same column may appear several times with different calculation methods associated to it. Note that by default the selected column list is blank, meaning all columns defined in the simulation with automatic calculation, with a default header group at the start of the report.
+
+          <li>Field (M) provides rules for stratification of simulation results. If left empty, results will be reported without stratification. If this field contains a valid table expression, the results will be presented stratified by the dimensions and the ranges that describe the table cells. The value of the table cells must be one of the following:
+               <ol type=1 start=0>
+<li>No stratification
+<li>Stratification by population demographics
+<li>Stratification by entry demographics to time interval
+<li>Stratification by record
+               </ol>
+
+          </ol>
+
+     <li>When all options have been defined by the user, press on the Generate Report button (N) to regenerate the report. The system will then automatically bring back the Report Text tab with the new report. Note that for some cases, the regeneration of the report may take some time.
+
+        </ol>
+
+   </body></html>
+

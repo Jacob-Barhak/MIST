@@ -1,0 +1,124 @@
+<html lang="en">
+<head>
+<title>Populations - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Transitions.html#Transitions" title="Transitions">
+<link rel="next" href="Parameters.html#Parameters" title="Parameters">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Populations"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Parameters.html#Parameters">Parameters</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Transitions.html#Transitions">Transitions</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">10 Populations</h2>
+
+<p>A population (also referred to as population set or data set) represents a pool of subjects and their characteristics. A populations can be either input as data, or by specifying a distribution (to be used for randomly generating population sets).
+
+<h3 class="section">10.1 Creating Populations</h3>
+
+     <ol type=1 start=1>
+<li>From the main form, click the 'Populations' button on the left-hand navigation pane. Note that this form can also be accessed by drilling down from the project form. 
+<br><br><img src='Images/populations.jpg'><br><br><li>This form shows the population groups. Click the 'Add' button (A), and a new row will appear. 
+<li>Enter the name for the population set in the box (C). It is also recommended that you enter notes in (F) and a reference to the source of the information in (G) since this improves tractability and improves the modeling work. 
+<li>Click the 'Data' button (E) to define the population characteristics and associated data/distributions. The following form will appear. 
+<br><br><img src='Images/popdata.jpg'><br><br><li>To input a population as data: Add a characteristic by selecting a parameter from the table in the lower left (D) and Click the up arrow (C). To remove a row, highlight it in (A), then click the down arrow (B). After all the population characteristics have been added, press the Data Tab (G) and fill in data for the chosen parameters for each individual. The data can also be imported from a file using the Import button - to view or change the imported data, press the data tab (G). 
+<li>To specify a population by its distribution: Add a characteristic by selecting a parameter from the table in the lower left (D). Additionally, define the distribution expression in the text box (E), or select a predefined expression parameter from the table in the lower right (F) and it will appear in (E). Click the up arrow (B) to add a row that combines the distribution and the parameter. To remove a row from (A) highlight it, then click the down arrow (C).
+     </ol>
+
+<h3 class="section">10.2 Removing an Entire Population</h3>
+
+<p>Identify the population, and click the 'X' (delete) button. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+
+<h3 class="section">10.3 Generating new population data based on distributions</h3>
+
+<p>The system supports the automatic generation of a population set defined by distributions of its characteristics. This feature can be used to automatically generate population sets in the system according to distributions provided in the literature. To perform these tasks, the following steps should be taken:
+     <ol type=1 start=1>
+<li>Follow the steps defined above in <strong>Creating Populations</strong> to define a population set defined by distributions that were defined in the previous step. 
+<li>Select the desired distribution based population. The population set should read "Distribution based" in the Definition Type field (D). 
+<li>Right click the mouse and a pop up menu will appear. Select the entry "Regenerate New Population Data from a Distribution". 
+<li>A new input dialog window will appear and will ask for the population size to be generated. Enter the desired number and press OK. 
+<li>The system will generate a new population set filled with data that was generated according to the distributions defined in the originally selected distribution population set. The system will place this population set at the end of the list and will focus on it so the user can modify it.
+        </ol>
+
+   <p>Note that generation of a data based population from distributions is controlled by multiple system option parameters that are listed in <a href="Parameters.html#Parameters">Parameters</a>.
+
+   <p>Also note that during generation of a population from distributions it is possible to have interdependent parameters that influence each other. For example, Blood Pressure may be a function of Age and Weight can be a function of Age and Height. The system will resolve these interdependencies upon generation as long as there are no circular conflicts such as A depends of B that depends back on A. Also note that parameter bounds are enforced during population generation and may skew a distribution.
+
+   </body></html>
+

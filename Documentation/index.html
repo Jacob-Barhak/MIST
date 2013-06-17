@@ -1,0 +1,227 @@
+<html lang="en">
+<head>
+<title>MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="../index.html#dir" title="(dir)">
+<link rel="next" href="Overview.html#Overview" title="Overview">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<h1 class="settitle">MIcroSimulation Tool (MIST)</h1>
+<div class="node">
+<p>
+<a name="Top"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Overview.html#Overview">Overview</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="../index.html#dir">(dir)</a>
+<hr><br>
+</div>
+
+<h2 class="unnumbered">About this Document</h2>
+
+<p>The MIcroSimulation Tool (MIST). Additional and updated information regarding the software and the project can be found online at the following web site:
+<a href='https://github.com/Jacob-Barhak/MIST' target="_blank"> https://github.com/Jacob-Barhak/MIST</a>
+
+   <p>First is a short menu of links associated with the system. Below it you will find the table of contents.
+
+<ul class="menu">
+<li><a accesskey="1" href="Overview.html#Overview">Overview</a>:  Overview of the software. 
+<li><a accesskey="2" href="License.html#License">License</a>:  Software usage and distribution agreement. 
+<li><a accesskey="3" href="About-This-Version.html#About-This-Version">About This Version</a>:  Important information on the capabilities and limitations of this version of the system. 
+<li><a accesskey="4" href="Setup.html#Setup">Setup</a>:  Instructions for installation and setup. 
+<li><a accesskey="5" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>:  A quick guide for modeling a disease with MIST. 
+<li><a accesskey="6" href="Simulation.html#Simulation">Simulation</a>:  Prediction of disease outcomes for a given population set according to the model. 
+<li><a accesskey="7" href="States.html#States">States</a>:  States are the stages of a disease process. 
+<li><a accesskey="8" href="Model.html#Model">Model</a>:  The representation of hypothesis of disease progression. 
+<li><a accesskey="9" href="Transitions.html#Transitions">Transitions</a>:  The probability of progressing from one state to another. 
+<li><a href="Populations.html#Populations">Populations</a>:  Subjects and their characteristics. 
+<li><a href="Parameters.html#Parameters">Parameters</a>:  Parameters used by the system. 
+<li><a href="Expressions.html#Expressions">Expressions</a>:  Expression syntax. 
+<li><a href="Reports.html#Reports">Reports</a>:  Reports provided by the system. 
+<li><a href="Utilities.html#Utilities">Utilities</a>:  A set of useful utility programs. 
+<li><a href="MIST-over-the-Cloud.html#MIST-over-the-Cloud">MIST over the Cloud</a>:  running MIST in High Performance Computing environment and specifically over the Amazon Compute Cloud. 
+</ul>
+
+   <div class="contents">
+<h2>Table of Contents</h2>
+<ul>
+<li><a name="toc_Top" href="index.html#Top">About this Document</a>
+<li><a name="toc_Overview" href="Overview.html#Overview">1 Overview</a>
+<li><a name="toc_License" href="License.html#License">2 License</a>
+<li><a name="toc_About-This-Version" href="About-This-Version.html#About-This-Version">3 About This Version</a>
+<li><a name="toc_Setup" href="Setup.html#Setup">4 Setup</a>
+<ul>
+<li><a href="Setup.html#Setup">4.1 Environment</a>
+<li><a href="Setup.html#Setup">4.2 Software Installation</a>
+<li><a href="Setup.html#Setup">4.3 Running the Software - Simple Start</a>
+</li></ul>
+<li><a name="toc_Getting-Started-with-MIST" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5 Getting Started with MIST</a>
+<ul>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.1 Running the Software</a>
+<ul>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.1.1 Handling Data Files</a>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.1.2 Projects</a>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.1.3 The First Time Running the System</a>
+</li></ul>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.2 Work Flow with the System</a>
+<ul>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.2.1 Literature Review</a>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.2.2 Building the Disease Model</a>
+<li><a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">5.2.3 Simulating Disease Progression</a>
+</li></ul>
+</li></ul>
+<li><a name="toc_Simulation" href="Simulation.html#Simulation">6 Simulation</a>
+<ul>
+<li><a href="Simulation.html#Simulation">6.1 Creating a Simulation</a>
+<li><a href="Simulation.html#Simulation">6.2 Simulation Rules</a>
+<li><a href="Simulation.html#Simulation">6.3 Cost/Quality of Life (QoL) Wizard</a>
+<li><a href="Simulation.html#Simulation">6.4 Running a Simulation</a>
+<li><a href="Simulation.html#Simulation">6.5 Simulation Results</a>
+<ul>
+<li><a href="Simulation.html#Simulation">6.5.1 Exporting Simulation Results</a>
+<li><a href="Simulation.html#Simulation">6.5.2 Removing Results</a>
+</li></ul>
+<li><a href="Simulation.html#Simulation">6.6 Copying a Project</a>
+</li></ul>
+<li><a name="toc_States" href="States.html#States">7 States</a>
+<ul>
+<li><a href="States.html#States">7.1 Overview of States:</a>
+<ul>
+<li><a href="States.html#States">7.1.1 State Classifications:</a>
+</li></ul>
+<li><a href="States.html#States">7.2 Creating States</a>
+<li><a href="States.html#States">7.3 Removing States from a Process</a>
+<li><a href="States.html#States">7.4 State Indicator Parameters</a>
+</li></ul>
+<li><a name="toc_Model" href="Model.html#Model">8 Model</a>
+<ul>
+<li><a href="Model.html#Model">8.1 Definitions of a Model</a>
+<li><a href="Model.html#Model">8.2 Working with Models</a>
+<ul>
+<li><a href="Model.html#Model">8.2.1 Creating a Model</a>
+<li><a href="Model.html#Model">8.2.2 Removing a Model</a>
+</li></ul>
+</li></ul>
+<li><a name="toc_Transitions" href="Transitions.html#Transitions">9 Transitions</a>
+<ul>
+<li><a href="Transitions.html#Transitions">9.1 Creating Transitions</a>
+<li><a href="Transitions.html#Transitions">9.2 Removing Transitions</a>
+<li><a href="Transitions.html#Transitions">9.3 Copying Transitions from Another Model</a>
+</li></ul>
+<li><a name="toc_Populations" href="Populations.html#Populations">10 Populations</a>
+<ul>
+<li><a href="Populations.html#Populations">10.1 Creating Populations</a>
+<li><a href="Populations.html#Populations">10.2 Removing an Entire Population</a>
+<li><a href="Populations.html#Populations">10.3 Generating new population data based on distributions</a>
+</li></ul>
+<li><a name="toc_Parameters" href="Parameters.html#Parameters">11 Parameters</a>
+<ul>
+<li><a href="Parameters.html#Parameters">11.1 Parameter Types</a>
+<li><a href="Parameters.html#Parameters">11.2 Working with Parameters</a>
+</li></ul>
+<li><a name="toc_Expressions" href="Expressions.html#Expressions">12 Expressions</a>
+<ul>
+<li><a href="Expressions.html#Expressions">12.1 Supported arithmetic functions</a>
+<li><a href="Expressions.html#Expressions">12.2 Other supported literals</a>
+<li><a href="Expressions.html#Expressions">12.3 A list of comparison operators</a>
+<li><a href="Expressions.html#Expressions">12.4 A list of Boolean operators</a>
+<li><a href="Expressions.html#Expressions">12.5 A list of special math related functions and symbols</a>
+<li><a href="Expressions.html#Expressions">12.6 Mathematical functions</a>
+<li><a href="Expressions.html#Expressions">12.7 Other functions</a>
+<li><a href="Expressions.html#Expressions">12.8 Statistical Distributions - Random number generators</a>
+<li><a href="Expressions.html#Expressions">12.9 Control and Data Access</a>
+<li><a href="Expressions.html#Expressions">12.10 Application specific</a>
+</li></ul>
+<li><a name="toc_Reports" href="Reports.html#Reports">13 Reports</a>
+<ul>
+<li><a href="Reports.html#Reports">13.1 Generating a Report</a>
+<li><a href="Reports.html#Reports">13.2 Saving the Report File</a>
+<li><a href="Reports.html#Reports">13.3 Changing Report Options</a>
+</li></ul>
+<li><a name="toc_Utilities" href="Utilities.html#Utilities">14 Utilities</a>
+<ul>
+<li><a href="Utilities.html#Utilities">14.1 Invoking Utility Scripts</a>
+<li><a href="Utilities.html#Utilities">14.2 Conversion of Data to Code</a>
+<li><a href="Utilities.html#Utilities">14.3 Running Multiple Simulations</a>
+<li><a href="Utilities.html#Utilities">14.4 Generating Textual Reports from Multiple Results</a>
+<li><a href="Utilities.html#Utilities">14.5 Generating Spreadsheet Reports from Multiple Results</a>
+<li><a href="Utilities.html#Utilities">14.6 Assembling CSV Reports from Multiple Scenarios</a>
+<li><a href="Utilities.html#Utilities">14.7 Creating Graphical Plots</a>
+<li><a href="Utilities.html#Utilities">14.8 Running Simulations and Reports in Parallel on a Computer Cluster</a>
+<li><a href="Utilities.html#Utilities">14.9 Extracting Results For External Processing</a>
+</li></ul>
+<li><a name="toc_MIST-over-the-Cloud" href="MIST-over-the-Cloud.html#MIST-over-the-Cloud">15 MIST over the Cloud</a>
+</li></ul>
+</div>
+
+   </body></html>
+

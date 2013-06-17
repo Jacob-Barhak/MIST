@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+<title>Study/Model - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Study_002fModel"></a>
+<hr><br>
+</div>
+
+<h2 class="chapter">9 Study/Model</h2>
+
+<p><a name="index-Study-1"></a><a name="index-Model-2"></a>
+
+<h3 class="section">9.1 Definitions of a Study and of a Model</h3>
+
+<p><strong>Study:</strong> A study describes the data on progression from one state to another state. This information is available in the literature and is usually found as incident counts from a given initial population count that reaches a state by the end of the study duration. Alternatively, study results can be reported in functional form.
+
+   <p><strong>Model:</strong> A specification of the disease progression created by the user within the system. The progression is defined as a set of states and processes, and of transitions between these states. Transitions hold transition probabilities that describe transition from one state to another.
+
+   <p>Since both studies and models describe a disease process, they are bundled together in this system. The system distinguishes between study and model using the Study Length field. A model has a duration of 0, while a study has a duration greater than 0.
+
+   <p>Studies contain data regarding part of the disease model studied in the study, and are generally much simpler in structure than models. Actually they are restricted to a single sub-process. Studies are related to estimation projects, where they are used to provide information to estimate unknown model parameters. These parameters can then be calculated during an estimation process. Models with known transition probabilities can be used in simulation projects.
+
+<h3 class="section">9.2 Working with Studies/Models</h3>
+
+<h4 class="subsection">9.2.1 Creating a Study/Model</h4>
+
+     <ol type=1 start=1>
+<li>From the main window, click the 'Study/Model' on the left navigation pane. 
+<br><br><img src='Images/study-model.jpg'><br><br><li>This form shows all of the studies and models in the project. To add a new study or model, press the 'Add' button (A), and a new row will appear in the table. 
+<li>Give the study/model a name (B). 
+<li>Set the Study Length (C). NOTE: as stated above, a model has a length of 0, and a Study has a length of greater than 0. 
+<li>Select the Main Process from the drop-down (D). For a Study, The main process can contain only normal states, event states and pooling states. No sub-processes are allowed. The main process of a model can be much more elaborate and contain nested sub-processes. Double clicking on the field will open the states form and allow creation of the requested sub-process. Note that upon return the last state created will appear in the drop box. 
+<li>Click on the <a href="Transitions.html#Transitions">Transitions</a> button to define transitions related to the Study/Model. Note that transitions of a study will hold existing information whereas transitions of a model will hold probabilities. 
+<li>Close the form or move to the next record to save the entry. This will trigger validity checking of the data entered and if no error message is displayed, then the data has been saved to memory. Note that the information is not yet saved to a file.
+     </ol>
+
+   <p><br /><br /><b>For a video demonstration on creating models, and transitions, click <a href="./Videos/Model/Model.html" target="_blank">here</a>.</b><br /><br />
+
+<h4 class="subsection">9.2.2 Removing a Study/Model</h4>
+
+<p>Open the Study/Model form. Identify the row to be removed, and click the 'X' (delete) button for that row. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+
+   </body></html>
+

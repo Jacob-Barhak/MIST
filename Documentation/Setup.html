@@ -1,0 +1,164 @@
+<html lang="en">
+<head>
+<title>Setup - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="About-This-Version.html#About-This-Version" title="About This Version">
+<link rel="next" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST" title="Getting Started with MIST">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Setup"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="About-This-Version.html#About-This-Version">About This Version</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">4 Setup</h2>
+
+<h3 class="section">4.1 Environment</h3>
+
+     <ul>
+<li>Microsoft Windows 7 or Linux. Note that other environments may work, yet were not fully tested. Linux installation is for experts. Windows environment is recommended for novice users. 
+<li>The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in
+<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a><li>The system can also run simulations in High Performance Computing (HPC) environment using Sun Grid Engine or the Amazon Elastic Compute Cloud. This is highly specialized and requires experts for the setup. 
+</ul>
+
+<h3 class="section">4.2 Software Installation</h3>
+
+<p>The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) that are for advanced and expert users. For novice users it is recommended that you use Quick Installation for Windows since it is the simplest and therefore described first.
+
+<h4 class="subheading">Quick and Simple Installation for Windows Users:</h4>
+
+     <ol type=1 start=1>
+<li>Download and Install Python(x,y) version 2.7 or higher. Here is a direct link
+<a href='http://pythonxy.googlecode.com/files/Py(x,y)-2.7.3.1.exe' target="_blank"> http://pythonxy.googlecode.com/files/Py(x,y)-2.7.3.1.exe </a>. Other versions can be found at
+<a href='http://code.google.com/p/pythonxy/wiki/Downloads' target="_blank"> http://code.google.com/p/pythonxy/wiki/Downloads </a><li>Download the file MIST-master.zip from github by typing the following URL in a web browser:
+<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a><li>Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. You can do this on windows by right clicking the archive and choosing Extract All.
+     </ol>
+
+<h4 class="subheading">Expert Installation for Linux/OSX:</h4>
+
+     <ol type=1 start=1>
+<li>Download and Install Anaconda from
+<a href='https://store.continuum.io/' target="_blank"> https://store.continuum.io/ </a><li>Install WxPython - this installation may require expert assistance and can be found at &lt;a href='http://www.wxpython.org/download.php#stable' target="_blank"&gt; http://www.wxpython.org/download.php#stable &lt;/a&gt;
+<li>Download the file MIST-master.zip from github by typing the following URL in a web browser:
+<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a><li>Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory.
+     </ol>
+
+<h4 class="subheading">Alternative Expert Installation Instructions:</h4>
+
+     <ol type=1 start=1>
+<li>Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in
+<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a> . You can also Install Python, numpy, matplotlib, and nose separately. <li>Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at
+<a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a><li>Download the file MIST-master.zip from github by typing the following URL in a web browser:
+<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a><li>Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory.
+     </ol>
+
+<h4 class="subheading">To Test the Above Installations:</h4>
+
+     <ol type=1 start=1>
+<li>From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly. 
+<li>Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-load the file Testing.zip to see the examples.
+     </ol>
+
+   <p>If you are an expert you can install and setup MIST to work in High Performance Computing (HPC) environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance.
+
+<h4 class="subheading">To run MIST over the cloud a more complicated setup is needed:</h4>
+
+     <ol type=1 start=1>
+<li>Install starcluster
+<a href='http://star.mit.edu/cluster/docs/latest/installation.html' target="_blank"> http://star.mit.edu/cluster/docs/latest/installation.html </a><li>Follow the instructions on
+<a href='http://continuum.io/blog/starcluster-anaconda' target="_blank"> http://continuum.io/blog/starcluster-anaconda </a><li>If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine
+<li>Use the starcluster put command to transfer MIST to the /home directory on the cluster
+     </ol>
+
+<h4 class="subheading">It is also possible to run MIST simulations in Multi-core environment using Sun Grid Engine. If you wish to install Sun-Grid-Engine on a single machine for testing purposes:</h4>
+
+     <ol type=1 start=1>
+<li>Follow the instructions on
+<a href='http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/' target="_blank"> http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/ </a>
+
+     <li>Follow the Quick Installation for Linux/OSX from above
+     </ol>
+
+<h3 class="section">4.3 Running the Software - Simple Start</h3>
+
+<p>Open the working directory created during installation and double-click <span class="file">Main.py</span>. The main form of the system, titled 'Indirect Estimation and Simulation Tool', will open. This is further described in the next section, <a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>.
+
+   <p>After you get familiar with the system and use it for a while you may expand to expert use where you can run <a href="MIST-over-the-Cloud.html#MIST-over-the-Cloud">MIST over the Cloud</a>.
+
+   </body></html>
+

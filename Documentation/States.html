@@ -1,0 +1,164 @@
+<html lang="en">
+<head>
+<title>States - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Simulation.html#Simulation" title="Simulation">
+<link rel="next" href="Model.html#Model" title="Model">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="States"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Model.html#Model">Model</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Simulation.html#Simulation">Simulation</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">7 States</h2>
+
+<h3 class="section">7.1 Overview of States:</h3>
+
+<p>States are representations of either discrete stages of a disease or of processes. 
+<br><img src='Images/modeldiagram.jpg'><br>
+
+<h4 class="subsection">7.1.1 State Classifications:</h4>
+
+<p>States can be classified according to several types
+     <ul>
+<li><strong>Normal State</strong> - a state in which a subject can remain or can  progress into. Normal states are marked in the model above by black boxes (rectangles). 
+<li><strong>Event State</strong> - an instantaneous state; a subject entering this state will exit it in the same simulation step. Therefore all transition probabilities from an event state must sum to 1. Event states are marked in the model above by a diamond. 
+<li><strong>Splitter States</strong> - a division of one state into two or more parallel sub-processes. A splitter state requires a matching Joiner State in a valid model. A splitter state is represented in the diagram above by the black dot to the left of two or more arrows. 
+<li><strong>Joiner State</strong> - a union of two or more parallel sub-processes into one state, essentially 'canceling out' a splitter state. A Joiner state is always linked with a specific Splitter state. A joiner state is represented in the diagram above by the black dot to  the right of two or more arrows. 
+<li><strong>Terminal State</strong> - when a terminal state is reached, the individual cannot progress into any other state and the simulation terminates for this individual. The terminal state is marked by a red box in the diagram above. 
+<li><strong>Process</strong> - a set of states that represent an  entire disease process; it may contain other sub-processes within itself. Processes are marked as dashed boxes in the diagram above. 
+</ul>
+
+   <p>There must be one Main Process for each model, containing all the other states. The states can be thought of as a tree structure, where a Main Process can contain states and/or sub-processes, and a sub-process contains states and/or other sub-processes, and so on. During simulation a subject can be in several sub-processes in parallel simultaneously.
+
+   <p>The probability for progressing from a state to another during a simulation step is set by the user in <a href="Transitions.html#Transitions">Transitions</a>. The probability of staying is a state in a simulation step is one minus the sum of probabilities to progress from that state into the following states.
+
+<h3 class="section">7.2 Creating States</h3>
+
+<p>To set up a new state:
+     <ol type=1 start=1>
+<li>From the main form, click the 'States' button on the left navigation pane. 
+<!-- modify image to have reference letters -->
+<br><br><img src='Images/states.jpg'><br><br><li>This form shows all states in the project. To add a new state, press the 'Add' button (A) on the top right of the form, and a new blank row will appear. 
+<li>Enter the title of the state in the 'Name' box (B). 
+<li>To define a state of type:
+          <ul>
+<li><strong>Normal State</strong>: continue to next step. 
+<li><strong>Event State</strong>: check box 'Is Event' (D). 
+<li><strong>Splitter State</strong>: check box 'Is Split' (C). 
+<li><strong>Joiner State</strong>: in drop-down box 'Joiner of Splitter' (K), select the name of the Splitter to be joined. 
+<li><strong>Terminal State</strong>: check box 'Is Terminal' (E). 
+</ul>
+
+     <li>If the state is a process/pooling state, meaning that it contains other states, make sure all the "child states" within the process have been created first (repeat from step 2). Next, select a "child state" from the drop-down box (G), and click the up arrow button (I). Repeat for all nested states. Remember, when a child state is a sub-process, all of its children are automatically included.
+
+     <p>It is important to note that the order in which the child states of a sub-process are defined determine the sort order by which transitions are displayed to the user. So they should be defined sequentially. Note that once a sub-process has been referenced, it is difficult to make changes in the system since changes in a referenced sub-processes will be blocked by the system.
+
+     <p class="noindent"><li>When finished, close the States form to save the states. This will trigger validity checking of the data entered; if no error message is displayed, then the data has been saved to memory. Note that the information is not yet saved to a file.
+
+        </ol>
+
+<h3 class="section">7.3 Removing States from a Process</h3>
+
+<p>To remove a state from a process:
+     <ol type=1 start=1>
+<li>In the States form, identify the process that you wish to modify. 
+<li>Highlight the state you wish to remove in the Included States box (F) of that process. 
+<li>Click the down arrow (J) to remove the state. Note: the state will not be completely deleted, it will only be deleted from the process.
+        </ol>
+
+<h3 class="heading">To permanently delete a state:</h3>
+
+     <ol type=1 start=1>
+<li>Remove the state from any processes, using steps above. If the state is itself a process, delete all reference to it from studies that use it as a main process. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used. 
+<li>In the States form, identify the state that you wish to delete, and click the 'X' (delete) button at the left of that row. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+     </ol>
+
+<h3 class="section">7.4 State Indicator Parameters</h3>
+
+<p>Each State or Process has two state indicators associated with it. These state indicators are parameters that are set/reset during a simulation.
+     <ul>
+<li><strong>Actual State Indicator</strong> - Uses the state name with spaces replaced by an underscore '_'. This state indicator will be set to 1 during simulation if the subject is present at this state at this simulation step. 
+<li><strong>Entered State Indicator</strong> - Uses the state name with spaces replaced by an underscore '_' followed by the suffix <em>_Entered</em>. This state indicator will be set to 1 during simulation if the subject is entered into this state at this simulation step. This state indicator is set to 1 only if the state was entered in this simulation step and will be reset if the individual stays in this state or leaves it. 
+</ul>
+
+   <p>Sub-Process state indicators will be set to 1 if the user is in any state / sub-process within this sub-process. This means, for example, that the state indicator of the main process of a model used is simulation is always set to 1. States will generally behave the same with the exception of a simulation step where several sub-processes are joined by a joiner state. In this case, the sub-process indicators will be reset, while the state indicators will remain set until the next simulation step. This behavior allows cost calculations in this simulation step according to the states before the collapsing joiner state was reached.
+
+   </body></html>
+

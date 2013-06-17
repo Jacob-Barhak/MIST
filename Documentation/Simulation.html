@@ -1,0 +1,202 @@
+<html lang="en">
+<head>
+<title>Simulation - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST" title="Getting Started with MIST">
+<link rel="next" href="States.html#States" title="States">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Simulation"></a>Next:&nbsp;<a rel="next" accesskey="n" href="States.html#States">States</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">6 Simulation</h2>
+
+<p>MIST uses Monte Carlo to simulate a disease process where subjects are defined by the user and followed each simulation step until death or until the end of the simulation.
+
+   <p>A simulation is a process where each individual in the population progresses through the states of a model, based on a random distribution. The active states for each individual at each step in time are given in the results.
+
+<h3 class="section">6.1 Creating a Simulation</h3>
+
+<p>A simulation is created by defining a new simulation project. Within this project the user can define the <a href="Model.html#Model">Model</a>, the model that guides the simulation, and the <a href="Populations.html#Populations">Population Set</a> as well as some other simulation parameters and additional simulation rules. The steps to create such a simulation project are:
+     <ol type=1 start=1>
+<li>Define <a href="States.html#States">States</a> to be used in simulation. 
+<li>Set up <a href="Parameters.html#Parameters">Parameters</a> to be used during simulation. 
+<li>Set up the <a href="Model.html#Model">Model</a>. 
+<li>Set up Model <a href="Transitions.html#Transitions">Transitions</a>. 
+<li>Set up the <a href="Populations.html#Populations">Population Set</a>. 
+<li>Double click 'Add New Project' in the main window. 
+<li>In the 'Create New Project' window, select 'Simulation', and click OK. 
+<br><br><img src='Images/simulation.jpg'><br><br><li>In the Project Definition form, give the Simulation a name (A). 
+<li>Select a Primary Model in the drop-down box (B). Note that you can drill down into the model and make changes by double clicking on the model or pressing the ... button near the name. 
+<li>Select a Population Set in the drop-down box (C). Note that you can drill down into the population set and make changes by double clicking on the population set or pressing the ... button near the name. 
+<li>Specify the number of Simulation Steps and Repetitions (D and E). Note that the number of repetitions for distribution based population defines the population size to be generated. Otherwise it defines the number or times the simulation should be repeated for each individual in the population data table. 
+<li>To add modification rules for parameters, follow instructions below. 
+<li>Click Save. The form can now be closed, or the simulation can be run. This will trigger validity checking of the data entered and if no error message is displayed, then the data has been saved to memory. Note that the information is not yet saved to a file.
+        </ol>
+
+<h3 class="section">6.2 Simulation Rules</h3>
+
+<p>From within the Simulation Project form, select the appropriate tab. The tabs are ordered according to different stages in the simulation. Rules are defined from the bottom of the Simulation Project form (F,G,H,I).
+
+   <p>Note that rules fall into the following categories that are represented in different tabs in the form:
+
+     <ul>
+<li>Stage 0 - Initialization : This stage in simulation is applied once at the beginning of simulation. This is a good place to initialize parameters that are not defined in a population set, or to override the population set data. It is also a location where system parameters that affect the simulation can be overridden. 
+<li>Stage 1 - Pre-State Transition Rules : This stage in simulation is applied every simulation step before running the model. It is typically used to update parameter values before calculating transitions. 
+<li>Stage 2 - Execute State Transitions : This stage does not involve rules - instead it applies the transitions defined in the model. 
+<li>Stage 3 - Post-State Transition Rules : This stage in simulation is applied every simulation step after running the model. It is typically used to update parameters that are related to the new state defined by the model, for example costs associated with a new state. 
+</ul>
+
+   <p>After choosing a tab, it is possible to view the rules it contains in the rules table (L) and manipulate them as explained below.
+
+     <ul>
+<li><strong>Parameter</strong> (F) - parameter to be modified by the rule and get the formula value. Double clicking opens the <a href="Parameters.html#Parameters">Parameters</a> form to allow adding new parameters. 
+<li><strong>Occurrence Probability</strong> (G) - probability that the function will be assigned to the parameter. This can also be used as an if statement by assigning a Boolean expression that evaluates to 0 or 1. Double clicking opens a larger box. 
+<li><strong>Function</strong> (H) - computational expression, which can use parameters as variables. This expression is calculated at simulation runtime and the value evaluated will be assigned as the new value of the parameter defined in (F). Double clicking opens a larger box and for CostWizard it opens  a wizard. 
+<li><strong>Notes</strong> (I) - not used in computation - simply for reference. Double clicking opens a larger box. 
+</ul>
+
+   <p>To add a rule to the Simulation, click the upward arrow (J). It will then be added to the table of rules (L).
+
+   <p>To remove a rule, highlight the entry in the rules table (L) and click the downwards arrow (K).
+
+   <p>To modify a rule, click the downwards arrow (H) to move its contents to the lower row (F), perform modifications and then click the upward arrow (J) to return the modified rule to the rules table. When the rule is moved down, the next record is highlighted. The rule will be added just before the highlighted record; i.e., back into the same position unless you choose to modify the highlighted record. The return position of the rule can be changed by highlighting a different record or it can be added at the end of the rules table if no item is highlighted.
+
+   <p>Note that it is possible to change the order of rules by highlighting different rules and using the (J),(K) arrow buttons, and this also allows copying rules.
+
+<h3 class="section">6.3 Cost/Quality of Life (QoL) Wizard</h3>
+
+<p>When the Function (H) is CostWizard and the user double clicks the box, then the Cost/Quality of Life (QoL) Wizard is invoked. It visually shows the Cost / Quality of Life values and parameters in table that is easier to visualize and manipulate. 
+The cost wizard uses the formulas described in the paper:
+Zhou H, Isaman DJ, Messinger S, Brown MB, Klein R, Brandle M, Herman WH. A computer simulation model of diabetes progression, quality of life, and cost. Diabetes Care. 2005;28(12):2856-63.
+
+<h4 class="subheading">Adding a Parameter to the Cost/QoL Expression</h4>
+
+     <ol type=1 start=1>
+<li>From within the Simulation Project form write a valid CostWizard expression such as CostWizard(0,1,[1],[1]) in the Function (H) then double click to lauch the CostWizard form:
+<br><br><img src='Images/costwizard.jpg'><br><br><li>First, select whether the wizard will be used to calculate Cost or Quality of Life by selecting one of those options in the drop-down (A). 
+<li>Enter an initial value for this Cost or Quality of Life in the box (B). 
+<li>Select a Parameter from the drop-down in the lower left (D) and enter a value in the box on the lower right (E). Finally, click the up arrow (F) to add the rule.
+     </ol>
+
+<h4 class="subheading">Removing a Parameter to the Cost/QoL Expression</h4>
+
+<p>Within the Cost/QoL Wizard, highlight the row to be removed In (C), and click the down arrow (G).
+
+<h3 class="section">6.4 Running a Simulation</h3>
+
+<p>In the main window, double-click the Simulation Project to be used. This opens the Simulation form. Verify the information and, when ready, click 'Run Simulation'.
+
+   <p>Note that a simulation is influenced by several system option parameters associated with simulation and in some case also with system option parameters associated with population generation from distributions. See <a href="Parameters.html#Parameters">Parameters</a> for a complete list of these system option parameters.
+
+<h3 class="section">6.5 Simulation Results</h3>
+
+<p>The results can be viewed within the Simulation form by clicking 'View Result'. This opens the Simulation Result form.
+
+   <p><br><br><img src='Images/resultviewer.jpg'><br><br>
+
+   <p>Every time a Simulation is run, it creates a new Simulation ID for the results; therefore, it is necessary to select the appropriate result ID from the drop-down field (A) at the top of the form. The default is the most recent result.
+
+   <p>The columns of the result table report results for all the parameters associated with the simulation including, yet not limited, to the parameters defined in the population set. Within the table, the results are sorted by the Individual sort order in the population (Individual ID), then by the repetition number, then by time. In other words, the first block of result records will describe the first individual; within it the first block will describe the first repetition of the simulation; within it the first record will describe the initial condition as described by the population set. The record afterwards will describe the result of the first simulation step.
+
+   <p>Note that a Project with results is considered locked. It is impossible to modify the project and any entity associated with the project such as the Model, or the population set it uses. This protects from ambiguity between project definitions and results. To modify a project with results, you will need to create a copy of it and possibly a copy of its model/population set and possibly other parameters.
+
+<h4 class="subsection">6.5.1 Exporting Simulation Results</h4>
+
+<p>Within the Simulation Result form, click the 'Export To File' (B) button. This saves the table as a CSV file, which can be opened by another spreadsheet program.
+
+<h4 class="subsection">6.5.2 Removing Results</h4>
+
+<p>NOTE: these actions CANNOT BE REVERSED. Use at your own risk.
+
+   <p>To eliminate one set of results, make sure the appropriate Simulation ID is selected from the drop-down, and click the 'Delete' button (C).
+
+   <p>To remove all results, click the 'Delete All' button (D).
+
+   <p>Removing all results from a project will unlock it and will allow modification of some of its parameters.
+
+<h3 class="section">6.6 Copying a Project</h3>
+
+<p>To copy a project, either click on the copy button at the top of the form or right click the mouse and select the copy record option from the pop up menu. This will create a new copy of the project that does not contain results and can be modified by the user. Note that the copied project name will have an extension with a number. This can be changed by the user.
+
+   <p>To remove all results, click the 'Delete All' button.
+
+   </body></html>
+

@@ -1,0 +1,1898 @@
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@c ver 45.0 5-Jun-2013  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
+@setfilename Documentation.info
+@settitle MIcroSimulation Tool (MIST)
+@c @setcontentfsaftertitlepage
+@c @setshortcontentsaftertitlepage
+@c %**end of header
+
+@copying
+
+Copyright @copyright{} 2013 Jacob Barhak
+
+Copyright @copyright{} 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+@subheading Additional Clarification
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including any warranty that it will not infringe on any property rights of another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with respect to the use of the MIcroSimulation Tool (MIST).  
+
+The MIcroSimulation Tool (MIST) was derived from the Indirect Estimation and Simulation Tool (IEST) and uses code distributed under the IEST name. The change of the name signifies a split from the original design that  focuses on microsimulation. For the sake of completeness, the copyright  statement from the original tool developed by the University of Michigan is provided below and is also mentioned above.
+
+
+@subheading ORIGINAL COPYRIGHT
+
+Copyright @copyright{} 2009-2012 The Regents of the University of Michigan. Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen Ye.
+Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+This documentation and software are part of the Indirect Estimation and Simulation Tool (IEST).  The Indirect Estimation and Simulation Tool (IEST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+@subheading Additional Clarification
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including any warranty that it will not infringe on any property rights of another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF MICHIGAN assumes no responsibilities with respect to the use of the Indirect Estimation and Simulation Tool (IEST).  
+
+@end copying
+
+@shorttitlepage
+
+@titlepage
+@title Indirect Estimation and Simulation Tool
+@insertcopying
+@end titlepage
+
+@ifnottex
+@node Top
+@top About this Document
+
+The MIcroSimulation Tool (MIST). Additional and updated information regarding the software and the project can be found online at the following web site:
+@html
+<a href='https://github.com/Jacob-Barhak/MIST' target="_blank"> https://github.com/Jacob-Barhak/MIST</a>
+@end html
+
+First is a short menu of links associated with the system. Below it you will find the table of contents.
+
+@menu
+* Overview:: Overview of the software. 
+* License:: Software usage and distribution agreement. 
+* About This Version:: Important information on the capabilities and limitations of this version of the system.  
+* Setup:: Instructions for installation and setup.
+* Getting Started with MIST:: A quick guide for modeling a disease with MIST.
+* Simulation:: Prediction of disease outcomes for a given population set according to the model.
+* States:: States are the stages of a disease process.  
+* Model:: The representation of hypothesis of disease progression.  
+* Transitions:: The probability of progressing from one state to another.   
+* Populations:: Subjects and their characteristics.
+* Parameters:: Parameters used by the system. 
+* Expressions:: Expression syntax. 
+* Reports:: Reports provided by the system. 
+* Utilities:: A set of useful utility programs.
+* MIST over the Cloud:: running MIST in High Performance Computing environment and specifically over the Amazon Compute Cloud.
+@end menu
+
+@contents
+
+@end ifnottex
+
+
+@node Overview
+@chapter Overview
+
+@heading Purpose:
+To facilitate modeling of the progression of chronic disease such as diabetes so that investigators can evaluate the cost/utility of a proposed method of prevention, early diagnosis or intervention.
+
+@heading Purpose:
+Provide software infrastructure to support micro-simulation to support chronic disease modeling activities.
+
+@heading Goal - Provide modeling framework to support Monte Carlo micro-simulation with the following capabilities:
+@itemize @bullet
+@item
+Modeling language and compiler
+@item
+Graphic User Interface
+@item
+Programmer Interfaces 
+@item
+Report Generator
+@item
+Repeatability and Traceability mechanism 
+@item
+Archiving and documentation.
+@item
+High Performance Computing (HPC) ready for computing environment such as the cloud.
+@item
+Simulations Repeatability and Traceability support
+@end itemize
+
+
+@heading Significance:
+
+The progression of chronic diseases, such as diabetes, is typically studied through Clinical Trials. Such trials typically a long and difficult process that take time and resources and produce a lot of information about observed phenomena.
+
+Computational disease models attempt to explain those phenomena using mathematical formulas and computer programs. Such disease models are used to estimate burden of disease in future including Cost/Quality of Life. These models also allow to hypothesize and test what if scenarios virtually without need for human subjects.
+
+Micro-simulation models are particularly useful since they allow running simulations at the individual level and showing the results for the entire population. Typically Monte-Carlo simulation is employed were random numbers are generated and simulations repeated many time to converge. This is computationally demanding and sometimes requires substantial computing power. 
+
+The MIcro Simulation Tool (MIST) addresses this need by providing an open source free modeling tool that allows running Monte-Carlo Simulations. It supports scaling simulations to High Performance Computing (HPC) environment. More specifically, MIST can runs over the cloud.
+
+Additional and updated information regarding the software and the project can be found online at the following web site:
+
+@html
+<a href='https://github.com/Jacob-Barhak/MIST' target="_blank"> https://github.com/Jacob-Barhak/MIST </a>
+@end html
+
+
+
+
+@node License
+@chapter License
+@insertcopying
+
+@node About This Version
+@chapter About This Version
+
+The MIcro Simulation Tool (MIST) is a split from Indirect Estimation and Simulation Tool (IEST). 
+
+MIST only deals with Monte-Carlo Micro-Simulation and does not offer Markov Estimation capabilities, this simplifies the system significantly and facilitates the following improvements:
+
+@itemize @bullet
+@item
+MIST runs over the cloud and on sun Grid Engine clusters
+@item
+Reproducibility and traceability were improved and tested
+@item
+Simplification/improvement of Parameters / Models / Simulation Rules
+@end itemize
+
+See the README.txt file supplied with the software for further information on changes and capabilities.
+
+@node Setup
+@chapter Setup
+
+
+@section Environment
+@itemize @bullet
+@item
+Microsoft Windows 7 or Linux. Note that other environments may work, yet were not fully tested. Linux installation is for experts. Windows environment is recommended for novice users.
+@item
+The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in 
+@html
+<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a>
+@end html
+@item
+The system can also run simulations in High Performance Computing (HPC) environment using Sun Grid Engine or the Amazon Elastic Compute Cloud. This is highly specialized and requires experts for the setup.
+@end itemize
+
+ 
+
+@section Software Installation
+
+
+The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) that are for advanced and expert users. For novice users it is recommended that you use Quick Installation for Windows since it is the simplest and therefore described first.
+
+@subheading Quick and Simple Installation for Windows Users:
+@enumerate
+@item
+Download and Install Python(x,y) version 2.7 or higher. Here is a direct link
+@html
+<a href='http://pythonxy.googlecode.com/files/Py(x,y)-2.7.3.1.exe' target="_blank"> http://pythonxy.googlecode.com/files/Py(x,y)-2.7.3.1.exe </a>
+@end html
+. Other versions can be found at 
+@html
+<a href='http://code.google.com/p/pythonxy/wiki/Downloads' target="_blank"> http://code.google.com/p/pythonxy/wiki/Downloads </a>
+@end html
+@item
+Download the file MIST-master.zip from github by typing the following URL in a web browser: 
+@html
+<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a>
+@end html
+@item
+Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. You can do this on windows by right clicking the archive and choosing Extract All.
+@end enumerate
+
+@subheading Expert Installation for Linux/OSX:
+@enumerate
+@item
+Download and Install Anaconda from 
+@html
+<a href='https://store.continuum.io/' target="_blank"> https://store.continuum.io/ </a>
+@end html
+@item
+Install WxPython - this installation may require expert assistance and can be found at <a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a>  
+@item
+Download the file MIST-master.zip from github by typing the following URL in a web browser: 
+@html
+<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a>
+@end html
+@item
+Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
+@end enumerate
+
+@subheading Alternative Expert Installation Instructions:
+@enumerate
+@item
+Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in 
+@html
+<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a> . You can also Install Python, numpy, matplotlib, and nose separately.
+@end html
+@item
+Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at 
+@html
+<a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a> 
+@end html
+@item
+Download the file MIST-master.zip from github by typing the following URL in a web browser: 
+@html
+<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a>
+@end html
+@item
+Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
+@end enumerate
+
+@subheading To Test the Above Installations:
+@enumerate
+@item
+From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly.
+@item
+Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-load the file Testing.zip to see the examples.
+@end enumerate
+
+
+
+If you are an expert you can install and setup MIST to work in High Performance Computing (HPC) environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance.
+
+@subheading To run MIST over the cloud a more complicated setup is needed:
+@enumerate
+@item
+Install starcluster 
+@html
+<a href='http://star.mit.edu/cluster/docs/latest/installation.html' target="_blank"> http://star.mit.edu/cluster/docs/latest/installation.html </a>
+@end html
+@item
+Follow the instructions on 
+@html
+<a href='http://continuum.io/blog/starcluster-anaconda' target="_blank"> http://continuum.io/blog/starcluster-anaconda </a>
+@end html
+@item
+If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine
+@item
+Use the starcluster put command to transfer MIST to the /home directory on the cluster
+@end enumerate
+
+@subheading It is also possible to run MIST simulations in Multi-core environment using Sun Grid Engine. If you wish to install Sun-Grid-Engine on a single machine for testing purposes:
+@enumerate
+@item
+Follow the instructions on 
+@html
+<a href='http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/' target="_blank"> http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/ </a>
+@end html
+
+@item
+Follow the Quick Installation for Linux/OSX from above
+@end enumerate
+
+
+@section Running the Software - Simple Start
+
+Open the working directory created during installation and double-click @file{Main.py}. The main form of the system, titled 'Indirect Estimation and Simulation Tool', will open. This is further described in the next section, @ref{Getting Started with MIST}. 
+
+After you get familiar with the system and use it for a while you may expand to expert use where you can run @ref{MIST over the Cloud}.
+
+
+@node Getting Started with MIST
+@chapter Getting Started with MIST
+
+@section Running the Software
+Open the folder created during installation and double-click @file{Main.py}. The form, 'MIcroSimulation Tool (MIST)', will open.
+
+@html
+<br><img src='Images/mainform.jpg'><br>
+@end html
+
+Using this form the user can load and save data and access all system parameters. Here is a short description of the basic operations that one can perform with this form:
+
+@subsection Handling Data Files
+The system holds its data in files in a @file{zip} archive. Each file can contain many Projects / Models / Populations using the same or different terminology. The system can load this information and at the end of work the user can save the modified information back to a file. Note that while working with the system the information is never saved to a file until the user specifies the save in this form.
+
+@subheading Loading a Data File
+@enumerate
+@item
+From the menu bar at the top of the main form, select @strong{File}.
+@item
+From the @strong{File} menu select @strong{Open}.
+@item
+Select the requested filename/path of the data file from the new window that appeared and press the Open Button.
+@item
+The label at the top of the windows should show the path of the file and the project list (A) should show projects held within the loaded file.
+@end enumerate
+
+@subheading Saving a Data File
+@enumerate
+@item
+From the menu bar at the top of the main form, select @strong{File}.
+@item
+From the @strong{File} menu select @strong{Save} to save under a default file name. Select @strong{Save As} to modify filename/path. 
+@item
+The label at the top of the windows should show the updated path of the file if this was changed. Note that if a system overwrites an existing file it will maintain a copy of the old file under a file name with an extension of a numerical timestamp representing the time/date of the new file created. This backup file can be loaded into the system. 
+@end enumerate
+
+In the event the system does not close properly any modifications made will be lost. A proper exit of the system will ask the user to save the information to file. The automatic backup mechanism during file saving helps track back changes in data and helps maintain integrity.
+
+Note that the system does not lock files after loading them during work. Also note that saving records in the system is not the same as saving the file. Records and entities in other forms are saved to memory rather than to a file. The only way to save to a file is through the main form menu.
+
+
+@subsection Projects
+A project is the main entity defined in the system. Projects define the @ref{Simulation} that the system will run and can share information such as models or parameters. 
+
+All the projects currently loaded in the system are listed in the main form in the project list (A).
+
+To view a project, double click its entry in the list (A) in the main form. The appropriate form will open.
+
+To add a new project to the system, double click the text Add New Project at the top of the list (A). Then select the type of the project from the window that will open. The appropriate form will open.
+
+
+@subsection The First Time Running the System
+One way to familiarize yourself with the system is to load the test examples file @file{Testing.Zip} created by the system during installation. This file provides an implementation of all the simulation examples provided in the test example document @file{SimulationExamples.pdf} that is also created by the installation.
+
+Each project is an example from this document. Double clicking on projects listed in (A) will open the project clicked upon. Clicking the buttons marked as (B,C,D,E,F) will allow exploring the underlying data that created these projects. 
+
+
+@section Work Flow with the System
+Before working with the computer system, some preparation is required. This page describes the preparation stages and the workflow with the system from a more abstract view.
+
+@subsection Literature Review
+When developing a new model or modifying an existing model, it is essential to perform an extensive literature review and to consult with clinical experts who can describe the progression of the disease. During the literature review, it is important to identify studies that provide estimates of the transition probabilities for the progression of the disease through time.
+
+@subsection Building the Disease Model
+@subheading Understanding the Disease Structure
+The information from the literature review must be translated into system terminology. This involves identification of important keywords that describe disease progression; these are then used in different categories defined by the computer system:
+@itemize @bullet
+@item
+@ref{States} - define the condition of the individual
+@item
+Sub-process - a collection of states that describe a condition and may consistent of a sequence of several states. Subprocesses may occur in parallel to each other, or may be nested within a different subprocess.
+@item
+@ref{Parameters} - characteristics such as age, blood pressure, costs, and other parameters that affect the progression of the disease or change due to its progression.
+@item
+Rules - Logic statements that describe changes in the disease or in associated parameters
+@end itemize
+
+@subheading Building the Model Diagram
+The identified states and sub-processes should be depicted as boxes in a diagram; the boxes should be connected with arrows to signify transitions between states. The output of this may look like:
+@html
+<br><img src='Images/modeldiagram.jpg'><br>
+@end html
+Also, the user should collect all known rules that describe parameter change such as Age increase and write those down.
+
+@subsection Simulating Disease Progression
+
+@subheading Define a Simulation Population Set
+It is necessary to specify the population of individuals to whom the simulation should apply. The population should contain information about the initial states of each individual. Also, parameters to be used in the simulation should be defined in this set. Populations can be defined as data table or as formulas describing distributions.
+
+@subheading Update and Enhance the Model
+The model can be enhanced by adding rules for updating parameters used in the simulation. Examples of rules include:
+@itemize @bullet
+@item
+Increase age every time period 
+@item
+Update blood pressure value
+@item
+Calculate Quality of Life according to current health state
+@item
+Calculate cost of treatment
+@item
+Decide if treatment is applied
+@end itemize
+
+
+@subheading Run the Simulation
+The simulation can then be performed to predict outcomes of disease progression over the defined population set. After analyzing the results, the simulation can be repeated after changing parameters or using a different population set to reflect different model conditions. Each change in the simulation may require creating a new simulation project. This can be easily done by copying the existing project.
+
+For further details, please see @ref{Simulation} for details.
+
+@node Simulation
+@chapter Simulation
+MIST uses Monte Carlo to simulate a disease process where subjects are defined by the user and followed each simulation step until death or until the end of the simulation.
+
+A simulation is a process where each individual in the population progresses through the states of a model, based on a random distribution. The active states for each individual at each step in time are given in the results.
+
+@section Creating a Simulation
+A simulation is created by defining a new simulation project. Within this project the user can define the @ref{Model}, the model that guides the simulation, and the @ref{Populations, Population Set} as well as some other simulation parameters and additional simulation rules. The steps to create such a simulation project are:
+@enumerate
+@item
+Define @ref{States} to be used in simulation.
+@item
+Set up @ref{Parameters} to be used during simulation.
+@item
+Set up the @ref{Model}.
+@item
+Set up Model @ref{Transitions}.
+@item
+Set up the @ref{Populations, Population Set}.
+@item
+Double click 'Add New Project' in the main window.
+@item 
+In the 'Create New Project' window, select 'Simulation', and click OK.
+@html
+<br><br><img src='Images/simulation.jpg'><br><br>
+@end html
+@item
+In the Project Definition form, give the Simulation a name (A).
+@item
+Select a Primary Model in the drop-down box (B). Note that you can drill down into the model and make changes by double clicking on the model or pressing the ... button near the name.
+@item
+Select a Population Set in the drop-down box (C). Note that you can drill down into the population set and make changes by double clicking on the population set or pressing the ... button near the name.
+@item
+Specify the number of Simulation Steps and Repetitions (D and E). Note that the number of repetitions for distribution based population defines the population size to be generated. Otherwise it defines the number or times the simulation should be repeated for each individual in the population data table.
+@item
+To add modification rules for parameters, follow instructions below.
+@item
+Click Save. The form can now be closed, or the simulation can be run. This will trigger validity checking of the data entered and if no error message is displayed, then the data has been saved to memory. Note that the information is not yet saved to a file.
+@end enumerate
+
+
+@section Simulation Rules
+From within the Simulation Project form, select the appropriate tab. The tabs are ordered according to different stages in the simulation. Rules are defined from the bottom of the Simulation Project form (F,G,H,I).
+
+Note that rules fall into the following categories that are represented in different tabs in the form:
+
+@itemize @bullet
+@item
+Stage 0 - Initialization : This stage in simulation is applied once at the beginning of simulation. This is a good place to initialize parameters that are not defined in a population set, or to override the population set data. It is also a location where system parameters that affect the simulation can be overridden.
+@item
+Stage 1 - Pre-State Transition Rules : This stage in simulation is applied every simulation step before running the model. It is typically used to update parameter values before calculating transitions.
+@item
+Stage 2 - Execute State Transitions : This stage does not involve rules - instead it applies the transitions defined in the model.
+@item
+Stage 3 - Post-State Transition Rules : This stage in simulation is applied every simulation step after running the model. It is typically used to update parameters that are related to the new state defined by the model, for example costs associated with a new state.
+@end itemize
+
+After choosing a tab, it is possible to view the rules it contains in the rules table (L) and manipulate them as explained below.
+
+@itemize @bullet
+@item
+@strong{Parameter} (F) - parameter to be modified by the rule and get the formula value. Double clicking opens the @ref{Parameters} form to allow adding new parameters.
+@item
+@strong{Occurrence Probability} (G) - probability that the function will be assigned to the parameter. This can also be used as an if statement by assigning a Boolean expression that evaluates to 0 or 1. Double clicking opens a larger box.
+@item
+@strong{Function} (H) - computational expression, which can use parameters as variables. This expression is calculated at simulation runtime and the value evaluated will be assigned as the new value of the parameter defined in (F). Double clicking opens a larger box and for CostWizard it opens  a wizard.
+@item
+@strong{Notes} (I) - not used in computation - simply for reference. Double clicking opens a larger box.
+@end itemize
+
+To add a rule to the Simulation, click the upward arrow (J). It will then be added to the table of rules (L).
+
+To remove a rule, highlight the entry in the rules table (L) and click the downwards arrow (K). 
+
+To modify a rule, click the downwards arrow (H) to move its contents to the lower row (F), perform modifications and then click the upward arrow (J) to return the modified rule to the rules table. When the rule is moved down, the next record is highlighted. The rule will be added just before the highlighted record; i.e., back into the same position unless you choose to modify the highlighted record. The return position of the rule can be changed by highlighting a different record or it can be added at the end of the rules table if no item is highlighted.
+
+Note that it is possible to change the order of rules by highlighting different rules and using the (J),(K) arrow buttons, and this also allows copying rules.
+
+@section Cost/Quality of Life (QoL) Wizard
+When the Function (H) is CostWizard and the user double clicks the box, then the Cost/Quality of Life (QoL) Wizard is invoked. It visually shows the Cost / Quality of Life values and parameters in table that is easier to visualize and manipulate.
+The cost wizard uses the formulas described in the paper:
+Zhou H, Isaman DJ, Messinger S, Brown MB, Klein R, Brandle M, Herman WH. A computer simulation model of diabetes progression, quality of life, and cost. Diabetes Care. 2005;28(12):2856-63.
+
+@subheading Adding a Parameter to the Cost/QoL Expression
+@enumerate
+@item
+From within the Simulation Project form write a valid CostWizard expression such as CostWizard(0,1,[1],[1]) in the Function (H) then double click to lauch the CostWizard form: 
+@html
+<br><br><img src='Images/costwizard.jpg'><br><br>
+@end html
+@item
+First, select whether the wizard will be used to calculate Cost or Quality of Life by selecting one of those options in the drop-down (A). 
+@item
+Enter an initial value for this Cost or Quality of Life in the box (B).
+@item
+Select a Parameter from the drop-down in the lower left (D) and enter a value in the box on the lower right (E). Finally, click the up arrow (F) to add the rule.
+@end enumerate
+
+
+@subheading Removing a Parameter to the Cost/QoL Expression
+Within the Cost/QoL Wizard, highlight the row to be removed In (C), and click the down arrow (G).
+
+
+
+@section Running a Simulation
+In the main window, double-click the Simulation Project to be used. This opens the Simulation form. Verify the information and, when ready, click 'Run Simulation'. 
+
+Note that a simulation is influenced by several system option parameters associated with simulation and in some case also with system option parameters associated with population generation from distributions. See @ref{Parameters} for a complete list of these system option parameters.
+
+
+@section Simulation Results
+The results can be viewed within the Simulation form by clicking 'View Result'. This opens the Simulation Result form. 
+
+@html
+<br><br><img src='Images/resultviewer.jpg'><br><br>
+@end html
+
+
+
+Every time a Simulation is run, it creates a new Simulation ID for the results; therefore, it is necessary to select the appropriate result ID from the drop-down field (A) at the top of the form. The default is the most recent result.
+
+The columns of the result table report results for all the parameters associated with the simulation including, yet not limited, to the parameters defined in the population set. Within the table, the results are sorted by the Individual sort order in the population (Individual ID), then by the repetition number, then by time. In other words, the first block of result records will describe the first individual; within it the first block will describe the first repetition of the simulation; within it the first record will describe the initial condition as described by the population set. The record afterwards will describe the result of the first simulation step.
+
+Note that a Project with results is considered locked. It is impossible to modify the project and any entity associated with the project such as the Model, or the population set it uses. This protects from ambiguity between project definitions and results. To modify a project with results, you will need to create a copy of it and possibly a copy of its model/population set and possibly other parameters.
+
+@subsection Exporting Simulation Results
+Within the Simulation Result form, click the 'Export To File' (B) button. This saves the table as a CSV file, which can be opened by another spreadsheet program.
+
+@subsection Removing Results
+NOTE: these actions CANNOT BE REVERSED. Use at your own risk.
+
+To eliminate one set of results, make sure the appropriate Simulation ID is selected from the drop-down, and click the 'Delete' button (C).
+
+To remove all results, click the 'Delete All' button (D).
+
+Removing all results from a project will unlock it and will allow modification of some of its parameters.
+
+@section Copying a Project
+
+To copy a project, either click on the copy button at the top of the form or right click the mouse and select the copy record option from the pop up menu. This will create a new copy of the project that does not contain results and can be modified by the user. Note that the copied project name will have an extension with a number. This can be changed by the user.
+
+To remove all results, click the 'Delete All' button.
+
+
+
+@node States
+@chapter States
+@section Overview of States:
+States are representations of either discrete stages of a disease or of processes.
+@html
+<br><img src='Images/modeldiagram.jpg'><br>
+@end html
+
+@subsection State Classifications:
+States can be classified according to several types
+@itemize @bullet
+@item 
+@strong{Normal State} - a state in which a subject can remain or can  progress into. Normal states are marked in the model above by black boxes (rectangles).
+@item 
+@strong{Event State} - an instantaneous state; a subject entering this state will exit it in the same simulation step. Therefore all transition probabilities from an event state must sum to 1. Event states are marked in the model above by a diamond.
+@item
+@strong{Splitter States} - a division of one state into two or more parallel sub-processes. A splitter state requires a matching Joiner State in a valid model. A splitter state is represented in the diagram above by the black dot to the left of two or more arrows.
+@item
+@strong{Joiner State} - a union of two or more parallel sub-processes into one state, essentially 'canceling out' a splitter state. A Joiner state is always linked with a specific Splitter state. A joiner state is represented in the diagram above by the black dot to  the right of two or more arrows.
+@item
+@strong{Terminal State} - when a terminal state is reached, the individual cannot progress into any other state and the simulation terminates for this individual. The terminal state is marked by a red box in the diagram above.
+@item
+@strong{Process} - a set of states that represent an  entire disease process; it may contain other sub-processes within itself. Processes are marked as dashed boxes in the diagram above.
+@end itemize
+
+There must be one Main Process for each model, containing all the other states. The states can be thought of as a tree structure, where a Main Process can contain states and/or sub-processes, and a sub-process contains states and/or other sub-processes, and so on. During simulation a subject can be in several sub-processes in parallel simultaneously.
+
+The probability for progressing from a state to another during a simulation step is set by the user in @ref{Transitions}. The probability of staying is a state in a simulation step is one minus the sum of probabilities to progress from that state into the following states.
+
+@section Creating States
+To set up a new state:
+@enumerate
+@item
+From the main form, click the 'States' button on the left navigation pane.
+@c modify image to have reference letters
+@html
+<br><br><img src='Images/states.jpg'><br><br>
+@end html
+@item
+This form shows all states in the project. To add a new state, press the 'Add' button (A) on the top right of the form, and a new blank row will appear.
+@item 
+Enter the title of the state in the 'Name' box (B).
+@item
+To define a state of type:
+@itemize @minus
+@item
+@strong{Normal State}: continue to next step.
+@item
+@strong{Event State}: check box 'Is Event' (D).
+@item
+@strong{Splitter State}: check box 'Is Split' (C).
+@item
+@strong{Joiner State}: in drop-down box 'Joiner of Splitter' (K), select the name of the Splitter to be joined.
+@item
+@strong{Terminal State}: check box 'Is Terminal' (E).
+@end itemize
+
+@item
+If the state is a process/pooling state, meaning that it contains other states, make sure all the "child states" within the process have been created first (repeat from step 2). Next, select a "child state" from the drop-down box (G), and click the up arrow button (I). Repeat for all nested states. Remember, when a child state is a sub-process, all of its children are automatically included.
+
+It is important to note that the order in which the child states of a sub-process are defined determine the sort order by which transitions are displayed to the user. So they should be defined sequentially. Note that once a sub-process has been referenced, it is difficult to make changes in the system since changes in a referenced sub-processes will be blocked by the system. 
+
+@noindent
+
+@item
+When finished, close the States form to save the states. This will trigger validity checking of the data entered; if no error message is displayed, then the data has been saved to memory. Note that the information is not yet saved to a file.
+
+@end enumerate
+
+
+
+@section Removing States from a Process
+To remove a state from a process:
+@enumerate
+@item
+In the States form, identify the process that you wish to modify.
+@item
+Highlight the state you wish to remove in the Included States box (F) of that process.
+@item
+Click the down arrow (J) to remove the state. Note: the state will not be completely deleted, it will only be deleted from the process.
+@end enumerate
+
+
+@heading To permanently delete a state:
+@enumerate
+@item
+Remove the state from any processes, using steps above. If the state is itself a process, delete all reference to it from studies that use it as a main process. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+@item
+In the States form, identify the state that you wish to delete, and click the 'X' (delete) button at the left of that row. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+@end enumerate
+
+
+@section State Indicator Parameters
+
+Each State or Process has two state indicators associated with it. These state indicators are parameters that are set/reset during a simulation. 
+@itemize @bullet
+@item
+@strong{Actual State Indicator} - Uses the state name with spaces replaced by an underscore '_'. This state indicator will be set to 1 during simulation if the subject is present at this state at this simulation step.
+@item
+@strong{Entered State Indicator} - Uses the state name with spaces replaced by an underscore '_' followed by the suffix @emph{_Entered}. This state indicator will be set to 1 during simulation if the subject is entered into this state at this simulation step. This state indicator is set to 1 only if the state was entered in this simulation step and will be reset if the individual stays in this state or leaves it.
+@end itemize
+
+Sub-Process state indicators will be set to 1 if the user is in any state / sub-process within this sub-process. This means, for example, that the state indicator of the main process of a model used is simulation is always set to 1. States will generally behave the same with the exception of a simulation step where several sub-processes are joined by a joiner state. In this case, the sub-process indicators will be reset, while the state indicators will remain set until the next simulation step. This behavior allows cost calculations in this simulation step according to the states before the collapsing joiner state was reached.
+
+@node Model
+@chapter Model
+@section Definitions of a Model
+
+@strong{Model:} A specification of the disease progression created by the user within the system. The progression is defined as a set of states and processes, and of transitions between these states. Transitions hold transition probabilities that describe transition from one state to another.
+
+
+@section Working with Models
+@subsection Creating a Model
+@enumerate
+@item
+From the main window, click the 'Models' on the left navigation pane.
+@html
+<br><br><img src='Images/model.jpg'><br><br>
+@end html
+@item
+This form shows all of the studies and models in the project. To add a new study or model, press the 'Add' button (A), and a new row will appear in the table.
+@item
+Give the model a name (B).
+@item
+Click on the @ref{Transitions} button to define transitions related to the Model. Transitions of a model will hold probabilities.
+@item
+Close the form or move to the next record to save the entry. This will trigger validity checking of the data entered and if no error message is displayed, then the data has been saved to memory. Note that the information is not yet saved to a file.
+@end enumerate
+
+@subsection Removing a Model
+Open the Model form. Identify the row to be removed, and click the 'X' (delete) button for that row. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+	
+@node Transitions
+@chapter Transitions
+Transitions connect states/processes within a model. Below, they are indicated by solid arrows and indicate the paths that subjects can take through the model and the probabilities to take a path in a certain time step.
+@html
+<br><br><img src='Images/modeldiagram.jpg'><br><br>
+@end html
+
+@section Creating Transitions 
+@enumerate
+@item
+From the main window, click 'Transitions' on the left navigation pane. This form can also be reached from a Model form by selecting the transition button for a certain Model.
+@html
+<br><br><img src='Images/transitionsmodel.jpg'><br><br>
+@end html
+@item
+This form shows the transitions for a given Model. Select the Model to be used from the drop-down box (A). Note: if the Transitions page was opened from the Model page, that Model will be selected and the combo box will be grayed out.
+@item
+Click the 'Add' button (B).
+@item
+Select the origin state for the transition (D).
+@item
+Select the destination state for the transition (E).
+@item
+Enter the transition probability in the box (F) as an expression, which may or may not include Parameters and State Indicators.
+@item
+It is recommended you add notes regarding the transition in (J). It is a good idea to write down the source of the information in the notes to improve model traceability.
+@item
+Close the form to save the entry.
+@end enumerate 
+
+
+@section Removing Transitions
+Identify the row that will be removed, and click the 'X' button (C) in that row. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+
+@section Copying Transitions from Another Model
+It may be desirable to build or modify a model by copying transition information from another model. The systems support this sort of copy using the following steps:
+
+@enumerate
+@item
+Initiate the transitions copy by pressing the @strong{Copy From Model} button (K). The following form will appear:
+@html
+<br><br><img src='Images/copytransitions.jpg'><br><br>
+@end html
+
+@item
+Select the model you wish to copy the transitions from by clicking on it.
+@item
+Press @strong{OK} to initiate the copy or @strong{Cancel} to abort the copy operation. 
+@item
+If the operation was not aborted, the system will bring a message indicating how many transitions were successfully copied. Dismiss this dialog box by pressing @strong{OK} and the transitions form will display the copied transitions.
+@end enumerate
+
+Note that this operation is useful while creating variations of a specific model that change the state/sub-process hierarchy. The copy transitions operation will try to copy all the transitions from the source model to the destination model. However, some transitions may not be copied as these may violate validation rules. Here are examples of transitions that will not be copied:
+
+@itemize @bullet
+@item
+Transitions that are already defined by states in the destination model will not be copied from the source model.
+@item
+Transitions where at least one of the states does not exist in the destination Model will not be copied.
+@item
+Transitions that will violate the sub-process hierarchy will not be copied. For example if the to/from states are not in the same sub-process in the destination model.
+@end itemize
+
+
+@node Populations
+@chapter Populations
+A population (also referred to as population set or data set) represents a pool of subjects and their characteristics. A populations can be either input as data, or by specifying a distribution (to be used for randomly generating population sets).
+
+@section Creating Populations
+@enumerate
+@item
+From the main form, click the 'Populations' button on the left-hand navigation pane. Note that this form can also be accessed by drilling down from the project form.
+@html
+<br><br><img src='Images/populations.jpg'><br><br>
+@end html
+@item
+This form shows the population groups. Click the 'Add' button (A), and a new row will appear.
+@item
+Enter the name for the population set in the box (C). It is also recommended that you enter notes in (F) and a reference to the source of the information in (G) since this improves tractability and improves the modeling work.
+@item
+Click the 'Data' button (E) to define the population characteristics and associated data/distributions. The following form will appear.
+@html
+<br><br><img src='Images/popdata.jpg'><br><br>
+@end html
+@item
+To input a population as data: Add a characteristic by selecting a parameter from the table in the lower left (D) and Click the up arrow (C). To remove a row, highlight it in (A), then click the down arrow (B). After all the population characteristics have been added, press the Data Tab (G) and fill in data for the chosen parameters for each individual. The data can also be imported from a file using the Import button - to view or change the imported data, press the data tab (G).
+@item
+To specify a population by its distribution: Add a characteristic by selecting a parameter from the table in the lower left (D). Additionally, define the distribution expression in the text box (E), or select a predefined expression parameter from the table in the lower right (F) and it will appear in (E). Click the up arrow (B) to add a row that combines the distribution and the parameter. To remove a row from (A) highlight it, then click the down arrow (C).
+@end enumerate
+
+
+
+@section Removing an Entire Population
+Identify the population, and click the 'X' (delete) button. This may require deletion of other entities and may be difficult if the deletion candidate was extensively used.
+
+@section Generating new population data based on distributions
+The system supports the automatic generation of a population set defined by distributions of its characteristics. This feature can be used to automatically generate population sets in the system according to distributions provided in the literature. To perform these tasks, the following steps should be taken:
+@enumerate
+@item
+Follow the steps defined above in @strong{Creating Populations} to define a population set defined by distributions that were defined in the previous step.
+@item
+Select the desired distribution based population. The population set should read "Distribution based" in the Definition Type field (D).
+@item
+Right click the mouse and a pop up menu will appear. Select the entry "Regenerate New Population Data from a Distribution". 
+@item
+A new input dialog window will appear and will ask for the population size to be generated. Enter the desired number and press OK.
+@item
+The system will generate a new population set filled with data that was generated according to the distributions defined in the originally selected distribution population set. The system will place this population set at the end of the list and will focus on it so the user can modify it. 
+@end enumerate
+
+Note that generation of a data based population from distributions is controlled by multiple system option parameters that are listed in @ref{Parameters}.
+
+Also note that during generation of a population from distributions it is possible to have interdependent parameters that influence each other. For example, Blood Pressure may be a function of Age and Weight can be a function of Age and Height. The system will resolve these interdependencies upon generation as long as there are no circular conflicts such as A depends of B that depends back on A. Also note that parameter bounds are enforced during population generation and may skew a distribution. 
+
+
+@node Parameters
+@chapter Parameters
+Parameters are used for various purposes by the system: Parameters that will change during simulation or define a demographic characteristic of a subject, they also can be defined by a user-specified expression/function and then used in subsequent functions as a symbol/shorthand for the user specified function; i.e., they may replace complex mathematical expressions or random generators in multiple functions.
+
+@section Parameter Types
+The following parameter types can be defined by the system. 
+@itemize @bullet
+@item
+@strong{Number} - accepts any floating point number such as 1.23345 or -0.123 or 1.2e3, subject to specified limits. 
+@item
+@strong{Integer} - accepts integers, such as 1,2,3, the system will raise an error if a non integer is assigned to the parameter during simulation, subject to specified limits. 
+@item
+@strong{Expression} - gives a name for an expression/function that can be used later during calculations. Each time the function name is used, it will be replaced by the expression that it represents. For example, a function that increases age may be called AgeIncrease and hold the function Age+1. When a function parameter is encountered in an expression, it is replaced by its contents during evaluation. Note that if this function includes a random number generator, a different value of the generator will be used each time the expression/function is invoked. Consider for example a parameter called CappedGaussian that generates random numbers using a Gaussian distribution with mean=0 and STD =1 that is restricted to the range from  -3 to +3. This can be done by the user using the formula Min(Max(Gaussian(0,1),-3),3) to define this function type parameter. After definition in the parameter form, CappedGaussian can be used in any expression in the system during simulation or population generation from distributions. Whenever this parameter is encountered during simulation, a new random number will be generated on the fly; that is, reusing CappedGaussian will generate a new random number rather than return the same value. This is different than most other parameter types that generally hold values that are assigned to them. Note that bounds can still be defined to an expression parameter.
+@item
+@strong{System Options} - These names are set by the system by default; their values can be modified by the user to change functionality of the system. Here is a short description of these parameters by categories of influence:
+
+@itemize @bullet
+	@itemize @bullet
+		@item
+		ValidateDataInRuntime: A number that defines the level of validity checking of expressions during simulation and population generation from distributions.  The following levels are supported: 
+		@itemize @bullet
+			@item
+			0: No validity checking. 
+			@item
+			1 or greater: Check that probabilities are within 0 and 1 and check that these sum to 1 when leaving event states and joiner states, and check that a value assigned to a parameter fits the validation rules defined for it. 
+			@item
+			2 or greater: Check that function parameter validity rules are honored during calculation of expressions - this is the default option. 
+			@item
+			3 or greater: Impose extra redundant validation checks on all phases of calculation.
+		@end itemize
+	@end itemize
+
+	@item
+	NumberOfErrorsConsideredAsWarningsForSimulation: The number of times the system will accept parameter validity violation errors during simulation as warnings and will not stop simulation. When this number of errors is reached, the system will raise a fatal error to the user and stop simulation. The error messages can be seen on the console window.
+
+	@item
+	NumberOfTriesToRecalculateSimulationStep: The number of times that the system will force recalculation of the same time step if an error was raised during this time step. If unsuccessful after this number of recalculations then force recalculation of the entire individual from the first time step.
+
+	@item
+	NumberOfTriesToRecalculateSimulationOfIndividualFromStart: The number of times an individual will be recalculated from start in case errors appeared during simulation that forced restarting calculations. If this number of tries is reached, a fatal error is raised that stops simulation.
+
+	@item
+	SystemPrecisionForProbabilityBoundCheck: This is a very small tolerance number that defines how accurate will be fatal error checks for probabilities if ValidateDataInRuntime>=1. This number allows overlooking machine precision issues. 
+
+	@item
+	RepairPopulation: This integer defines the level the system will try to correct a population set to fit a model before simulation. The following levels are supported:
+
+	@itemize @bullet
+		@item
+		0: No repairs are made and errors are generated. This forces the user to match population set parameters and model parameters very carefully, including process names. 
+		@item
+		1 or Greater: The system will attempt to figure out values for process state indicators and other states in the process according to the model structure and according to state indicator values defined in the population set. 
+		@item
+		10 or Greater: The system will remove individuals with empty values in the population data before simulation, and therefore avoid generating an error that will stop the simulation process.
+	@end itemize
+
+	@item
+	VerboseLevel: Defines how much information to output during simulation. 
+
+	@itemize @bullet
+		@item
+		Here are supported levels for output from population generation from distributions:
+		@itemize @bullet
+		@item
+		3 or greater: Record random seed number on file that will be created at the start of population generation from distributions.
+		@item
+		7 or greater: Record generated population set on file. This would be a pickled python list object.
+		@item
+		10 or greater: Print an announcement each time a new individual starts generation. Also print a generation summary at the end of of population generation from distributions.
+		@end itemize
+	@end itemize
+
+	@item
+	Here are supported levels for output from bridging population set and model definitions before simulation:
+
+	@itemize @bullet
+		@item
+		1 or greater: Print summary of the bridge process.
+		@item
+		5 or greater: Print a message if deleting a record due to a missing value.
+		@item
+		10 or greater: Show each process set by the system due to a child state.
+	@end itemize
+
+	@item
+		Here are supported levels for output from simulation:
+		@itemize @bullet
+			@item
+			3 or greater: Record random seed number on file that will be created at the start of simulation.
+			@item
+			7 or greater: Record simulation results set on file.
+			@item
+			10 or greater: Print an announcement each time a new individual starts simulation. Also print a simulation summary at the end of simulation.
+			@item
+			20 or greater: Print an announcement each time an individual starts a new repetition during simulation. Also print a message if recalculation of a repetition was forced due to error.
+			@item
+			30 or greater: Print an announcement each time step during simulation. Also print a message if recalculation of a time step was forced due to error.
+			@item
+			40 or greater: Print an announcement for each state in the State Processing Queue (SPQ). This is highly advanced and requires deep understanding of the system.
+		@end itemize
+
+	@item
+	RandomSeed: Defines a random seed to start both population generation and simulation. NaN is used to indicate that system time will be used as a random seed - essentially making numbers different each simulation.
+
+	@item
+	NumberOfErrorsConsideredAsWarningsForPopulationGeneration: The number of times the system will accept boundary violation errors as warnings and will not stop during population generation from distributions. When this number or errors is reached, the system will raise a fatal error to the user. Error messages can be found on the console window.
+
+	@item
+	NumberOfTriesToRecalculateIndividualDuringPopulationGeneration: The number of time the system will try to recalculate the same individual if a non fatal error is encountered during calculation of that individual. Once this number is reached a fatal error will be raised and generation of data from distributions will stop.
+
+@end itemize
+
+
+@item
+@strong{State Indicator} - These cannot be changed by the user, but can be used in expressions and other system functions. For each state created in the system, there will be two State Indicator parameters associated with it - the actual state and the entered state indicator - see @ref{States}.  The validation rule for this type of parameter is Integer [0,1].
+@end itemize
+
+
+When defining a parameter the user can define additional validation rule parameters of the type [min, max] that will define bounds for this parameter. For example a user who wishes to define a Boolean parameter, should define an integer with the validation rule parameters of [0,1]. Another example is a user who wishes to define a positive integer should define a parameter of the type integer with the validation rule parameter of [0,Inf]. By default and unless specifically requested otherwise by the user by changing the appropriate system options, validation rule parameters are checked during simulation at each step to verify values are within the allowed ranges. 
+
+@section Working with Parameters
+@subheading Creating Parameters
+@enumerate
+@item
+From the main form, click the 'Parameters' button on the left-hand navigation panel. The following form will appear:
+@html
+<br><br><img src='Images/parameter_filter.jpg'><br><br>
+@end html
+@item
+To see all parameters, make sure 'ALL User Accessible' is selected, and press 'OK'. You can also decide to check only the parameter types of interest to view instead seeing all parameters. Then the parameter form will appear:
+@html
+<br><br><img src='Images/parameters.jpg'><br><br>
+@end html
+@item
+This form displays the Parameter details. To add a new Parameter, click the 'Add' button (A), and a blank row will appear.
+@item
+Enter the Parameter name in the box (C).
+@item
+Pick the Parameter Type from the drop-down (D).
+@item
+For an Expression or System Option enter a Formula in the box (E). An expression defined in the formula defines a substitution expression that will be calculated on the fly, whenever encountered, and may receive different values if it includes a random number generator.
+@item
+Optionally Enter the Validation Rule Parameters in the box (G). A Validation Rule will define the range of values the parameter may have within brackets using the format [MinAllowed,MaxAllowed]
+@item
+Close the form or move to the next record to save the entry. This will trigger validity checking of the data entered and if no error message is displayed, then the data has been saved to memory. Note that the information is not yet saved to a file.
+@end enumerate
+
+Note that the parameters form can accessed from other forms by double clicking a field that requires a parameter. This allows creating parameters on the fly while working from another form.
+
+
+@node Expressions
+@chapter Expressions
+The system uses expressions in parameters and in simulation rules. Expressions include mathematical and logical formulas. Expressions can be a simple as 1+2; they can use another parameter as in Age +1; They can be complex expressions using mathematical functions as in Exp(-Age); They can even use if statements as in Iif(Gr(Age+1,50),1,0); These expressions can also represent tables as in Table(1,3,0,0.5,1,Age,NaN,20,30,40) . These formulas may contain, as literals, parameter names (including parameters that hold values, parameters that specify user defined functions, state indicator names, and some reserved words), mathematical operators, system built in functions. Below is a list of allowed operators:
+
+@section Supported arithmetic functions 
+@itemize @bullet
+@item	
+@strong{+} : addition operator
+@item	
+@strong{-} : negative/subtraction operator
+@item	
+@strong{*} : multiplication operator
+@item	
+@strong{/} : division operator (note that integers will be treated as floating point numbers) 
+@item	
+@strong{**} : power operator 
+@end itemize
+
+@section Other supported literals
+@itemize @bullet
+@item	
+@strong{()} : Parenthesis to determine the order of the calculation
+@item	
+@strong{[,]} : brackets enclosing comma separated values describe lists. Note that this type of expression is limited for use only is special cases.
+@end itemize
+
+@section A list of comparison operators
+@itemize @bullet
+@item	
+@strong{Eq(x1,x2)}: will return 1 if x1=x2 and 0 otherwise
+@item	
+@strong{Ne(x1,x2)}: will return 1 if x1<>x2 and 0 otherwise
+@item	
+@strong{Gr(x1,x2)}: will return 1 if x1>x2 and 0 otherwise
+@item	
+@strong{Ge(x1,x2)}: will return 1 if x1>=x2 and 0 otherwise
+@item	
+@strong{Ls(x1,x2)}: will return 1 if x1<x2 and 0 otherwise
+@item	
+@strong{Le(x1,x2)}: will return 1 if x1<=x2 and 0 otherwise
+@end itemize
+
+@section A list of Boolean operators
+In the following Boolean operators, the results are either 1 or 0.  Any argument that not zero is considered be true and zero is treated as false.
+@itemize @bullet
+@item	
+@strong{Or(x1,x2,x3…)}: will perform a Boolean OR operation on two or more inputs
+@item	
+@strong{And(x1,x2,x3…)}: will perform a Boolean AND operation on two or more inputs
+@item	
+@strong{Not(x)}: will perform a Boolean Not operation on a single input
+@item	
+@strong{IsTrue(x)}: will return 1 for a numeric x that is not 0. Will return 0 otherwise. 
+@end itemize
+
+@section A list of special math related functions and symbols
+Note that these may be platform dependent.  Boolean operators treat NaN (Not a Number) as false as well as any other non-number type such as a vector/matrix.
+@itemize @bullet
+@item	
+@strong{Inf, inf}: will be recognized by the system as infinite. This symbol should not to be used in mathematical calculations as it may generate error. It can be used for bound checks for parameters.
+@item	
+@strong{NaN, nan}: will be recognized by the system as not a number. Note that comparison of NaN to any number including NaN will return False. Arithmetic operations using NaN produce NaN and may raise errors and therefore should be avoided. NaN has a special meaning when defining tables.
+@item	
+@strong{IsInvalidNumber(x)}: will return 1 for x=NaN or for a non numeric type such as a vector , 0 otherwise
+@item	
+@strong{IsInfiniteNumber(x)}: will return 1 for x=-Inf or x=Inf, 0 otherwise
+@item	
+@strong{IsFiniteNumber(x)}: will return 1 if x is a finite number, 0 if x is not a valid number or an Infinite number
+@end itemize
+
+@section Mathematical functions
+@itemize @bullet
+@item	
+@strong{Exp(x)}: exponential
+@item	
+@strong{Log(x,n)}: logarithm of base n
+@item	
+@strong{Ln(x)}: natural logarithm 
+@item	
+@strong{Log10(x)}: decimal logarithm 
+@item	
+@strong{Pow(x,n)}: power operator similar to ** 
+@item	
+@strong{Sqrt(x)}: square root operator similar to **0.5
+@item	
+@strong{Pi()}: the mathematical constant approximately equal to 3.14159 
+@end itemize
+
+@section Other functions
+@itemize @bullet
+@item	
+@strong{Mod (x,n)}: Modulus of base n
+@item	
+@strong{Abs(x)}: Absolute value of x
+@item	
+@strong{Floor(x)}: closest integer equal to or below x 
+@item	
+@strong{Ceil(x)}: closest integer equal to or above x
+@item	
+@strong{Max(a1,a2,a3…)}: the maximum value in the list
+@item	
+@strong{Min(b1,b2,b3…)}: the minimum value in the list
+@end itemize
+
+
+@section Statistical Distributions - Random number generators 
+These random functions can be used to define the Distribution of parameters: 
+@itemize @bullet
+@item	
+@strong{Bernoulli(p)} : produces a 1 with probability p - somewhat similar to a coin flip.
+@item	
+@strong{Binomial(n,p)} : the number of successes of n bernoulli tests with probability p - somewhat similar to rolling n dice
+@item	
+@strong{Geometric(p)} : number of bernoulli tests to achieve the first sccesss
+@item	
+@strong{Uniform(a,b)} : the arguments a and b define the lower and upper limits of the interval 
+@item	
+@strong{Gaussian(mean,std)} : normal distribution with mean and std
+@end itemize
+
+
+@section Control and Data Access
+@itemize @bullet
+@item	
+@strong{Iif(Statement,TrueResult,FalseResult)}: Returns TrueResult if Statement is not 0, FalseResult if Statement is 0.
+@item	
+@strong{Table (TableParameters)}: A multi-dimensional table. TableParameters are provided as a string of comma-separated values. The Table Input argument pattern is: D,N_1,N_2,...,N_D,V_1...V_(N1*N2*...*ND),M_1,R_1_0...R_1_(N_1)......M_D,R_D_0...R_D_(N_D).  Where D defines the number of dimensions, N_i the dimension size for dimension i, V_i table values, M_i dimension names, R_i_j, the j range value definition item for dimension i . NaN value in R_i_0 means the dimension is discrete rather than continuous and the range bounds provided later represent values rather than lower and upper bounds associated with cells. For example Table(2,2,3,1,2,3,4,5,6, Gender, NaN,0,1, Age,0,30,60,120) defines a D=2 dimensional table with the dimensions M_1=Gender and M_2=Age. The levels of each dimension are defined by cutpoints which represent the lower and upper bounds for each interval; > lower bound and <= upper bound.  When the dimension is categorical, such as Gender, the first cutpoint should be NaN, followed by the values of the categories.  When the dimension is continuous, the first cutpoint is less than the minimum and the last cutpoint is >= the maximum.  In our example, . the Gender Dimension has N_1 =2 categories with the discrete values of R_1_0 =NaN,  R_1_1 = 0 and R_1_2 = 1, and the Age dimension has N_2=3 categories defined by  R_2_0= 0<Age<=30= R_2_1, R_2_1= 30<Age<=60= R_2_2, R_2_2= 60<Age<=120= R_2_3.The values that the table holds are V1...V6=1,2,3,4,5,6. as can be seen in the following table: 
+@html
+<table width="200" border="1">
+  <tr>
+    <th scope="col">&nbsp;</th>
+    <th scope="col">0&lt;Age&lt;=30</th>
+    <th scope="col">30&lt;Age&lt;=60</th>
+    <th scope="col">60&lt;Age&lt;=120</th>
+  </tr>
+  <tr>
+    <th scope="row">Gender=0</th>
+    <td><div align="center">1</div></td>
+    <td><div align="center">2</div></td>
+    <td><div align="center">3</div></td>
+  </tr>
+  <tr>
+    <th scope="row">Gender=1</th>
+    <td><div align="center">4</div></td>
+    <td><div align="center">5</div></td>
+    <td><div align="center">6</div></td>
+  </tr>
+</table>
+@end html
+@end itemize
+
+@section Application specific
+@itemize @bullet
+@item	
+@strong{CostWizard (FunctionType, InitialValue, CoefficientVector, ValuesVector)}: The function calculates costs or QoL accurding to FunctionType: If FunctionType=0, costs are calculated if FunctionType=1, Quality of life is calculated. Note that CoefficientVector and ValuesVector are vectors of the same size. The system returns an error if there is an incompatibility between parameters and coefficients or if the FunctionType is not 0 or 1. The cost/QoL function is calculated according to the formula presented in Zhou H, Isaman DJ, Messinger S, Brown MB, Klein R, Brandle M, Herman WH. A computer simulation model of diabetes progression, quality of life, and cost. Diabetes Care. 2005;28(12):2856-63. Note that the values associated with the cost/QoL can be changed by the user.
+@end itemize
+
+Note that missing values are not supported by the system. An exception is population data upload in which case missing data values are ignored by default in simulation.
+
+@node Reports
+@chapter Reports
+The reports option provides users with the ability to view the information in textual form. Reports can include information about parameters, states, studies/models, transitions, population sets, projects, and results. 
+
+@section Generating a Report
+Reports are generated in the context of the topmost open window. For example a report generated from the Model window will generate a report describing a Model and a report generated from the project window will describe the project.
+
+To generate a report for a single entry in any form:
+@enumerate
+@item
+Select the row/record of interest.
+@item
+From the menu bar at the top of the form, select @strong{File}.
+@item
+From the @strong{File} menu select @strong{Single Report}.
+@end enumerate
+
+To generate a report regarding all the records in the form: 
+@enumerate
+@item
+From the menu bar at the top of the form, select @strong{File}.
+@item
+From the @strong{File} menu select @strong{Report All}.
+@end enumerate
+
+Either of these actions will open the Report Viewer form with the generated report:
+@html
+<br><br><img src='Images/reportviewer.jpg'><br><br>
+@end html
+
+The user can view the report in the text area (B). Note that the reports are usually very wide and may not fit the screen and using the scroll bars to view the results may be necessary. 
+
+
+@section Saving the Report File
+To save the report as text:
+@enumerate
+@item
+From the menu bar at the top of the Report viewer form, select @strong{File}.
+@item
+From the File menu select Save to save under a default file name. Select Save As to allow the user to modify filename/path.
+@end enumerate
+
+Also note that portions of the report can be highlighted and copied into the clipboard to be pasted into other applications.
+
+
+@section Changing Report Options 
+The report that first appears uses default options defined by the system. The context/formatting of most reports can be controlled by the user. Specifically the simulation results report is very extensive and has many options, whereas other reports use the Detail Level option.
+
+To change report options, from the report viewer form select the Report Option tab (A). The following options form will replace the result tab:
+@html
+<br><br><img src='Images/reportvieweroptions.jpg'><br><br>
+@end html
+
+The user can now change report options using according to the following instructions:
+@enumerate
+
+@item
+Choose the appropriate @strong{Details Level} from the drop box (A), or leave blank for a default of 0. This report option affects the reports for most entities. The higher the number the more details will be provided on the entity. In some cases, higher details level will drill down into other entities associated with the reported entity. Higher Detail Level will indicate more levels of drilling down. 
+
+@item
+Choose the appropriate @strong{Show Dependency} from the drop box (B), or leave blank for a default of @emph{No}. This report option affects the reports for most entities. If @emph{Yes} is selected, the  report will contain additional information regarding dependencies between entities, such as states and the associated state indicators etc. In addition, some expressions will be explained in a more readable fashion to the user.
+
+@item
+Define an appropriate Summary Intervals (C) for a simulation results report, or leave blank for the default. This option defines a list of simulation step intervals for summary statistics in the report enclosed in brackets [a,b,c…]. Summary interval members can be defined as an integer such as 2 meaning a summary will be generated for every 2 simulation steps. Alternatively, a summary interval member can be specified by a nested set of [] in a [min,max] format such as [1,3] meaning the interval starts at simulation step 1 and ends at simulation step 3. The number 0 refers to the initial condition. Also if the number 0 is defined as a single member at the beginning of the list, this means simulation steps will be counted from the initial state rather from the first simulation step. Note the difference between 0 as a number compared to the range [0,0]. The first one means that counting time intervals starts at 0 instead or at the first simulation step, whereas the latter means to report the initial condition as a summary interval. Finally, the maximal interval of [0/1, Max] is always automatically included by the system at the end of the list. Where Max stands for the maximal number of simulation steps as defined in the project and 0/1 is dictated by the appearance of 0 in the list. If no specification is made, then the following default results are presented: each cycle, sequential five-cycle interval, sequential 10-cycle intervals and a summary of the entire range of cycles. To help understand these concepts, here are a few examples: 
+@itemize @bullet
+@item
+When there are two nonzero entries [a,b], then first each sequential 'a' cycles will be summarized followed by each sequential 'b' cycles. For example, the list [1,2] will mean generating summaries for every year starting at 1, i.e. equivalent to [1,1],[2,2],[3,3] etc. and then generating all summary intervals 2 years apart, i.e. equivalent to [1,2],[3,4],[4,6] etc. Finally the system will add the overall interval of [1, Max].
+@item
+When an interval is embedded in a second set of [] such as [[a,b]], then the interval of cycle 'a' to 'b' will be summarized. For example, the list [[1,2]] will generate a single summary interval [1,2] and the system will add the overall interval of [1, Max].
+@item
+When zero is specified, it modifies the summaries to start from cycle zero (the initial state. For example, the list [0,2] will generate the following summary intervals two years apart [0,1], [2,3],[4,5] etc. and then the system will add the overall interval of [0, Max].
+@item
+The list [[0,2]] will generate a single summary interval [0,2] and the system will add the overall interval of [1, Max].
+@item
+The number 1 alone will be recognized by the system as [1] meaning a summary interval for each simulation step i.e. [1,1] ,[2,2],[3,3] etc. and  the system will add the overall interval of [1, Max].
+@end itemize
+@item
+Define appropriate @strong{Float Column Number Format} (D) and @strong{Integer Column Number Format} (E) for a report of the simulation results, or leave blank for the default. If one of these options is defined, the other one is required as well. These two options define how numbers will look at the summary section of the report. The format is based on the format available in the Python Language as defined in
+@html
+<a href='http://docs.python.org/lib/typesseq-strings.html'> http://docs.python.org/lib/typesseq-strings.html </a> 
+@end html 
+@item
+Define an appropriate @strong{Column Separator} (F) for a simulation results report or leave blank for the default of '|'. This allows the user to define the character that separates columns. This is useful when importing the report text to a spreadsheet as this allows automatic separation of columns. 
+@item
+Define columns of interest to display in the simulation results report. This involves several operations as follows:
+@enumerate
+@item
+Select a column/group from the candidate group list (G). Column names are parameters that exist in the result set and can be selected by name. This includes all state indicators of all types and all parameters defined in the initial population set and in the simulation rules. For ease of selecting entire groups of columns, these parameters are grouped by the system in several groups such as <Number> or <State Indicator>. A user can select a column or a group to allow flexibility. Note that the Group <Heading> has special treatment as it creates the header for the report.
+
+
+@item
+Select the calculation method to apply to the column from the drop box (H) or leave it as Auto Detect. In most cases the system will be able to deduce the desired calculation method from the list, which is the default. Yet the user can force a specific calculation method overriding the system auto detection mechanism. Possible calculation methods are:
+
+@itemize @bullet
+@item
+@strong{Auto Detect}: System automatically selects the calculation method from the list below according to the parameter characteristics and its use in the project. If this option is selected and there is ambiguity as to the calculation method required, the system will place an * in the report on this column and place a warning at the end of the report. A user should then verify that the calculation is proper and if needed manually select the calculation method for this column.
+@item
+@strong{@emph{Func} Over All Records} - will apply @emph{Func} to values from all the records in the summary interval. When @emph{Func}=Sum, the system will sum the column values for all the records in the summary interval. It is useful to count the number of occurrences of a state in a population in a given summary interval. This is the default option for Booleans that are not demographics, e.g. State indicators. When @emph{Func}=Average, the system will average the column values for all the records in the summary interval. It is useful to find the average value of a covariate changing during simulation in a given summary interval. It is equivalent to dividing the sum over all records by the total number of all records in the interval. This is the default option for non-Booleans that are not demographics, i.e. may be affected during the simulation. When @emph{Func} = STD, sample standard deviation is calculated using the method of provisional means. When @emph{Func} = Min or when @emph{Func} = Max then the minimal or maximal value of all records in the interval is reported. @emph{Func} = Valid Count will return the non NaN count.
+@item
+@strong{@emph{Func} Over Demographics} - will apply @emph{Func} to values in records entering the summary interval. When @emph{Func}=Sum, the system will sum the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographics values should not change during simulation steps. This option can be used to represent the number of occurrences of a state in a population entering the summary interval. This is the default option for Booleans that are unaffected by the simulation i.e. non state indicators not in the affected list of the simulation project. When @emph{Func} = Average, the system will average the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographic values should not change during simulation steps. This option can be used to represent the average of a covariate in a population entering the summary interval. It is equivalent to dividing the sum over demographics by the total number of records entering the interval. This is the default option for non-Boolean parameters that are in the affected list of the simulation. When @emph{Func} = STD, sample standard deviation is calculated using the method of provisional means. When @emph{Func} = Min or when @emph{Func} = Max then the minimal/maximal value of demographics records entering the interval is reported. @emph{Func} = Valid Count will return the non NaN count.
+@item
+@strong{@emph{Func} Over Last Observations Carried Forward} - will apply @emph{Func} to the last record of each individual. The max time record, i.e. either the record in the year of termination, or the last year record, is considered. Note that every individual will have exactly one record for each repetition. @emph{Func} can be Sum, Average, STD, Min, Max, Valid Count.
+@item
+@strong{Record Count} - This calculation option will count the number of records within the summary interval. It is useful to show the denominator used for Average Over All Records defined above, in case it is of interest to the user.
+@item
+@strong{Demographic count} - This calculation option will count the number of records within the first year of a summary interval. In other words it will return the number of individuals entering the summary interval. It is useful to show the denominator used for Average Over Demographics defined above, in case it is of interest to the user.
+@item
+@strong{Interval Start}: This option will return the simulation step number defining the summary interval start. This option ignores the column numbers and will work with any column the same. Note that this is used by the system in the <Header> column group and in most cases will not be needed for the user again. 
+@item
+@strong{Interval End}: Similar to @strong{Interval Start} above with the difference that it returns the last simulation step number in the summary interval.
+@item
+@strong{Interval Length}: Similar to @strong{Interval Start} above with the difference that it returns the number of simulation steps represented in the summary interval such that @strong{Interval Length = Interval End - Interval Start +1}
+@item
+@strong{No Summary} - No summary is returned for the column. It can be used to create spaces in a report.
+@end itemize
+
+@item
+Optionally select an alternative label for the column name (I) or leave blank. By Default blank means that the column name will not change in the report. 
+
+@item
+Add the column/group, calculation method, and label to the selected columns list (L) by pressing the button (J). The column will be added before the column selected in the selected column list (L), if none were selected, it will be added at the end. Pressing the x button (K) will remove a selected column from the selected columns list (L). Note that the order that appears in the selected columns list (L) will allow users to control the order the columns appear in the report as well as their calculation methods. Note that the same column may appear several times with different calculation methods associated to it. Note that by default the selected column list is blank, meaning all columns defined in the simulation with automatic calculation, with a default header group at the start of the report.
+
+@item
+Field (M) provides rules for stratification of simulation results. If left empty, results will be reported without stratification. If this field contains a valid table expression, the results will be presented stratified by the dimensions and the ranges that describe the table cells. The value of the table cells must be one of the following:
+@enumerate 0 
+@item
+No stratification
+@item
+Stratification by population demographics
+@item
+Stratification by entry demographics to time interval
+@item
+Stratification by record
+@end enumerate
+
+@end enumerate
+
+@item
+When all options have been defined by the user, press on the Generate Report button (N) to regenerate the report. The system will then automatically bring back the Report Text tab with the new report. Note that for some cases, the regeneration of the report may take some time. 
+
+@end enumerate
+
+
+@node Utilities
+@chapter Utilities
+
+With the details you already have, you should be able to conduct complicated simulation scenarios with various models and population sets. You are also able to produce reports to help analyze the simulations. Yet sometimes there is a need to get beyond the results of a single simulation, or there is a need to take the data outside the GUI. To support such manipulation, the system offers some python utilities that arrive with the system. The following text will explore these utilities and their usefulness by subject.
+
+The utilities are python scripts that allow the user to perform special advanced tasks.  Here is a brief list of these scripts:
+
+@itemize @bullet
+@item
+@file{ConvertDataToCode.py} : A utility that converts @file{zip} file generated by the system to a python script.
+@item
+@file{MultiRunSimulation.py} : A utility that allows running the same simulation multiple times outside the GUI. Useful for parallel processing on multiple computers. It can be used well with @file{MultiRunSimulationStatisticsAsCSV.py} to generate a summary statistics for repetitions.
+@item
+@file{MultiRunCombinedReport.py} : A utility that allows combining results from several runs of the same model and population set into a single report. The use of this utility allows running multiple simulations in parallel and combining their results.
+@item
+@file{MultiRunSimulationStatisticsAsCSV.py} : A utility that generates CSV summary reports from several runs of the same project. Combines well with @file{MultiRunSimulation.py} that generates input files for this CSV report. The output consists of mean,STD,median,min,max of report columns with regard to different simulation results.
+@item
+@file{MultiRunExportResultsAsCSV.py} : A utility that generates a CSV file containing the data from a set of result files.
+@item
+@file{AssembleReportCSV.py} : A utility that assembles a CSV file from multiple CSV files generated by @file{MultiRunExportResultsAsCSV.py}
+@item
+@file{CreatePlotsFromCSV.py} : A utility that constructs plots in a PDF file. The plot data is collected from a CSV file assembled by @file{AssembleReportCSV.py}
+@item
+@file{CodeFromDocAndSpreadsheet.py} : A python script that converts rule text from a word document and CSV file from a spreadsheet with populations into code and a model file. This script was created to handle a specific format used with the Michigan model documentation. This file relies on a very specific format of documents and remains undocumented and should be treated as an example for programmers that want to extend the system.
+@end itemize
+
+
+@section Invoking Utility Scripts
+
+All these scripts are invoked using a similar manner. Therefore for explanation purposes we will refer to the script name, including the .py extension as: @file{PythonScript.py}. Whenever the name @file{PythonScript.py} is encountered, it should be replaced with the script name of interest.
+
+The above scripts all start from the command prompt / terminal window. In Linux you can open a terminal window. In windows you can select the command prompt under the program group called accessories when you click on the windows start button on the lower left corner.  On the windows start menu, you can also select run and then type @code{cmd} and then press Enter to launch the command prompt.
+
+Once you opened the terminal, you will have to change directory to your working directory by typing:
+
+@code{cd WorkingDirectoryFullPath}
+
+Recall that your working directory is the directory you installed IEST and @code{WorkingDirectoryFullPath} means the full path name. To write the full directory name you can use the tab completion feature, or use drag and drop of a file into the command prompt window in windows and make corrections to the name that appears. Note that the directory separator on PC is the backslash character \ while on Linux it is a slash character / .
+
+Once you are in the correct directory, you can invoke the script  @file{PythonScript.py} by typing:
+
+@code{python PythonScript.py}
+
+The invoked script will show you usage information and list its input variables. The program will then ask you to enter input through the console, each time prompting a single input. You can now follow the questions to run the script.
+
+It is also possible to invoke the scripts with all their inputs from the command line and avoid asking the user for additional input. To do this, just add the input values after the script name:
+
+@code{python PythonScript.py InputVariable1 InputVariable2 ...}
+
+Note that each script will have different requests for input variables. And that in many cases, there may be defaults for some variables making them optional. Optional variables are displayed in brackets [] in the usage information if the script is invoked with no variables.
+
+We will now continue to discuss each utility script separately.
+
+
+@section Conversion of Data to Code
+
+The script in focus for this topic is @file{ConvertDataToCode.py}.
+
+If you think about the way you work with the system, entities are created in a certain order and reference each other. The order of entity creation is important to enable certain dependencies. For example you need to define a state before you include it in a process, you need to create a model before you use it in a project, and you need to create a parameter before you use it in an expression. It is somewhat similar to building a house: you first need to build the foundations, then the main body, and only then the roof, in that order. And just like in a house, after it is built it is sometimes difficult to make a correction in foundations. This analogy of building a house may be helpful later on, for now we will get back to our system and the GUI.
+
+Each time you create a new entity the system will add it to the database. This database can be saved and loaded by the system as a @file{zip} file. This file is referred to many times as the data definitions file, since this file holds the entire database of entities that enables us to save and load our work. It can also contain simulation results on top of the project that created them. Think about adding entities to the system analogous to adding bricks to the house and think of the database as a snapshot of the entire house.
+
+Think about a situation where instead of clicking your way through the system forms and entering data in a certain order, you can write down sentences that describe what you are doing in the form of instructions. Such a set of instructions can be used to create the database from scratch. This set of instructions constitutes a program that can reconstruct such a database. With analogy to the house, think about this as a plan with detailed instructions to a quick builder on how to build the house.
+
+Now think that you already have a database @file{zip} file and want the system to figure out what is the set of instructions that created the database @file{zip} file. The system can do just that if you used the utility called @file{ConvertDataToCode.py}.
+
+This utility takes a database @file{zip} file as input and creates Python code that reconstructs this database.  With analogy to the house, think about it as looking at a snapshot of a house and automatically deriving the plans for the house as instructions to the builder.
+
+The main input parameter to the reconstruction program is the database @file{zip} file we will denote as @code{DataDefintionsFileName.zip} and typically the script will be invoked in the following way:
+
+@code{python ConvertDataToCode.py DataDefintionsFileName.zip}
+
+This will avoid asking questions from the user and just perform the conversion with default values which are recommended for most cases. By default the set of instructions to create the database will be saved as a reconstruction Python program using the file name:
+@file{TheGeneratedDataCode.py}
+
+With regards to our analogy, think about this file as the plan containing instructions for the builder to build the house.
+
+If you open this file, you will find instructions that create your data base in the following order:
+@itemize @bullet
+@item
+States - including processes
+@item
+Parameters
+@item
+Models
+@item
+Transitions
+@item
+PopulationSets
+@item
+Project rules ending with a project definition
+@end itemize
+
+Unless you request for it specifically, simulation results will not be converted by default, otherwise these will appear at the end.
+
+
+At the very end of the code, you will find a line that creates a new @file{zip} file from the code under the default file name @file{TheGeneratedDataCode_out.zip}. So if you run the python reconstruction program @file{TheGeneratedDataCode.py} it will create a new database @file{zip} file under the name @file{TheGeneratedDataCode_out.zip} that is equivalent to the database file you converted to code.
+
+To run the conversion from code back to data use the command:
+@code{python TheGeneratedDataCode.py}
+
+
+If there are no changes to the python reconstruction program then this allows circular path between code and data that can be followed in either direction. In other words, this allows transfer from data definitions to code and vice versa so that code and data definitions are now interchangeable. With analogy to the house, think about is as having the ability to build a house from a plan containing building instructions and the ability to take a snapshot of an existing house and convert it back into building plans. This is powerful mechanism that allows the user to make complicated changes easily.
+
+The most useful task that can be performed through code is making changes while avoiding dependencies. For example, if the user wants to change a name of a parameter from @code{Diabetes} to @code{Type2Diabetes}, once @code{Diabetes} is used, the system will not allow the user to perform this change through the Graphical User Interface (GUI) since this will violate dependencies. Yet it is possible to do this using find and replace operation in the code file and then reconstructing a new data file. Note that the user should be careful to make the changes in all places and avoid name clashes and changes of other variable names with the word @code{Diabetes} in them. If the changes the user made in the code are reasonable, once the code is executed a new database file will be created. If changes create conflicts or are otherwise invalid, the system will not be able to reconstruct the data file. With analogy to the house, think about it as being able to take a snapshot of an existing house converting it into plans, changing the plans of the foundation and then rebuilding the entire house from the existing plan.
+
+Note that this type of operation is intended for the advanced user and the user is responsible for making intelligent changes in the code. However, the system will make validity checks when converting the code back to data. With analogy to the house, it is up to the designer to make a proper change in the foundation in the plan, otherwise the builders will either not be able to build this house, or if the house is built, it may be faulty due to a bad change in the foundations.
+
+There are other uses of this powerful capability code that include:
+@enumerate 
+@item
+Merging different model versions by selecting wanted code lines from each version.
+@item
+Conversation of code into a document or spreadsheet tables by replacing delimiting text with table separation characters and importing into a spreadsheet or a word processor application.
+@item
+Finding changes between data definition files by comparing their code representation.
+@end enumerate
+
+There may be other uses to this powerful capability. Yet again it is important to understand that it is not recommended for non advanced user. If not used properly, it can cause much confusion. Never the less it is a very useful tool.
+
+As an example, it is recommended to run the following command:
+
+@code{python ConvertDataToCode.py Testing.zip}
+
+This will convert the testing data definitions to code in the file @file{TheGeneratedDataCode.py} that can be inspected by the user or executed to regenerate the data definitions.
+
+
+
+@section Running Multiple Simulations
+The script in focus for this topic is @file{MultiRunSimulation.py}.
+
+Using the GUI it is possible to define and run a simulation by pressing the Run Simulation Button in the simulation screen. Each time a simulation is launched there is a need to wait for it to finish. Once done, simulation results are accessible.
+
+However, since we typically run a Monte-Carlo simulation, we will expect different results each time we run the simulation. If we want to get a good understanding of the distribution of results, there is a need to run many repetitions of the same simulation. This is possible to do by defining a large number of repetitions for a project. However, for practical reasons it is may not be the most efficient thing to do. These reasons include: 1) Running the simulation for a very large number of population repetitions, such as 100,000 or more, may be required for some models to get stable results, yet it may take much time to wait for results. 2) Keeping simulation results in memory may not be practical as it may require larger machines and is prone to interruptions of simulation. 3) We sometimes want the population size to match the study size to allow better comparison of results. 4) Sometimes the user may wants to run the simulations outside the GUI - perhaps as a batch job.
+
+To resolve these issues and offer further flexibility, the system provides a mechanism to run simulations outside the GUI using the @file{MultiRunSimulation.py} script.
+When the script is invoked, it will ask for the following parameters in this order:
+@itemize @bullet
+@item
+@code{FileName}: The data definitions @file{zip} file name that holds the project to be simulated.
+@item
+@code{ProjectIndex}: The number of the project to be simulated within the data definitions @file{zip} file. Note that project number zero means the first project on the list displayed in the GUI main screen.  However, for advanced users, it is possible to use the internal ID that can be seen if data is converted to code if it is enclosed in brackets. If this information is omitted, then the system will choose the first project by default.
+@item
+@code{Repetitions}: This is an optional integer that defines the number of times to repeat the entire simulation. For each repetition, the system will create a new output database file with simulation results for the project requested. Each new file will have the same file name as the original data definitions @file{zip} file with an extension of a @code{_#} where @code{#} will be the number of the simulation. Each such file will be a copy of the original database with a single result set. If @code{Repetitions} are omitted the default is 100 repetitions.
+@item
+@code{StartIndex}: This is an optional integer that indicates the first suffix counter to be added to the file generated with the results. By default, this number will be 0, meaning that the results will be saved in a filename with the same name as the database name followed by an underscore and 0 for the first file and subsequent files generated will continue counting from this number. This number is useful if we want to add additional simulations after N simulations have already been generated by @file{MultiRunSimulation.py} and we want to run additional simulations where filenames start their index after N simulations. This way we can save time, by running the simulations on different machines in parallel.
+@item
+@code{OverWriteFilesOrReconstructFromTraceback}: This is an optional letter, If y (default), then output files will overwrite old ones. If r then reconstruct simulation from TraceBack files in the Temp directory. The reproducibility option is useful for validation or reconstruction or simulation.
+@item
+@code{PopulationRepetitionsOverride}: This is an optional integer that defines an override to the population repetitions defined in the Project form. If the word @code{None} is used, then the system will not perform any override - this is the default. Otherwise the number of repetitions of each population individual is overridden. Note that @code{Repetitions} and @code{PopulationRepetitionsOverride} are related, yet define different things. In a sense these two numbers multiply the number of individuals defined in the population set if all simulations are examined. For example, if 100 Repetitions are requested as input to @file{MultiRunSimulation.py}  and the number of @code{PopulationRepetitionsOverride} is 2000 for a distribution based population, then there will be 100 new files generated each with 2000 individuals simulated. If all files are counted, overall there will be 200,000 individuals simulated from which statistics can be derived.
+@item
+@code{ModelOverrideID}: This is an optional integer. The number indicates the model index to override the model defined in the project to be simulated. The first model is indexed as 0 and the model numbers are sorted according to the order they appear in the GUI in the model form when it opens. It is also possible to specify the number in brackets and then the internal index of the model will be used, this internal ID can be found if the database file is converted to code. This option is useful if the user wants to compare the results of a project with multiple model versions without redefining the data definitions @file{zip} file. It is the responsibility of the user to make sure the model is compatible with the other definitions of the project.
+@item
+@code{PopulationOverrideID}: This is an optional integer. The number indicates the population set index to override the population set defined in the project to be simulated. The first population set is indexed as 0 and the population set numbers are sorted according to the order they appear in the GUI in the population form when it opens. It is also possible to specify the number in brackets and then the internal index of the population set will be used, this internal ID can be found if the database file is converted to code. This option is useful if the user wants to compare the results of a project with multiple population sets. It is the responsibility of the user to make sure the population set is compatible with the other definitions of the project.
+@item
+@code{RuleValueOverrides}: One or more numbers that are optional and if specified will override project initialization rule values. This is intended to allow the user to override initialization values defined in stage 0 of the simulation. The first number overrides the value provided for the affected parameter in the first rule, the second number for the second rule and so on. To use this ability the user has to define the project rules in stage 0 of the simulation to be in a known order beforehand since this order will be used to place the override values. This allows interfacing with project initialization before simulation from a batch program outside the GUI system and manipulating simulation parameters. In a sense this ability transforms the project into a function with input parameters defined by the override.
+@end itemize
+
+As an example, it is recommended to run the following command:
+@code{python MultiRunSimulation.py Testing.zip 0 3}
+
+This will run the first example in the file 3 times and will generate the files @file{Testsing_0.zip}, @file{Testsing_1.zip}, @file{Testsing_2.zip}, each holding simulation results for the first project. You can then load these files through the GUI and inspect the results in each file.
+
+Note that the simulation will be conducted sequentially one after the other on the same machine on the same CPU core. So using @file{MultiRunSimulation.py} script does not save simulation time in this form. However, this script allows avoiding memory limit violations. It allows practical flexibility of conducting simulations by manipulating the simulation defaults and scaling the simulation result sizes after definitions. These capabilities can be utilized manually by the user. However, these capabilities are best utilized by the system to provide parallel computing capabilities as will be discussed later.
+
+
+@section Generating Textual Reports from Multiple Results
+
+The script in focus for this topic is @file{MultiRunCombinedReport.py}.
+
+Using the GUI it was possible to generate a report for a single simulation result set. However, even within the GUI it is possible to run several simulations for the same project, each time creating a new results set while the report is per simulation results set - not per project. Moreover, if simulations for the same project were generated using @file{MultiRunSimulation.py}, then results exist in multiple files and it is hard to compose a report for all of these together.
+
+The @file{MultiRunCombinedReport.py} script allows pulling together several result sets from multiple files and creating a single report combining them together. It is up to the user to make sure that the result sets are compatible.
+
+When this script is invoked, it will ask the user a few questions as input. It is possible to answer the questions by hand, or prepare a file with the answers and run the script with this file as input as depicted in the usage.
+
+The inputs requested are:
+@enumerate
+@item
+A list of data file names from which results will be collected, each in a separate line and a blank line to indicate the end of the list. These will be the files from which results will be pulled.
+@item
+A list of simulation result ID numbers, each is a separate line with a blank line to end the list. These ID values will be searched in each file mentioned above to create the report. Typically, however, if there are multiple ID numbers defined, then there will be only one results file and vice versa.
+@item
+An optional list of format options. These format options are provided as line pairs of @code{OptionName} and @code{OptionValue}. A blank line indicates the end of the format options list. Note that an easy way to obtain this list is saving the format options from the GUI results form into an @file{.opt} file and copying the contents of this file.
+@item
+The optional output report filename. If unspecified, the report name will be @file{Report.txt}.
+@end enumerate
+
+As an example that demonstrates the capabilities of this utility, we will build upon the results from the previous example created by @file{MultiRunSimulation.py} .  In this example invoke the program in the following manner:
+
+
+@code{python MultiRunCombinedReport.py}
+
+
+Then provide the following answers, where (Press Enter for Blank Line)
+stands for an empty line:
+@example
+Testing_0.zip
+Testing_1.zip
+Testing_2.zip
+(Press Enter for Blank Line)
+1
+(Press Enter for Blank Line)
+DetailLevel
+1
+(Press Enter for Blank Line)
+(Press Enter for Blank Line)
+@end example
+These inputs can be also saved into a file that will be provided as a parameter to the script in the command line when it is invoked.
+
+Once the script finished running, you can open the file @file{Report.txt} and find a detailed report that will combine results from all 3 simulations in the 3 files created previously. Note that the record count is 3000 rather than 1000. Also note that the filenames are presented at the top of the report.
+
+The @file{MultiRunCombinedReport.py} script in combination with the previous @file{MultiRunSimulation.py} script allows overcoming memory limitations by chopping down a large simulation to smaller chunks. This is one way to get better statistics while running a report. However, processing the report may be very time consuming, especially if there are many files since this is done sequentially. Moreover, the report will combine all individuals together into a single report so the number of individuals in the report may not match the study size. Finally, the report is textual. The system provides other tools that provide further flexibility in reporting results that are discussed next.
+
+
+@section Generating Spreadsheet Reports from Multiple Results
+
+The script in focus for this topic is @file{MultiRunSimulationStatisticsAsCSV.py}.
+
+Previous reports were textual with fixed width tables, yet since most reports in the system are tabular it makes sense to create the report as a spreadsheet. A common method to represent such reports textually is the CSV format that stands for Comma Separated Values. In this format, each cell in the spreadsheet is separated from its neighbor rows using commas and a new line indicates a new row in the spreadsheet. Spreadsheet applications can open this file and the user can then manipulate it further if needed.
+
+The script in focus is able to generate such a CSV report from a data definitions @file{zip} file with results. Moreover, this script can do this for multiple files generated by @file{MultiRunSimulation.py} and generate additional statistics in a summary report. Furthermore, this script allows processing this information in parallel and cutting down computation time significantly if computing power is available.
+
+It is possible to invoke the script without input parameters in the command line and enter them manually. Yet it is usually invoked from the command line as follows:
+
+@code{python MultiRunSimulationStatisticsAsCSV.py FilePattern ResultsID OptFile OutPrefix}
+
+Note that the last three command line parameters are optional and can be omitted.  Here is a description of these inputs:
+@itemize @bullet
+@item
+@code{FilePattern}: The file pattern that describes the file or files to be processed. Note that this input defines the processing tasks the script will undertake.
+@enumerate
+@item
+If @code{FilePattern} is a single @file{zip} file such as @file{Model.zip}, then the system will generate a single CSV file with the same name replacing the suffix to indicate a CSV report. This is useful for running many such reports in parallel on different CPU cores.
+@item
+If @code{FilePattern} includes wildcards that expand to multiple @file{zip} files such as @file{Model_*.zip} then the system will generate a CSV report for each file that matches the pattern and then an additional CSV report that summarizes these CSV files providing statistics about all files. Note that the double quotes for the file pattern are important to avoid the Linux operating system expanding this pattern before passing it to the program. Note that computations will be performed serially for each @file{zip} file and then the report is created, this is much more time consuming than the parallel form.
+@item
+If @code{FilePattern} includes wildcards that expand to multiple CSV files such as @code{"Model_*.CSV"} then the system will generate only the statistics report that summarizes these CSV files providing statistics about all files. Again, note that the double quotes are important on Linux. This form is useful in parallel computing environment if each CSV report was already computed from each @file{zip} file in parallel as described previously.
+@end enumerate
+@item
+@code{ResultsID}: This parameter defines the simulation result set ID to process in each file in @code{FilePattern}. Note that the system assumes that the results were generated by @file{MultiRunSimulation.py} and that all results are for the same project and therefore have the same @code{ResultsID} in each file. Typically, the @code{ResultsID} will be 1 for data definitions file without previous results. The default value is @code{None}, meaning the first result set is selected - typically result set 1.
+@item
+@code{OptFile}: This is the report options file that can be generated and saved through the report form in the GUI. It contains report parameters of interest and calculation methods, it also contains information about stratification. Note that @code{DetailLevel} and other report options such as number format are ignored since these are not relevant for CSV reports. It is recommended to create such a file after running a small simulation in the GUI and compiling the report. If this file is not specified, all parameters will be used with the system trying to automatically determine the calculation method without stratification.
+@item
+@code{OutPrefix}: This defines the prefix for the output summary statistics filenames. If no prefix is defined, the system will use the common prefix of the input file names for the summary output. There will be 5 files generated as summary output, all having the same prefix and ending with the following endings: @file{Mean.csv}, @file{STD.csv}, @file{Median.csv}, @file{Min.csv}, @file{Max.csv}. Each such ending will report the statistics for all the files that fit the @code{FilePattern} specified. Note that @code{OutPrefix} does not influence the individual CSV file generated for each @file{zip} file, which will have the same name as the @file{zip} file.
+@end itemize
+
+This script enables processing of reports for multiple result files and can be invoked on a machine with a single CPU, or in parallel processing environment. Here are examples that will build upon the results from the previous example created by @file{MultiRunSimulation.py}:
+
+Example for running simulation statistics in serial:
+
+@code{python MultiRunSimulationStatisticsAsCSV.py "Testing_*.zip"}
+
+This will generate 8 CSV files: @file{Testing_0.csv}, @file{Testing_1.csv}, @file{Testing_2.csv}, @file{Testing_Max.csv}, @file{Testing_Mean.csv}, @file{Testing_Median.csv}, @file{Testing_Min.csv}, @file{Testing_STD.csv}. The first 3 files will contain a report of the results from the corresponding @file{zip} file. The last 5 files will gather information from these 3 files and calculate a specific statistic function over these files using the functions: Max, Mean, Median, Min, STD. Note that a CSV report will look rotated compared to a textual report since columns become rows and vice versa. In the generated CSV reports, each row represents a different parameter and calculation and each column represents different time steps within a stratification cell. If there are several stratification cells, these will appear as column blocks starting with a mostly blank column defining the stratification. Note that the first few columns/rows contain headers. The statistic files also contain a new row at the end defining the number of repetitions from which the information was extracted. This is helpful to figure out how much information was available to construct the statistics. Note that in contrary to @file{MultiRunCombinedReport.py} that combines all results and then generates a textual report on the combined population size, @file{MultiRunSimulationStatisticsAsCSV.py} will generate multiple CSV reports for each result set using the original specified population size and provides statistics on what happens when the simulation is repeated several times.
+
+
+The same example above can be repeated by running the script several times in parallel with different input parameters. To do this, the following commands should be run in parallel. This can be simulated by running the commands from multiple console/terminal windows:
+
+@code{python MultiRunSimulationStatisticsAsCSV.py Testing_0.zip}
+
+@code{python MultiRunSimulationStatisticsAsCSV.py Testing_1.zip}
+
+@code{python MultiRunSimulationStatisticsAsCSV.py Testing_2.zip}
+
+Once all the above scripts have finished, run the collection script:
+
+@code{python MultiRunSimulationStatisticsAsCSV.py Testing_?.csv}
+
+The first 3 commands will create a since CSV report for each @file{zip} file, while the last command will create the 5 summary statistics CSV files from the single report CSV files. The results are similar to running the computation in the serial case, while gaining the advantage of utilizing computing power to cut down coverall computation time. This advantage is significant in High Performance Computing Environment (HPC) where this script is executed on a cluster and on the cloud, as will be shown later - see @ref{MIST over the Cloud}.
+
+
+@section Assembling CSV Reports from Multiple Scenarios
+
+The script in focus for this topic is @file{AssembleReportCSV.py}.
+
+Typically, simulations reproduce a few different scenarios that should be compared. For example the results of a control group need to be compared to the results of an intervention group in a simulated clinical study. Once results are available, the user will want to see the results near each other on the same report using similar terminology. Alternatively, a user may want to compare simulation results to the actual results obtained from a clinical trial. Also, the user may just want to narrow down the amount of information from a single CSV report file to compare specific time frames and stratifications in a certain order from a much larger list.
+
+The system provides some support to accommodate such comparison and visualization through the @file{AssembleReportCSV.py} utility.
+
+The @file{AssembleReportCSV.py} utility assumes that @file{MultiRunSimulationStatisticsAsCSV.py} created summary simulation reports as CSV files. And these files are to be combined to a single file that compares specific columns from those CSV files, and possibly includes reference columns from other files with a similar format.
+
+The script is always invoked from the command line in the following format:
+
+@code{python AssembleReportCSV.py AssemblySequence OutputFileName}
+
+@itemize @bullet
+@item
+@code{AssemblySequence} is an elaborate structure that allows the user to select specific columns from specific input files in a specific order. The assembly sequence will be of the form @code{[ ColumnTuple1, ColumnTuple2, ...]}. The user can specify this sequence within double quotes in the command line, or place it in a text file and place the filename as a command line parameter instead. Each member in the assembly sequence is a tuple enclosed in parenthesis of the form @code{(Filename, Key1, Key2, Stratification, Title)} where:
+@itemize @bullet
+@item
+@code{FileName} is the CSV filename from which to extract the column within quotes.
+@item
+@code{Key1}: The start step of the interval of interest. This information is required and should be enclosed in quotes.
+@item
+@code{Key2}: The end step of the interval of interest. This information is required and should be enclosed in quotes.
+@item
+@code{Stratification}: This is an optional parameter that can be skipped or omitted by specifying an empty string. Otherwise, is allows specifying a stratification cell of interest by string. The string should match exactly the stratification string in the CSV report that starts with @code{'Stratification -'} and should be enclosed in quotes. This information allows the system to select a specific column by the stratification cell. If skipped, then the time intervals from the first stratification cell encountered will be used.
+@item
+@code{Title}: An optional parameter that can be omitted. If specified as a string in quotes, this string will be used as the column title. This allows the user to specify a title that can distinguish columns textually and give a meaningful explanation of the column and therefore recommended.
+@end itemize
+@item
+@code{OutputFileName} is the name of the output CSV file where the collected columns will be placed.
+@end itemize
+
+
+The report generated is very similar to previous CSV reports with the difference that it can extract columns from multiple files and provides a title for each such column. So the output file contains the following information for each column: user specific title, the file name from which the column was extracted for reference, the stratification requested by the user, the project name that generated the results, the model name used in the project, the population set name used in the project, start step of interval, end step of interval, many rows with parameter statistics, repetitions count.
+
+To make the report readable it is recommended to extract the first two header columns by including the following tuples in the beginning of the sequence:  @code{('FileName','',''), ('FileName','Start Step','End Step')}.  Note that this assumes that @code{<Header>} was selected as the first parameter in the report options file, which is the default.
+
+Here is an example that builds again on the simulations we conducted using @file{MultiRunSimulation.py} and on reports we created using @file{MultiRunSimulationStatisticsAsCSV.py} beforehand.
+
+Type in the following command:
+
+@code{python AssembleReportCSV.py "[('Testing_Mean.csv','',''), ('Testing_Mean.csv','Start Step','End Step'), ('Testing_0.csv','0','0','','Simulation 1 result'), ('Testing_1.csv','0','0','','Simulation 2 result'), ('Testing_2.csv','0','0','','Simulation 3 result'), ('Testing_Mean.csv','0','0','','Mean of 3 simulations') , ('Testing_STD.csv','0','0','','STD of 3 simulations'), ('Testing_0.csv','1','1','','Simulation 1 result'), ('Testing_1.csv','1','1','','Simulation 2 result'), ('Testing_2.csv','1','1','','Simulation 3 result'), ('Testing_Mean.csv','1','1','','Mean of 3 simulations') , ('Testing_STD.csv','1','1','','STD of 3 simulations'), ('Testing_0.csv','2','2','','Simulation 1 result'), ('Testing_1.csv','2','2','','Simulation 2 result'), ('Testing_2.csv','2','2','','Simulation 3 result'), ('Testing_Mean.csv','2','2','','Mean of 3 simulations') , ('Testing_STD.csv','2','2','','STD of 3 simulations'), ('Testing_0.csv','3','3','','Simulation 1 result'), ('Testing_1.csv','3','3','','Simulation 2 result'), ('Testing_2.csv','3','3','','Simulation 3 result'), ('Testing_Mean.csv','3','3','','Mean of 3 simulations') , ('Testing_STD.csv','3','3','','STD of 3 simulations')]" Testing_Out.csv}
+
+This example demonstrates the use of this script to compare the results from each of the 3 simulations at all 3 years near each other. It also compares those to the Mean and STD statistics extracted for those 3 simulations.
+
+Note that the user can specify a reference CSV file that can be used to include specific columns. Also note that the system will not check if the rows match, it just selects columns from multiple files and assembles those together. It is up to the user to make sure the columns and their definitions match between files. With good organization of the data, CSV reports can now be read by human or reused to create graphical plots as described hereafter.
+
+
+
+
+
+@section Creating Graphical Plots
+
+The script in focus for this topic is @file{CreatePlotsFromCSV.py}.
+
+Once a CSV report is assembled, it is possible to use a spreadsheet to plot graphs using external tools. However, in many cases, there is a need to create the same plot repetitively in an automated way without manipulating the CSV file after its creation. To support such a method, the system provides the utility @file{CreatePlotsFromCSV.py}.
+
+This utility relies on the format that is produced by @file{AssembleReportCSV.py} since it expects the first row to contain a title. It also expects the first two columns in the file to contain header columns with parameter and calculation method. Basically what the script does is produce a plot where the X and Y axis values are selected by the user by specifying a parameter and a calculation method. The script is sensitive to the titles provided at the first row and defines these as different series with different legends in the plots. It can also generate several plots together.
+
+
+This script is invoked with the following command line:
+
+@code{python CreatePlotsFromCSV.py InputFileName OutputFileName PlotSequence}
+
+@itemize @bullet
+@item
+@code{InputFileName} is the name of the file generated by @file{AssembleReportCSV.py} and contains the data to display.
+@item
+@code{OutputFileName} is the name of the PDF document file that will contain the plots, each plot in a different page.
+@item
+@code{PlotSequence} is a file name or a string representing the graphs to be made of the form @code{[ParamList, LegendList, StyleList]} where @code{ParamList} defines what parameters are of interest in the plot, @code{LegendList} defines the titles of interest, @code{StyleList} defines the color, line type and marker to use in the plot for different legends.
+@itemize @bullet
+@item
+@code{ParamList}  is of the form @code{[ParamDataX, ParamDataY1, ParamDataY2...]} where Each element defines a specific row in the input CSV file from which data will be extracted. The first element is considered as the series for the X axis values in the plot and therefore referred to as @code{ParamDataX}. Each successive @code{ParamData#} defines the Y axis values for a new plot and therefore named as @code{ParamDataY1}, @code{ParamDataY2}, and so on. The definition of each element @code{ParamData#} is the same and is normally defined as a tuple: @code{(ParamName, ParamCalcMethod, AxisTitle)}:
+@itemize @bullet
+@item
+@code{ParamName} is the name of the parameter to display, it should be enclosed in quotes and corresponds to the names that appear in the first column in the input file.
+@item
+@code{ParamCalcMethod} is the short name for the calculation method and should correspond to the value of the second column in the CSV file. It is a required identifier to define the plot series since each parameter can be calculated several times using several calculation methods, so there is a need to define both the @code{ParamName} and @code{ParamCalcMethod} to define the correct row of values in the input CSV file.
+@item
+@code{AxisTitle} is a string enclosed in quotes that can be specified by the user to give a new name for the set of numbers in the row to appear at the axis or legend. Yet the user can specify an empty string so that the system will use the combined @code{ParamName} and @code{ParamCalcMethod} as the default axis title.
+@end itemize
+@item
+Recall that the first @code{ParamData#} parameter stands for the X axis. This X axis will be used for all the plots that will follow it and each subsequent @code{ParamData#} will define a new plot for a new Y axis. However, it is possible to bundle several parameters together in a single plot, or specifying a separate X axis for each plot by creating a nested @code{ParamList} instead of @code{ParamData#}. If this is done, the system will treat the nested list differently and the first @code{ParamData#} element will be the new X title and all subsequent @code{ParamData#} elements will be plotted with the new X axis all on the same plot in the same page. So nesting allows comparing different parameters, or calculation methods, or changing the X axis for this plot. Note that nesting is possible for 1 level only.
+@item
+Recall that the input CSV file may contain information from several simulation scenarios, each one having a different title in the first row. The script allows selecting which scenarios the plots will be constructed from. This is done by defining @code{LegendList}.
+@item
+@code{LegendList} is composed of strings, enclosed in quotes, and separated by commas. The system will extract information from plots only from elements in the @code{LegendList}. Each such element will be displayed as a different series in the same plot with the matching legend. Note that this defines which columns from the input CSV file will be chosen. Yet the order in which those columns appear is the series will not change from the CSV file. Also note that in case of a nested @code{ParamList}, the name of the title will be added to the legend to separate series by legend as well as parameter and calculation method. In all cases, different series will look differently according to the sequence specified in @code{StyleList}.
+@item
+@code{StyleList} is a list of strings enclosed in quotes and separated by commas. These strings will determine the appearance of the line type, the color and the marker for each series in a plot. Each string is a format string where line and marker type are defined by one of the characters from the list:
+@code{'-','--','-.',':','.',',','o','v','^','<','>','1','2','3','4','s','p','*','h','H','+','x','D','d','|','_'} , and color is defined by a character from the list: @code{'b','g','r','c','m','y','k','w'}. Combining those together will create a specific format for the line. If this list is not defined or is too short, the system will use an internal sequence of format strings. Additional information is available in  
+@html
+<a href="http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.plot" target="_blank">this web site</a>
+@end html
+. 
+@end itemize
+@end itemize
+
+The next example will demonstrate plot generation from the CSV file previously created by the @file{AssembleReportCSV.py} example.
+
+@code{python CreatePlotsFromCSV.py Testing_Out.csv  Testing_Out.pdf "[ [('','Start Step',''), ('Alive','Sum All',''),[ ('Age','Avg All',''), ('Alive','Sum All',''), ('Dead','Sum All','')]] , ['Simulation 1 result', 'Simulation 2 result', 'Simulation 3 result', 'Mean of 3 simulations'] ,  ['r-','g-','b-','k-', 'r--','g--','b--','k--'] ]"}
+
+This command will create a pdf file with two plots. The first will show the number of alive people per year for each simulation and for the average of 3 simulations. The second plot, will also show the number of deaths per year on the same plot where the X axis is age.
+
+This plot script can be included in other scripts to build elaborate graphical reports as will be demonstrated later.
+
+
+
+
+
+@section Running Simulations and Reports in Parallel on a Computer Cluster
+
+The script in focus for this topic is @code{ClusterRun.py}.
+
+The utility scripts above can be used to conduct simulations, generate reports, and even create graphical plots. Those utilities run on both Linux and Windows. Those utilities can also work in High Performance Computing (HPC) environment where these can be executed on a cluster of computers. Although the system can potentially run on several HPC environments, the HPC environment of choice for the system is Sun Grid Engine (SGE). A quick start guide for SGE can be found 
+@html
+<a href="http://star.mit.edu/cluster/docs/0.93.3/guides/sge.html" target="_blank">here</a>
+@end html
+.
+
+
+If you have SGE installed on a computing cluster that also has all required packages installed on it, the system provides the @file{ClusterRun.py} script that executes a complete simulation and reporting mechanism.
+
+Note, however, that contrary to other scripts that receive input parameters when run and should not be changes, this script is a Python program that should be changed by the user to adapt to their needs. So it is assumed that the user has at least basic understanding of Python and programming.  
+@html
+<a href="http://docs.python.org/tutorial/" target="_blank">This tutorial</a>
+@end html
+ may be helpful for getting acquainted with Python.
+
+
+@file{SlurmRun.py} starts with a set of definitions that are intended for change by the user. After these are defined, the system will run the simulation in parallel in 3 main phases. These phases include several sub phases that will be described hereafter:
+
+@itemize @bullet
+@item
+Phase 1: Run simulation repetitions in a parallel and extract a CSV report for each run.
+@itemize @bullet
+@item
+Phase 1A: Run simulations using in parallel using @file{MultiRunSimulation.py}  and create @file{zip} files with simulation results.
+@item
+Phase 1B: After the @file{zip} file was created process simulation results using @file{MultiRunSimulationStatisticsAsCSV.py} so that each @file{zip} file will have a matching CSV file.
+@end itemize
+@item
+Phase 2: Collect all CSV files using @file{MultiRunSimulationStatisticsAsCSV.py} to create a single CSV file for each scenario variation reporting simulation results from multiple repetitions of the same scenario variation.
+@item
+Phase 3: Create final report comparing all simulations and scenario variations and notify the user.
+@itemize @bullet
+@item
+Phase 3A: Assemble final reports combining all simulations and possibly a reference file using @file{AssembleReportCSV.py} to create a CSV file for summary results and a CSV file for yearly results. These reports will be assembled from all simulations and include all scenario variations in a readable manner.
+@item
+Phase 3B: Analyze the results - this requires a user specific program that is not provided with the MIST distribution.
+@item
+Phase 3C: Generate graphical plots using @file{CreatePlotsFromCSV.py} that show the reports graphically.
+@item
+Phase 3D: Collect all the results and send an email to the user notifying completion and summarizing results.
+@end itemize
+@end itemize
+
+
+Using these phases, the system can run many simulations in parallel and receive many results from many scenario variations. To control the simulation, the user will change parameters in the scenario definition section at the top of the script. These parameters are:
+
+@itemize @bullet
+@item
+@code{Scenario}: The name for the simulation job you are running.
+@item
+@code{FileNamePrefix}: The name of the @file{zip} file that holds the data definitions of the projects to run.
+@item
+@code{MailFinalResultsTo}: The email address you want the results to be sent to.
+@item
+@code{Phase1Environemnt}, @code{Phase2Environemnt}, @code{Phase3Environemnt}: the SLURM environment parameters for the SLURM @code{sbatch} command you want the simulations to run with. This includes time, memory, machine allocation and many other parameters that should be determined together with the cluster administrator.
+@item
+@code{RunPhase1A}, @code{RunPhase1B}, @code{RunPhase2}, @code{RunPhase3A}, @code{RunPhase3B}, @code{RunPhase3C}: are Boolean parameters that allow the user to control what phases to run. These should normally be all set to @code{True}. However, in some cases, it is useful to have this control, especially in cases where recovery is needed.
+@item
+@code{ReproduceResultsFromTraceback}: A Boolean that controls reproducibility. If False a new simulation is created. If True the simulation is reproduces from TraceBack files in the Temp directory. 
+@item
+@code{Repetitions}: The number of times to repeat each scenario variation simulation. Note that there may be several scenario variations, so the number of simulations in Phase 1 is controlled by this number and by the number of scenario variations.
+@item
+@code{SimulationTimeOverride}: This parameter can be used to override the number of simulation steps defined in the project to be run. Use @code{'None'} to avoid changes.
+@item
+@code{PopulationRepetitionsOverride} : This parameter can be used to override the size of population generated in the simulation by overriding the project definition of population repetitions. Use @code{'None'} to avoid changes.
+@item
+@code{OptionsSeperation1}, @code{OptionsSeperation2}, @code{OptionsSeperation3}, @code{OptionsSeperation4}, @code{OptionsSeperation5}, @code{OptionsSeperation6}: These are lists of option categories that are used to define a scenario variation. Generally elements in these lists are tuples of the form @code{(ParameterOverrideString, TitleComponent)}. @code{ParameterOverrideString} provides a sub set of parameter values to use with @file{MultiRunSimulation.py} to override initialization values of the project in simulation stage 0. This requires for the project definition to accept these overrides. Note that these option groups are later merged to create all possible combinations of the options entered when scenario variations are determined. These options are later used during report creation to define the title from components defined in @code{TitleComponent}. For example, if the project accepts a single coefficient parameter that defines if biomarkers change during simulation that exists in stage 0 of simulation, we can define @code{OptionsSeperation1} as @code{[('0','NoBioChange'), ('1','WithBioChange')]}. With this example @file{SlurmRun.py} will run both scenario options and combine them with other possible scenario options to create scenario variations. Each scenario variation created will have a title that contains either the title component @code{NoBioChange} or @code{WithBioChange}. Such titles will appear at the top of reports. Note that if there is no variation in a specific option, then the system will not include a title component for it to avoid unnecessary long title strings. As an extended example, if the project also accepts a coefficient that defines if the simulation should be run with treatment or without treatment, then the user can run both options in parallel using @file{SlurmRun.py} if @code{OptionsSeperation2} is defined as @code{[('0','NoTreatment'), ('1','WithTreatment')]}. Note that @code{OptionsSeperation2} will be combined with @code{OptionsSeperation1} so that 2x2=4 scenario variations will be created. These scenario variations will have the following titles: @code{'NoBioChange NoTreatment'}, @code{'NoBioChange WithTreatment'}, @code{'WithBioChange NoTreatment'}, @code{'WithBioChange WithTreatment'}. These scenarios variations may be combined further with other options to create even more scenario variations.
+@item
+@code{StratifyBy}: If stratification of the results is required in the report, this string will hold the stratification table for report generation.
+@item
+@code{Stratifications}: A list of stratifications of interest in the form @code{(StatificationString, TitleComponent)} where @code{StatificationString} is the title string generated in the report that corresponds to a specific cell table specified in @code{StratifyBy} and starts with the words: @code{'Stratification -'}. @code{TitleComponent} is the stratification title to combine with other title components if this stratification is used in the final report. Note that this does not increase the number of simulations, yet increases the size of the report.
+@item
+@code{PopulationsToUse}, @code{ModelsToUse}: The population override and model override for the project. This option allows running the same simulation with multiple population sets and multiple model overrides without changing the project. The populations are defined as tuples of the form @code{(OverrideNumberAsString, TitleComponent)}. @code{OverrideNumberAsString} holds the population/model number to override as a string enclosed in quotes. If @code{OverrideNumberAsString} is provided in brackets, the internal code of the population set/model are used, otherwise the sort order in the GUI is used. @code{TitleComponent} is a string to use when the report title is assembled by the system from all options. It is up to the user to make sure the override projects/models are reasonable.
+@item
+@code{ProjectsToUse}: Allows the user to define the project number to run in different scenario variations. Again, a tuple of the form @code{(OverrideNumberAsString, TitleComponent)} is used. @code{OverrideNumberAsString} holds the project number to run from the model @file{zip} file where the first project is indexed as 0. @code{TitleComponent} will determine the part of the title for the scenario variation that uses this option. If several projects are used it is up to the user to set them up so they will return results in the same format and be compatible for combining in a report.
+@item
+@code{Inclusions}, @code{Exclusions}: These are lists of tuples of strings that indicate what options should be included together and what options should be excluded when building the scenario variations. For example to include only scenario variations where both biomarkers and treatment or neither are simulated while disallowing other scenarios, we can define this by using @code{Inclusions = [('NoBioChange', 'NoTreatment'), ('WithBioChange', 'WithTreatment')]} or by defining @code{Exclusions = [('NoBioChange', 'WithTreatment'), ('WithBioChange', 'NoTreatment')]}. For each tuple in @code{Inclusions}, the system will make sure each scenario variation title that will be executed will include all the tuple components. For each tuple in @code{Exclusions}, the system will make sure each scenario variation title that will be executed will not include all the tuple components. By using @code{Inclusions} and @code{Exclusions} it is possible to reduce the number of scenario variations and keep only combinations of options that may interest the user, otherwise the number of scenario variations may be very large and impractical to simulate and visualize.
+@item
+@code{MaxDimensionsToAllowVariation}: This parameter allows limiting the number of scenario variations by allowing only a certain number of changes in options from the first scenario variation defined. For example if we set @code{MaxDimensionsToAllowVariation = 1} with the biomarker and treatment example without @code{Inclusions} or @code{Exclusions} defined, then we will get only 3 variations: @code{'NoBioChange NoTreatment'}, @code{'NoBioChange WithTreatment'}, @code{'WithBioChange NoTreatment'} since these change only one dimension at most from the original scenario variation. Note that @code{'WithBioChange WithTreatment'} will not be included since it changes both parameters from the original scenario variation. Note that the original scenario variation is determined by the first tuple defined for each option. In other words, this parameter defines the Hamming distance from the first simulation that will be considered.
+@item
+@code{ReportReferenceFileName}: This parameter allows the user to define a reference CSV file name from which the first two columns and reference values can be extracted and combined into the final report. It is useful to show known study results together with simulation results. However, the reference file should have the same format as a CSV report created by the system to allow its assembly. If an empty string is used then the system will select the first two title columns from the Mean CSV file of the first scenario.
+@item
+@code{ReportReferenceColumnTuple}: This parameter allows the user to define which columns to extract from the reference file. The tuple will be of the form @code{(ReportReferenceFileName, Key1,Key2)} where @code{Key1} and @code{Key2} are the column title found in rows 4,5 of the column to be extracted. If @code{ReportReferenceFileName} is left blank, @code{ReportReferenceColumnTuple} is ignored.
+@item
+@code{SummaryReportTimes}: This is a list of tuples of time step intervals to be shown in the summary report. Each tuple consists of @code{(StartTimeStep,EndTimeStep)} where @code{StartTimeStep} and @code{EndTimeStep} are strings enclosed in quotes that are expected to be generated in @code{SummaryIntervals} that is later defined. Note that @code{SummaryIntervals} may include other time intervals relevant to create the yearly report and other intervals while @code{SummaryReportTimes} selects only the intervals relevant for the final summary report, not the yearly summary report.
+@item
+@code{SummaryIntervals}: A full list of intervals for the report. It is a list of numbers and sequences to be used to process reports with. See the @ref{Reports} for further details. Note that to generate yearly summary intervals, it is recommended to include the number 1 in the sequence to generate yearly results for the yearly report and the plot.
+@item
+@code{ColumnFilter}: A list of parameters and calculation methods for reports. It is defined as a sequence of tuples @code{(ParameterName, ParameterCalculationMethod, ReplacementTitleName)}. See the help on @ref{Reports} for further details. It is recommended to create an @file{.opt} file with report options and extract this filter from the file rather than construct it using the editor.
+@item
+@code{PlotFilter}: Instructions for @file{CreatePlotsFromCSV.py} to create plots from the final yearly report. This is only the @code{ParamList} component from the @code{PlotSequence} input parameter to the @file{CreatePlotsFromCSV.py} script. It should contain components from @code{ColumnFilter} where the calculation method is replaced by the short version name of the calculation method. Note that the @code{LegendList} component is not required since it will be calculated automatically from the titles of the scenario variations.
+@item
+@code{PlotStyles}: A sequence of strings to represent color, line style, and markers of different scenario variations. This is only the @code{StyleList} component from the @code{PlotSequence} input parameter to the @file{CreatePlotsFromCSV.py} script.
+@item
+@code{ReportFilterFileName}: @file{SlurmRun.py} will create a new @file{.opt} file and save it under this name. This is created for clerical purposes to allow future manipulation of this file.
+@end itemize
+
+Running this script requires specialized environment. Yet the script as installed would run on properly installed SGE. This script is also used to run simulations on the cloud as shown in @ref{MIST over the Cloud}. 
+
+@section Extracting Results For External Processing
+
+The script in focus for this topic is @file{MultiRunExportResultsAsCSV.py}.
+
+The user may wish to process simulation results using different calculation techniques than those provided so far. Or the user may wish to store the calculations within a database that can be read by other systems. To provide such capabilities, the system provides a script to convert the simulation results from the internal @file{zip} form to CSV files that can be read by many systems, including spreadsheets and database applications.
+
+It is possible to invoke the script without input parameters in the command line and enter them manually. Yet it is usually invoked from the command line as follows:
+
+@code{python MultiRunSimulationStatisticsAsCSV.py FileNamePattern ResultsID ColumnName}
+
+Where:
+@itemize @bullet
+@item
+@code{FileNamePattern}: The file pattern that describes all the @file{zip} files to be processed. It is recommended to enclose it in double quotation marks to fit both Linux and Windows formats.
+@item
+@code{ResultsID}: A mandatory parameter that defines the simulation result ID to process in each file in @code{FileNamePattern}. Typically, the results ID will be 1 - this is true for running a model file without previous results, never the less, the user can choose a different results set that exists in all @file{zip} files.
+@item
+@code{ColumnName}: Optional column names that exist in the result set. The user can provide as many column names separated by spaces, these column names correspond to parameter names to be exported to the CSV file. If no column is defined, then the system will export all parameters calculated during simulation to the output file.
+@end itemize
+The output file name for each file that matched the @code{FileNamePattern} will be the same as the file name with the @file{.zip} ending replaced with @file{Results.csv}. The first line in this output file will contain the parameter names to allow easier visualization and import into spreadsheet and database applications.
+
+
+To demonstrate this script, here is an example that is based on the results from the previously described example of @file{MultiRunSimulation.py}. Try running the script with the following line:
+
+@code{python MultiRunExportResultsAsCSV.py "Testing_*.zip" 1 IndividualID Repetition Time Age Alive Dead}
+
+
+The system will create 3 files: @file{Testing_0Results.csv} , @file{Testing_1Results.csv}, @file{Testing_2Results.csv}. Each file will contain 6 columns corresponding to the list provided by the user. These files are easily opened with a spreadsheet application and the results there can be manipulated further by the user to create their own reports.
+
+
+
+@node MIST over the Cloud
+@chapter MIST over the Cloud
+
+MIST can run over the cloud. MIST uses the 
+@html
+<a href="http://aws.amazon.com/ec2/" target="_blank"> Amazon Elastic Compute Cloud (EC2)</a>
+@end html
+and 
+@html
+<a href= "http://star.mit.edu/cluster/" target="_blank"> Star Cluster </a> 
+@end html
+to run simulations in parallel in High Performance Computing (HPC) environment to reduce simulation time and Monte-Carlo uncertainty and allow exploring many more variations in simulation.
+
+Running MIST over the cloud requires special preparation. Here is a list of things you should have before starting:
+
+@itemize @bullet
+@item
+ MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a working directory Desktop\MIST on a windows operating system under your user account.
+@item
+You should have a MIST model zip file prepared with that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file Testing.zip and use the projects of Example5a and Example5b in this tutorial.
+@item
+You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized set up for MIST over the cloud in @ref{Setup} you will get to the
+@html
+<a href="http://aws.amazon.com/ " target="_blank"> Amazon EC2 login page </a> 
+@end html
+where you should create an account. Note that running simulations in Amazon EC2 will cost money - make sure you can pay for the mount of computation you are planning before running any simulations.
+@item
+You should have Star Cluster installed. See @ref{Setup} for specialized set up for the cloud
+@item
+You should have configured your Star Cluster configuration files to work with your cloud account. You can find instructions for specialized set up for MIST over the cloud in @ref{Setup}.
+@end itemize
+
+Once you have setup the system, you should follow several steps to launch a simulation on the cloud. We will show these steps with an example.
+
+
+@enumerate
+@item
+Copy the model file to your working directory on your PC. 
+
+In our example @code{Testing.zip} is already in the working directory.
+@item
+Modify the file ClusterRun.py to define your run on the cluster. See additional details in @ref{Utilities}. 
+
+In our example, you can leave the file unchanged.
+@item
+Cleanup the working directory on your PC from temporary and irrelevant data. 
+
+In our case, delete the @code{Temp} directory if it exists and delete the files ending with @code{.pyc} if they exist.
+
+@item
+Open a terminal/command line prompt. The command line prompt will start at your user home directory. 
+
+In our example on Windows type @code{cmd} in the Start menu. 
+
+The commands will be typed in this new command line prompt from now on.
+
+@item
+Start StartCuster with the number of nodes you want and specify its name. 
+
+For our example we will use the command :  
+
+@code{starcluster start -s 5 mycluster}
+
+In this example the name of the cluster we start is mycluster and it is composed of 5 nodes. This operation may take a while and you can later see the nodes through the Amazon EC2 web interface.
+
+@item
+Upload the MIST system and associated model files to the cluster @code{/home} directory. Typically we will organize all the files in the working directory so we can make all transfers with a single @code{put} command. 
+
+In our example, use the command:
+
+@code{starcluster put mycluster Desktop\MIST /home}
+
+Note that the @code{/home} directory must be the destination since it is shared between all cluster machines. Also note that @code{Desktop\MIST} is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
+
+@item
+Run the simulations. You will have to access the @code{/home} directory on the cloud and then run the python script and this should be done with one command line. 
+
+To do this, you should run the following command exactly as it appears: 
+
+@code{starcluster sshmaster mycluster "cd /home/MIST && python ClusterRun.py"}
+
+In this example about 200 processes will be launched on 5 machines. You should see printout of commands launched.
+
+@item
+While the system is running you can check upon the status of the simulation. 
+
+You can look at the result files accumulating in the @code{/home} directory by typing the command: 
+
+@code{starcluster sshmaster mycluster "ls /home/MIST"}
+
+To see the remaining jobs the cluster needs to run use the command: 
+
+@code{starcluster sshmaster mycluster "qstat"}
+
+In our example the simulation would take a few minutes and you will be able to see how files are added and processes removed from the queue.
+
+
+@item
+When the simulation is done, you can now retrieve the results using the @code{get} command. Since there are many files after simulation, you may wish to concentrate on several files of interest and not get the entire directory. 
+
+In our example, we will retrieve only the result files to the user home directory by using the command: 
+
+@code{starcluster get mycluster /home/MIST/Testing_Out* .}
+
+In our example this should retrieve 3 files with results: Testing_Out.csv, Testing_Out_Yearly.pdf, Testing_Out_Yearly.csv. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
+
+@item
+Very important to stop the cluster - otherwise you keep on paying. This is done using the command: 
+
+@code{starcluster terminate mycluster}
+
+You should answer y and press Enter to the following question the system will ask: @code{Terminate cluster mycluster (y/n)?}
+
+Note that once you run this command and confirm termination, the information on the cluster is lost and anything you have not downloaded cannot be retrieved. Yet if you do not do this, you continue paying for all cluster nodes you created until you terminate.
+
+@end enumerate
+
+
+Note that there are many extensions/variations to these that you can run on the cloud. You can find additional information in the following links:
+
+
+@html
+<a href="http://star.mit.edu/cluster/docs/0.93.3/quickstart.html" target="_blank"> Star Cluster Quick Start </a> 
+@end html
+
+@html
+<a href="http://star.mit.edu/cluster/docs/0.93.3/manual/putget.html" target="_blank"> Star Cluster Copying Data Instructions </a> 
+@end html
+
+
+@c @node General Index
+@c @unnumbered Index
+@c @printindex cp
+
+@bye
+
+
+
+
+

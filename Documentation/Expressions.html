@@ -1,0 +1,211 @@
+<html lang="en">
+<head>
+<title>Expressions - MIcroSimulation Tool (MIST)</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="MIcroSimulation Tool (MIST)">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Parameters.html#Parameters" title="Parameters">
+<link rel="next" href="Reports.html#Reports" title="Reports">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2013 Jacob Barhak
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The MIcroSimulation Tool (MIST) is distributed in the hope that it will
+be useful, but "as is" and WITHOUT ANY WARRANTY of any kind, including
+any warranty that it will not infringe on any property rights of
+another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities with
+respect to the use of the MIcroSimulation Tool (MIST).
+
+   The MIcroSimulation Tool (MIST) was derived from the Indirect
+Estimation and Simulation Tool (IEST) and uses code distributed under
+the IEST name. The change of the name signifies a split from the
+original design that  focuses on microsimulation. For the sake of
+completeness, the copyright  statement from the original tool developed
+by the University of Michigan is provided below and is also mentioned
+above.
+
+ORIGINAL COPYRIGHT
+------------------
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan.
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen
+Ye.  Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman.
+Videos by Michael Kylman.
+
+   This documentation and software are part of the Indirect Estimation
+and Simulation Tool (IEST).  The Indirect Estimation and Simulation
+Tool (IEST) is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+   The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+Additional Clarification
+------------------------
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in
+the hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY
+of any kind, including any warranty that it will not infringe on any
+property rights of another party or the IMPLIED WARRANTIES OF
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF
+MICHIGAN assumes no responsibilities with respect to the use of the
+Indirect Estimation and Simulation Tool (IEST).-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Expressions"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Reports.html#Reports">Reports</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Parameters.html#Parameters">Parameters</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr><br>
+</div>
+
+<h2 class="chapter">12 Expressions</h2>
+
+<p>The system uses expressions in parameters and in simulation rules. Expressions include mathematical and logical formulas. Expressions can be a simple as 1+2; they can use another parameter as in Age +1; They can be complex expressions using mathematical functions as in Exp(-Age); They can even use if statements as in Iif(Gr(Age+1,50),1,0); These expressions can also represent tables as in Table(1,3,0,0.5,1,Age,NaN,20,30,40) . These formulas may contain, as literals, parameter names (including parameters that hold values, parameters that specify user defined functions, state indicator names, and some reserved words), mathematical operators, system built in functions. Below is a list of allowed operators:
+
+<h3 class="section">12.1 Supported arithmetic functions</h3>
+
+     <ul>
+<li><strong>+</strong> : addition operator
+<li><strong>-</strong> : negative/subtraction operator
+<li><strong>*</strong> : multiplication operator
+<li><strong>/</strong> : division operator (note that integers will be treated as floating point numbers)
+<li><strong>**</strong> : power operator
+</ul>
+
+<h3 class="section">12.2 Other supported literals</h3>
+
+     <ul>
+<li><strong>()</strong> : Parenthesis to determine the order of the calculation
+<li><strong>[,]</strong> : brackets enclosing comma separated values describe lists. Note that this type of expression is limited for use only is special cases. 
+</ul>
+
+<h3 class="section">12.3 A list of comparison operators</h3>
+
+     <ul>
+<li><strong>Eq(x1,x2)</strong>: will return 1 if x1=x2 and 0 otherwise
+<li><strong>Ne(x1,x2)</strong>: will return 1 if x1&lt;&gt;x2 and 0 otherwise
+<li><strong>Gr(x1,x2)</strong>: will return 1 if x1&gt;x2 and 0 otherwise
+<li><strong>Ge(x1,x2)</strong>: will return 1 if x1&gt;=x2 and 0 otherwise
+<li><strong>Ls(x1,x2)</strong>: will return 1 if x1&lt;x2 and 0 otherwise
+<li><strong>Le(x1,x2)</strong>: will return 1 if x1&lt;=x2 and 0 otherwise
+</ul>
+
+<h3 class="section">12.4 A list of Boolean operators</h3>
+
+<p>In the following Boolean operators, the results are either 1 or 0.  Any argument that not zero is considered be true and zero is treated as false.
+     <ul>
+<li><strong>Or(x1,x2,x3…)</strong>: will perform a Boolean OR operation on two or more inputs
+<li><strong>And(x1,x2,x3…)</strong>: will perform a Boolean AND operation on two or more inputs
+<li><strong>Not(x)</strong>: will perform a Boolean Not operation on a single input
+<li><strong>IsTrue(x)</strong>: will return 1 for a numeric x that is not 0. Will return 0 otherwise. 
+</ul>
+
+<h3 class="section">12.5 A list of special math related functions and symbols</h3>
+
+<p>Note that these may be platform dependent.  Boolean operators treat NaN (Not a Number) as false as well as any other non-number type such as a vector/matrix.
+     <ul>
+<li><strong>Inf, inf</strong>: will be recognized by the system as infinite. This symbol should not to be used in mathematical calculations as it may generate error. It can be used for bound checks for parameters. 
+<li><strong>NaN, nan</strong>: will be recognized by the system as not a number. Note that comparison of NaN to any number including NaN will return False. Arithmetic operations using NaN produce NaN and may raise errors and therefore should be avoided. NaN has a special meaning when defining tables. 
+<li><strong>IsInvalidNumber(x)</strong>: will return 1 for x=NaN or for a non numeric type such as a vector , 0 otherwise
+<li><strong>IsInfiniteNumber(x)</strong>: will return 1 for x=-Inf or x=Inf, 0 otherwise
+<li><strong>IsFiniteNumber(x)</strong>: will return 1 if x is a finite number, 0 if x is not a valid number or an Infinite number
+</ul>
+
+<h3 class="section">12.6 Mathematical functions</h3>
+
+     <ul>
+<li><strong>Exp(x)</strong>: exponential
+<li><strong>Log(x,n)</strong>: logarithm of base n
+<li><strong>Ln(x)</strong>: natural logarithm
+<li><strong>Log10(x)</strong>: decimal logarithm
+<li><strong>Pow(x,n)</strong>: power operator similar to **
+<li><strong>Sqrt(x)</strong>: square root operator similar to **0.5
+<li><strong>Pi()</strong>: the mathematical constant approximately equal to 3.14159
+</ul>
+
+<h3 class="section">12.7 Other functions</h3>
+
+     <ul>
+<li><strong>Mod (x,n)</strong>: Modulus of base n
+<li><strong>Abs(x)</strong>: Absolute value of x
+<li><strong>Floor(x)</strong>: closest integer equal to or below x
+<li><strong>Ceil(x)</strong>: closest integer equal to or above x
+<li><strong>Max(a1,a2,a3…)</strong>: the maximum value in the list
+<li><strong>Min(b1,b2,b3…)</strong>: the minimum value in the list
+</ul>
+
+<h3 class="section">12.8 Statistical Distributions - Random number generators</h3>
+
+<p>These random functions can be used to define the Distribution of parameters:
+     <ul>
+<li><strong>Bernoulli(p)</strong> : produces a 1 with probability p - somewhat similar to a coin flip. 
+<li><strong>Binomial(n,p)</strong> : the number of successes of n bernoulli tests with probability p - somewhat similar to rolling n dice
+<li><strong>Geometric(p)</strong> : number of bernoulli tests to achieve the first sccesss
+<li><strong>Uniform(a,b)</strong> : the arguments a and b define the lower and upper limits of the interval
+<li><strong>Gaussian(mean,std)</strong> : normal distribution with mean and std
+</ul>
+
+<h3 class="section">12.9 Control and Data Access</h3>
+
+     <ul>
+<li><strong>Iif(Statement,TrueResult,FalseResult)</strong>: Returns TrueResult if Statement is not 0, FalseResult if Statement is 0. 
+<li><strong>Table (TableParameters)</strong>: A multi-dimensional table. TableParameters are provided as a string of comma-separated values. The Table Input argument pattern is: D,N_1,N_2,...,N_D,V_1...V_(N1*N2*...*ND),M_1,R_1_0...R_1_(N_1)......M_D,R_D_0...R_D_(N_D).  Where D defines the number of dimensions, N_i the dimension size for dimension i, V_i table values, M_i dimension names, R_i_j, the j range value definition item for dimension i . NaN value in R_i_0 means the dimension is discrete rather than continuous and the range bounds provided later represent values rather than lower and upper bounds associated with cells. For example Table(2,2,3,1,2,3,4,5,6, Gender, NaN,0,1, Age,0,30,60,120) defines a D=2 dimensional table with the dimensions M_1=Gender and M_2=Age. The levels of each dimension are defined by cutpoints which represent the lower and upper bounds for each interval; &gt; lower bound and &lt;= upper bound.  When the dimension is categorical, such as Gender, the first cutpoint should be NaN, followed by the values of the categories.  When the dimension is continuous, the first cutpoint is less than the minimum and the last cutpoint is &gt;= the maximum.  In our example, . the Gender Dimension has N_1 =2 categories with the discrete values of R_1_0 =NaN,  R_1_1 = 0 and R_1_2 = 1, and the Age dimension has N_2=3 categories defined by  R_2_0= 0&lt;Age&lt;=30= R_2_1, R_2_1= 30&lt;Age&lt;=60= R_2_2, R_2_2= 60&lt;Age&lt;=120= R_2_3.The values that the table holds are V1...V6=1,2,3,4,5,6. as can be seen in the following table:
+<table width="200" border="1">
+  <tr>
+    <th scope="col">&nbsp;</th>
+    <th scope="col">0&lt;Age&lt;=30</th>
+    <th scope="col">30&lt;Age&lt;=60</th>
+    <th scope="col">60&lt;Age&lt;=120</th>
+  </tr>
+  <tr>
+    <th scope="row">Gender=0</th>
+    <td><div align="center">1</div></td>
+    <td><div align="center">2</div></td>
+    <td><div align="center">3</div></td>
+  </tr>
+  <tr>
+    <th scope="row">Gender=1</th>
+    <td><div align="center">4</div></td>
+    <td><div align="center">5</div></td>
+    <td><div align="center">6</div></td>
+  </tr>
+</table></ul>
+
+<h3 class="section">12.10 Application specific</h3>
+
+     <ul>
+<li><strong>CostWizard (FunctionType, InitialValue, CoefficientVector, ValuesVector)</strong>: The function calculates costs or QoL accurding to FunctionType: If FunctionType=0, costs are calculated if FunctionType=1, Quality of life is calculated. Note that CoefficientVector and ValuesVector are vectors of the same size. The system returns an error if there is an incompatibility between parameters and coefficients or if the FunctionType is not 0 or 1. The cost/QoL function is calculated according to the formula presented in Zhou H, Isaman DJ, Messinger S, Brown MB, Klein R, Brandle M, Herman WH. A computer simulation model of diabetes progression, quality of life, and cost. Diabetes Care. 2005;28(12):2856-63. Note that the values associated with the cost/QoL can be changed by the user. 
+</ul>
+
+   <p>Note that missing values are not supported by the system. An exception is population data upload in which case missing data values are ignored by default in simulation.
+
+   </body></html>
+
