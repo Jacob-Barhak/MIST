@@ -261,10 +261,11 @@ if __name__ == "__main__":
         # Ask the user for information
         # Ask the user to provide file name to run
         print 'Info: this script can be invoked from command line using the following syntax:'
-        print ' MultiRunSimulation.py FileName ProjectIndex [OptionalArguments...] '
-        print ' ProjectIndex is the sort order of the project, unless enclosed by brackets'
-        print ' in which case it means the internal project ID'
+        print ' MultiRunSimulation.py FileName [OptionalArguments...] '
         print ' OptionalArguments consists of the following parameters in this order:'
+        print '  ProjectIndex: is the sort order of the project in the file, unless enclosed'
+        print '                by brackets in which case it means the internal project ID.' 
+        print '                the default is 0 - meaning the first project in the file'
         print '  Repetitions: The number of times to repeat the simulation'
         print '  StartIndex: An integer to start the enumerated output file sequence'
         print '  OverWriteFilesOrReconstructFromTraceback: If y (default), then output'

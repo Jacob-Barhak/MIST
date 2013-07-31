@@ -92,7 +92,7 @@ LoadedModuleNames = dir()
 # different revisions of a similar data structure than may or may not be
 # compatible with each other. It is the responsibility of the code to
 # check what code versions and revisions are compatible with it.
-Version = (0,87,0,0,'MIST')
+Version = (0,88,0,0,'MIST')
 
 # DEBUG variables
 # DebugPrints options are ['Table','TBD','Matrix', 'ExprParse','ExprConstruct', 'PrepareSimulation', 'Load' , 'MultiProcess', 'CSV', 'TempDir']
@@ -102,8 +102,8 @@ MessagesTBD = []
 
 # First, some useful constants
 FloatCompareTolerance = 1e-13 # Tolerance for comparing some floats for equality
-Inf = 1e30000000    # May be replaced by numpy later on
-NaN = Inf-Inf       # May be replaced by numpy later on
+Inf = float('inf')    # May be replaced by numpy later on
+NaN = float('nan')    # May be replaced by numpy later on
 inf = Inf    # Duality needed to support both upper and lower case versions
 nan = NaN    # Duality needed to support both upper and lower case versions
 InitTime = datetime.datetime(datetime.MINYEAR,1,1)
@@ -725,24 +725,30 @@ def Iif (Statement, TruePart, FalsePart):
 
 def TableParseOnly(*ArgList):
     """ Parses a table definition - return the class """
-    # Recostruct the Argument list string while replacing back Inf and NaN
-    # This is requires since the call to the function already replaced
-    # Inf and NaN with values and string conversion will create artifacts.
-    # Since the table class requires string representation, this processing
-    # is required to provide proper input. The function returns the constructed
-    # Table object
-    ArgString = str(ArgList)
-    ArgString = ArgString.replace(str(Inf),'Inf')
-    ArgString = ArgString.replace(str(-Inf),'(-Inf)')
-    ArgString = ArgString.replace(str(NaN),'NaN')
-    TBD('Optimize the speed of accessing of tables - important for runtime')
-    try:
-        # Try to create a table class with the input parameters. If unsuccessful
-        # raise an error
-        TempTable = TableClass('Table'+ArgString, ParseOnly = True)
-    except:
-        (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-        raise ValueError, 'Table Parser Error: The table cannot be evaluated. Check the number and the validity of parameters. Here are additional details:' + str(ExceptValue)
+    # First see if the Arguments to the table are of 2 lists. if so, then
+    # the new method of calling is used and there is no need to reconstruct
+    # any string.
+    if len(ArgList)==2 and IsList(ArgList[0]) and IsList(ArgList[1]):
+        # if using the new format, just call the funcion with the arguments
+        TempTable = TableClass(DimensionsArray = ArgList[0], ValuesArray = ArgList[1])
+    else:
+        # Recostruct the Argument list string while replacing back Inf and NaN
+        # This is requires since the call to the function already replaced
+        # Inf and NaN with values and string conversion will create artifacts.
+        # Since the table class requires string representation, this processing
+        # is required to provide proper input. The function returns the constructed
+        # Table object
+        ArgString = str(ArgList)
+        ArgString = ArgString.replace(str(Inf),'Inf')
+        ArgString = ArgString.replace(str(-Inf),'(-Inf)')
+        ArgString = ArgString.replace(str(NaN),'NaN')
+        try:
+            # Try to create a table class with the input parameters. If unsuccessful
+            # raise an error
+            TempTable = TableClass( InitString = 'Table'+ArgString, ParseOnly = True)
+        except:
+            (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+            raise ValueError, 'Table Parser Error: The table cannot be evaluated. Check the number and the validity of parameters. Here are additional details:' + str(ExceptValue)
     return TempTable
 
 def Table(*ArgList):
@@ -1068,7 +1074,7 @@ def CostWizardParserForGUI(CostWizardString, TreatEmptyAsDefault = False):
     if TempStr[10] != '(' or TempStr[-1] != ')':
         raise ValueError, 'Cost Wizard Parser: Cost function not fully enclosed in parenthesis or is not the only function in the expression. To use the cost Wizard correctly, the expression must include the Cost Wizard Function alone. If a more complicated expression is required, please split it to several separate rules'
     # 2. Split the string at [
-    SequenceSplit = NestedExpressionArgumentSplit(TempStr)
+    SequenceSplit = NestedExpressionArgumentSplit(TempStr, EatFunctionWrapper = '()')
     # Make sure there is a correct number of sequences
     if len(SequenceSplit) != 4:
         raise ValueError, 'ASSERTION ERROR: There should be exactly 2 sequences in the CostWizard parameters'
@@ -1102,7 +1108,7 @@ def CostWizardParserForGUI(CostWizardString, TreatEmptyAsDefault = False):
         except:        
             raise ValueError, 'Cost Wizard Parser: Proper sequence not detected for parameter #' + str(SeqNum+3)+ ' of CostWizard, if the function was manipulated by hand, remove all enclosing parenthesis and spaces around the brackets'
         # Split the sequence without brackets at the commas
-        ParamList = NestedExpressionArgumentSplit(SequenceToCheck.strip()[1:-1], EatFunctionWrapper = False)
+        ParamList = NestedExpressionArgumentSplit(SequenceToCheck.strip()[1:-1])
         SequenceLengths[SeqNum] = len(ParamList)
         # For each member:
         for Member in ParamList:
@@ -1155,7 +1161,8 @@ def ConstructCostWizardString(CostWizardSequence):
         raise ValueError, 'Cost Wizard Constructor: The constructed cost wizard expression is invalid. Make sure that the parameters used are valid and that the result can be calculated. The constructed expression was: "' + CostWizardStr + '". Here are error details: ' + str(ExceptValue)
     return CostWizardStr
 
-def NestedExpressionArgumentSplit(InputString, EatFunctionWrapper = True):
+
+def NestedExpressionArgumentSplit(InputString, EatFunctionWrapper = None):
     """Splits a string of arguments at commas at the topmost nesting level"""
     NestingLevel = 0
     CurrentMember = ''
@@ -1163,12 +1170,13 @@ def NestedExpressionArgumentSplit(InputString, EatFunctionWrapper = True):
     StringToProcess = InputString
     # Eating function wrapper will take away the header and the tail up to the
     # first parenthesis/brackets as long as no comma is encountered.
+    # EatFunctionWrapper hold the open/close element to be eaten to - () or []
     # Note that no consistency check is made on the pairing of parenthesis
     # it is assumed that parenthesis are paired properly
-    if EatFunctionWrapper:
+    if EatFunctionWrapper != None:
         try:
-            StartIndex = InputString.index('(') + 1
-            EndIndex = InputString.rindex(')')
+            StartIndex = InputString.index(EatFunctionWrapper[0]) + 1
+            EndIndex = InputString.rindex(EatFunctionWrapper[1])
         except:
             (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
             raise ValueError, 'ASSERTION ERROR: Cannot properly strip wrapper parenthesis from function string before splitting at commas "' + InputString + '". Here are error details: ' + str(ExceptValue)
@@ -1191,8 +1199,10 @@ def NestedExpressionArgumentSplit(InputString, EatFunctionWrapper = True):
         elif Char in '])':
             # closing parenthesis and brackets decrease nesting level
             NestingLevel = NestingLevel - 1
-    SplitOutput = SplitOutput + [CurrentMember]
+    # Note that output elements are striped from spaces
+    SplitOutput = SplitOutput + [CurrentMember.strip()]
     return SplitOutput
+
 
 
 def HandleOption(OptionName, OptionList, Value = None, UseNewValue = False, DeleteThisOption = False):
@@ -1394,11 +1404,11 @@ class Expr(str):
     DependantParams = [] # Holds the names of the dependant parameters after
                          # Validation of an expression
     ReplacementSubExpressions = [] # Holds the sub-expressions associated with 
-                                   # each dependant parameter at DependantParams
+                                   # each dependant param at DependantParams
                                    # These can later be used for validation of
                                    # values.
-    ValidationRule = None # Recalls the validation rule used when the expression
-                          # was created.
+    ValidationRule = None # Recalls the validation rule used when the 
+                          # expression was created.
     RawDependants = [] # A list of tokens recognized in the expression. These
                        # represent nodes in the expression tree                     
     RawReplacement = [] # a list of replacements to replace the tokens. These 
@@ -1635,7 +1645,7 @@ class Expr(str):
                 # Check that this is actually case A by trying to split it
                 # into tuple arguments. then seeing if the parenthesis
                 # in the first argument are balanced.
-                TupleArguments = NestedExpressionArgumentSplit(ModifiedString)
+                TupleArguments = NestedExpressionArgumentSplit(ModifiedString, EatFunctionWrapper = '()')
                 ParenthisisOpen = TupleArguments[0].count('(')
                 ParenthisisClose = TupleArguments[0].count(')')
                 if ParenthisisOpen == ParenthisisClose:
@@ -1903,15 +1913,15 @@ class Expr(str):
                     if EncapsulatedFunctionName in FunctionsWithExplanations:
                         ReportString = ReportString + TotalIndent + FieldHeader * ('The sub-expression: ' + str(EncapsulatedFunction) + ' means: ') + LineDelimiter
                         if EncapsulatedFunctionName == 'Table':
-                            TableToAnalyze = TableClass(EncapsulatedFunction)
+                            TableToAnalyze = TableClass(InitString = EncapsulatedFunction)
                             ReportString = ReportString + TableToAnalyze.GenerateReport(FormatOptions)
                         elif EncapsulatedFunctionName == 'Iif':
-                            Arguments = NestedExpressionArgumentSplit(EncapsulatedFunction)
+                            Arguments = NestedExpressionArgumentSplit(EncapsulatedFunction, EatFunctionWrapper = '()')
                             ReportString = ReportString + TotalIndent + IndentAtom + 'If ' + Arguments[0] + ': '+ LineDelimiter
                             ReportString = ReportString + TotalIndent + IndentAtom + IndentAtom + 'Then return (' + Arguments[1] + ') '+ LineDelimiter
                             ReportString = ReportString + TotalIndent + IndentAtom + IndentAtom + 'Else return (' + Arguments[2] + ') '+ LineDelimiter
                         elif EncapsulatedFunctionName in ComparisonOperatorDict.keys():
-                            Arguments = NestedExpressionArgumentSplit(EncapsulatedFunction)
+                            Arguments = NestedExpressionArgumentSplit(EncapsulatedFunction, EatFunctionWrapper = '()')
                             OperatorSignText = ComparisonOperatorDict[EncapsulatedFunctionName]
                             ReportString = ReportString + TotalIndent + IndentAtom + 'Return 1 if ' + Arguments[0] + OperatorSignText + Arguments[1] + ', return 0 otherwise.'+ LineDelimiter
             ReportString = ReportString + TotalIndent + SectionSeparator + LineDelimiter
@@ -2098,9 +2108,10 @@ class Expr(str):
         return
 
 
+
 class TableClass():
     """Defines a multidimensional table with values, dimensions, and ranges"""
-    Description = ''  # The string that initially defined the table
+    DescriptionStr = None  # The string that initially defined the table
     DimNum = 0    # The number of dimensions in the table
     Sizes = []    # A sequence containing the size of each dimension
     Values = []   # A multidimensional sequence defining the table
@@ -2110,182 +2121,316 @@ class TableClass():
     FlatValues = [] # The same as Values, only flattened into a list with
                     # a single dimension
     DataItemsNum = 0 # A number representing the total number of table elements
-    SystemTableFlag = False # True indicates that the data in the table is for 
-                            # system use only or can also be used by the user in 
-                            # data manipulation.     
-    def __init__( self , InitString = None , Dimensions = None, FlatValues = None , ParseOnly = False):
-        """Constructor with default values and some consistency checks"""
-        if InitString == None:
-            # in case the init string was not specified as a string
-            # construct the string from available information
-            # Note that Values is considered a flat vector
-            InitString = self.ConstructDescriptionStringByValues (Dimensions, FlatValues)
-        # Define a local constant string that will be used for error messages
-        TableDescriptionErrorString = 'The Table Input argument pattern is: D,N_1,N_2,...,N_D,V_1...V_(N1*N2*...*ND),{M_1,R_1_0...R_1_(N_1)}......{M_(N_D),R_D_0...R_D_(N_D)}. D defines the number of dimensions, N_i the dimension size for dimension i, V_i table values, M_i dimension names, R_i_j, the j range bound item for dimension i.'
-        # If the information is provided via an initializing string        
-        # Init the table by converting the data in InitString
-        # Start with removing the word Table
-        TempStr = InitString.strip()
-        if not TempStr.startswith('Table'):
-            raise ValueError, 'Table Expression Validation Error: The table expression is missing the keyword "Table" in the beginning of the expression. The expression was: "' + InitString + '"'
-        TempStr = TempStr[5:].strip()
-        if TempStr[0] != '(' or TempStr[-1] != ')':
-            raise ValueError, 'Table Expression Validation Error: The table is not specified in function form - parenthesis are missing. The expression was: "' + InitString + '"'
-        # The description holds only the data
-        Description = TempStr[1:-1]
-        if "Table" in DebugPrints:
-            print 'DEBUG - Table Description = ' + str(Description)
-        # old version text was: Items = Description.split(',')
-        Items = NestedExpressionArgumentSplit(InitString)
-        # Remove leading and following spaces from each item in items
-        Items = map (lambda Item: Item.strip() , Items)
-        # Interpret the number of dimensions
-        try:
-            DimNum = int (Items[0])
-        except:
-            raise ValueError, 'Table Expression Validation Error: A non integer number was detected for the number of dimensions D. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"'
-        else:
-            if not IsNumericType(DimNum) or DimNum<1:
-                raise ValueError, 'Table Expression Validation Error: A non positive number was detected for the number of dimensions. The first argument of a table represents the number of dimensions. The table expression was: "' + InitString + '"' 
-        if "Table" in DebugPrints:
-            print 'DEBUG - Table DimNum = ' + str(DimNum)
-        # Verify there is enough information about sizes
-        if len(Items) < DimNum+1:
-            raise ValueError, 'Table Expression Validation Error: Not enough elements to define the sizes of the table. ' + TableDescriptionErrorString + ' There were not enough numbers to define N_i in the given definition. The table expression was: "' + InitString + '"' 
-        # Interpret the number of dimensions
-        Sizes = []
-        DataItemsNum = 1
-        SupportingItemsNum = 0
-        for Item in Items[1 : DimNum+1]:
-            try:
-                Size = eval (Item , EmptyEvalDict)
-            except:
-                raise ValueError, 'Table Expression Validation Error: Dimension size does not represent a number. ' + TableDescriptionErrorString + ' At least one of the N_i values does not evaluate to a number. The table expression was: "' + InitString + '"'
-            else:
-                if not IsNumericType(Size) or Size<1:
-                    raise ValueError, 'Table Expression Validation Error: Dimension size does not represent a positive number. ' + TableDescriptionErrorString + ' At least one of the N_i values does not evaluate to a positive number. The table expression was: "' + InitString + '"'
-                Sizes = Sizes + [Size]
-                DataItemsNum = DataItemsNum * Size
-                SupportingItemsNum = SupportingItemsNum + 2 + Size
-        if "Table" in DebugPrints:
-            print 'DEBUG - Table Sizes = ' + str(Sizes)
-        if len(Items) != 1 + DimNum + SupportingItemsNum + DataItemsNum:
-            raise ValueError, 'Table Expression Validation Error: The number of information items is incompatible with the size of the table. ' + TableDescriptionErrorString + ' There were not enough / too many members in the string to accommodate all the information as defined by D and N_i. The table expression was: "' + InitString + '"' 
-        # Convert the data into a sequence
-        IndexVector = [0] * DimNum
-        FlatSequenceString = '['
-        SequenceString = '[' * DimNum
-        for Item in Items[DimNum+1 : DimNum+DataItemsNum+1]:
-            # If the input data in the string is evaluated to a number,
-            # the item will be a number. Otherwise it will be a string
-            # representing an expression
-            if ParseOnly:
-                # if only parsing, make sure it is a valid expression
-                try:
-                    Expr(Item)
-                except:
-                    (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-                    raise ValueError, 'Table Expression Validation Error: Table data value items in the table should become numeric. The item "' + str(Item) + '" is not valid. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '". Here are additional details on the Error: ' + str(ExceptValue)
-            else:
-                # in this case just make sure this is a number
-                # note that 1+2 or a similar constant expression 
-                # is still considered a number
-                try:
-                    ItemVal = eval (Item , EmptyEvalDict)
-                    if not IsNumericType(ItemVal):
-                        raise ValueError , "Non Numeric Type Detected"
-                except:
-                    (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-                    raise ValueError, 'Table Expression Validation Error: Table data value items in the table should be numeric. The item "' + str(Item) + '" is not valid. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '" . Here are additional details on the Error: ' + str(ExceptValue)
-            ItemToAdd = Item
-            DimIndex = DimNum -1
-            Separator=','
-            # Increase index vector first digit
-            IndexVector[DimIndex] = IndexVector[DimIndex]+1
-            while DimIndex >=0 and IndexVector[DimIndex] == Sizes[DimIndex]:
-                # Reset current dimension index counter
-                IndexVector[DimIndex] = 0
-                # Add parenthesis to a proper separator
-                Separator = ']'+ Separator +'[' 
-                # Increase the index counter
-                DimIndex = DimIndex - 1
-                # Increase the next dimension index counter
-                if DimIndex >=0:
-                    IndexVector[DimIndex] = IndexVector[DimIndex]+1
-            SequenceString = SequenceString + ItemToAdd + Separator
-            FlatSequenceString = FlatSequenceString + ItemToAdd + ','
-        # Remove the unneeded brackets at the end
-        SequenceString = SequenceString[0 : -(DimNum+1)]
-        FlatSequenceString = FlatSequenceString[0:-1] +']'
-        # After the string is created turn it into a sequence
-        Values = eval(SequenceString, EmptyEvalDict)
-        FlatValues = eval(FlatSequenceString, EmptyEvalDict)
-        if "Table" in DebugPrints:
-            print 'DEBUG - Table Values = ' + str(Values)
-        ### Organize the dimension names and ranges in tuples
-        Pos = DimNum+DataItemsNum+1
-        Dimensions = []
-        for DimIndex in range(DimNum):
-            DimensionName = Items[Pos]
-            DimRangeInText = Items[Pos+1 : Pos+2+Sizes[DimIndex]]
-            # Check validity of the dimension name
-            if ParseOnly:
-                # If only validating the table structure, dimension
-                # names should not appear. Instead only numbers are
-                # expected. Assert this:
-                try:
-                    float(DimensionName)
-                except:
-                    raise ValueError, 'ASSERTION ERROR: found a non number:' + str(DimensionName) +'" while in validate only mode while defining a table'
-            else:
-                # In non validation mode, the dimension name should be
-                # a valid Expression.
-                try:
-                    Expr(DimensionName)
-                except:
-                    (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-                    raise ValueError, 'Table Expression Validation Error: The table dimension "' + str(DimensionName) +'" contains an invalid expression. Here the table processed' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '" . Here are additional details on the Error: '+ str(ExceptValue)
 
-            DimRange = []
-            for Item in DimRangeInText:
-                try:
-                    ItemVal = eval (Item , EmptyEvalDict)
-                except:
-                    raise ValueError, 'Table Expression Validation Error: Range bound item could not be evaluated. Received the value: "' + Item +'". ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"' 
+    def __init__( self , InitString = None , DimensionsArray = None, ValuesArray = None , ParseOnly = False):
+        """Constructor with default values and some consistency checks"""
+        # Note that the constructor shuld handle both construction by arguments
+        # and construction as string since both runtime and compile time
+        # Table are possible and use the same code. For example Tables are used
+        # for report generation where the text form is used.
+        # Note that currently two inpur formats are supported: the new format
+        # that uses lists and the old format that uses a string. 
+        # The old format is being rolled out and is declared deprecated.
+        def VerifySizes(Sizes, Values):
+            """Verify Recursively that Value array corresponds to Sizes"""
+            # An Error will be raised if mismatch, otherwise True Returned
+            # If reached an empty list of size
+            if Sizes == []:
+                if IsList(Values):
+                    raise ValueError, "Table Size Validation Error: Table sizes do not match array sizes - the data contains more dimensions than the size."
+            else:
+                # if the size still exists
+                if not IsList(Values):
+                    raise ValueError, "Table Size Validation Error: Table sizes do not match array sizes - the size contains more dimensions than the data - expected size " + str(Sizes[0]) + " with the subset " + str(Values) + " ."
+                elif len(Values)!=Sizes[0]:
+                    raise ValueError, "Table Size Validation Error: Table sizes do not match array sizes - expected size " + str(Sizes[0]) + " got " + str(len(Values)) + " with the subset " + str(Values) + " ."
                 else:
-                    if not IsNumericType(ItemVal):
-                        raise ValueError, 'Table Expression Validation Error: Range bound items must be either a number or NaN. Received the value: "' + Item +'". ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"'
-                # Check that items are ordered in increasing order
-                if DimRange != [] and not IsNaN(DimRange[-1]) and DimRange[-1] > ItemVal:
-                    raise ValueError, 'Table Expression Validation Error: Range bound items are not sorted in ascending order: ' + SmartStr(DimRange[-1]) + ' is higher than ' + str(ItemVal)+'. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"'
-                # Add these to the range
-                DimRange = DimRange + [ItemVal]
-            # Add the tuple of Name and the range to the Dimensions vector
-            Dimensions = Dimensions + [(DimensionName,DimRange)]
-            # Update the position in the text
-            Pos = Pos + 2 + Sizes[DimIndex]
-        if "Table" in DebugPrints:
-            print 'DEBUG - Table Dimensions = ' + str(Dimensions)
-        # when the table is initialized this was it is assumed to be a table
-        # that can be used by a user and not an internal system table and
-        # therefore the SystemTableFlag is reset
-        SystemTableFlag = False            
+                    for Element in Values:
+                        VerifySizes(Sizes[1:], Element)
+            # This means ok with this dimension
+            return True
+        # Define a local constant string that will for error messages
+        # Define as a function to skip calculations unless needed
+        def TableDescriptionErrorString(self):
+            return 'The format should be : DimensionsArray, ValueArray. Where DimensionsArray = [[DimName, [DimRange,..],..]] , ValueArray = [..[NestedValues]..] .  The table expression was: "' + self.Description() + '"'
+            
+        def ReturnNumericOrString(Item):
+            'Returns a numeric value from string if possible otherwise string'
+            try:
+                # try to evaluate this to a number
+                ItemVal = eval (Item , EmptyEvalDict)
+                if not IsNumericType(ItemVal):
+                    raise ValueError , "Non Numeric Type Detected"
+            except:
+                # if not evaluated properly, retain the string
+                ItemVal=Item
+            return ItemVal
+        
+        # Figure out if old format or new format were used.
+        if InitString == None:
+            NewTableFormat = True
+            Dimensions = DimensionsArray
+            Values = ValuesArray
+        else:
+            try:
+                # If the information is provided via an initializing string        
+                # Init the table by converting the data in InitString
+                # Start with removing the word Table
+                TempStr = InitString.strip()
+                if not TempStr.startswith('Table'):
+                    raise ValueError, 'Table Expression Validation Error: The table expression is missing the keyword "Table" in the beginning of the expression. The expression was: "' + InitString + '"'
+                TempStr = TempStr[5:].strip()
+                if TempStr[0] != '(' or TempStr[-1] != ')':
+                    raise ValueError, 'Table Expression Validation Error: The table is not specified in function form - parenthesis are missing. The expression was: "' + InitString + '"'
+                if "Table" in DebugPrints:
+                    print 'DEBUG - Table Description = ' + str(InitString)
+                SplitArguments = NestedExpressionArgumentSplit(InitString, EatFunctionWrapper = '()')
+                # if a list is detected, then we know the new format is used
+                if len(SplitArguments) == 2 and SplitArguments[0][0]=='[' and SplitArguments[0][-1]==']' and SplitArguments[1][0]=='[' and SplitArguments[1][-1]==']':
+                    NewTableFormat = True
+                    # Preprocess the information so that it can be used with
+                    # the same code that initializes data.
+                    # First figure out table size
+                    DimSplit = NestedExpressionArgumentSplit(SplitArguments[0][1:-1])
+                    Dimensions = []
+                    # start parsing the dimension list
+                    try:
+                        for DimLine in DimSplit:
+                            if DimLine[0]!='[' or DimLine[-1]!=']':
+                                raise ValueError, 'Range should be a list'
+                            DimLineSplit = NestedExpressionArgumentSplit(DimLine[1:-1])
+                            # The format is Name followed by a range list
+                            DimName = ReturnNumericOrString(DimLineSplit[0])
+                            DimRangeString = DimLineSplit[1]
+                            if DimRangeString[0]!='[' or DimRangeString[-1]!=']':
+                                raise ValueError, 'Range should be a list'
+                            DimRangeSplit = NestedExpressionArgumentSplit(DimRangeString[1:-1])
+                            DimLineVal = []
+                            for Item in DimRangeSplit:
+                                ItemVal = ReturnNumericOrString(Item)
+                                DimLineVal.append(ItemVal)
+                            Dimensions.append([DimName,DimLineVal])
+                    except:
+                        raise ValueError, 'Table Expression Validation Error: invalid DimensionsArray was deteted that could not be parsed. ' + TableDescriptionErrorString(self)
+                    # If reaced this far, parse the values. Note that this is 
+                    # done level by level to support expressions within the 
+                    # table values.
+                    def ReconstrcutBySplitting(CurrentLevelData, LevelsToGo):
+                        "Reconstructs multidimentional array from string"
+                        # first split at commas
+                        StrippedCurrentLevelData = CurrentLevelData.strip()
+                        if len(StrippedCurrentLevelData)<2 or (StrippedCurrentLevelData[1] != '[' and  StrippedCurrentLevelData[-1] != ']'):
+                            raise ValueError, 'Split Error: Could not find sequence markers at beginning and end of string ' + repr(StrippedCurrentLevelData) + ' - check the declared dimension level'
+                        CurrentSplitLevel = NestedExpressionArgumentSplit(StrippedCurrentLevelData[1:-1])
+                        ReturnArray = []
+                        for Item in CurrentSplitLevel:
+                            if LevelsToGo == 1:
+                                ItemVal = ReturnNumericOrString(Item)
+                            else:
+                                ItemVal = ReconstrcutBySplitting(Item, LevelsToGo-1)
+                            ReturnArray.append(ItemVal)
+                        return ReturnArray
+                    try:
+                        Values = ReconstrcutBySplitting(SplitArguments[1],len(Dimensions))
+                    except:
+                        raise ValueError, 'Table Expression Validation Error: invalid ValuesArray was deteted that could not be parsed. ' + TableDescriptionErrorString(self)
+                else:
+                    # This is is about to be deprecated
+                    NewTableFormat = False
+            except:
+                raise ValueError, 'Table Expression Validation Error: invalid Input was deteted that could not be parsed. ' + TableDescriptionErrorString(self)
+
+        if NewTableFormat:
+            # reset description
+            DescriptionStr = None
+            # in case the init string was not specified as a string then it is 
+            # Assumed that the user supplied the data as nested lists. This is
+            # much faster to process for the system
+            if not IsList(Dimensions) or not IsList(Values):
+                raise ValueError, 'Table Expression Validation Error: invalid Input to Table DimensionsArray, ValueArray are not lists. ' + TableDescriptionErrorString(self)
+            DimNum = len(Dimensions)
+            # Interpret the number of dimensions
+            Sizes = []
+            DataItemsNum = 1
+            for Dim in range(DimNum):
+                # check validity of list
+                if not IsList(Dimensions[Dim]):
+                    raise ValueError, 'Table Expression Validation Error: invalid DimensionsArray that does not contain lists. ' + TableDescriptionErrorString(self)
+                DimSize = len(Dimensions[Dim][1])-1
+                # check that the size is not invalid
+                if DimSize < 1:
+                    raise ValueError, 'Table Expression Validation Error: invalid DimensionsArray with list smaller than 2 range elements for Dimension #' + str(Dim) + '. ' + TableDescriptionErrorString(self)
+                Sizes.append(DimSize)
+                DimensionName = Dimensions[Dim][0]
+                DimRange = Dimensions[Dim][1]
+                IsCategorical = IsNaN(DimRange[0])
+                for ItemEnum in range(IsCategorical+1, DimSize+1):
+                    if DimRange[ItemEnum-1] > DimRange[ItemEnum]:
+                        raise ValueError, 'Table Expression Validation Error: Range bound items are not sorted in ascending order: ' + SmartStr(DimRange[ItemEnum-1]) + ' is higher than ' + SmartStr(DimRange[ItemEnum]) + '. ' + TableDescriptionErrorString(self)
+                DataItemsNum = DataItemsNum * DimSize
+            # Now validate that Values is of valiid Sizes
+            try:            
+                VerifySizes(Sizes, Values)
+            except:
+                (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+                raise ValueError,  'Table Expression Validation Error: ' + str(ExceptValue) + ' ' + TableDescriptionErrorString(self)
+            # To speed up computation, the following FlatValues remains empty
+            # these are relevant only in the old format
+            FlatValues = None
+        else:
+            # Define a local constant string that will be used for error messages
+            # THIS CODE IS CANDIDATE FOR DEPRECATION !!!
+            MessageToUser("Old Table format is deprecated - Please use the faster new format")
+            # The description holds only the data
+            DescriptionStr = TempStr[1:-1]
+            TableDescriptionErrorString = 'The Table Input argument pattern is: D,N_1,N_2,...,N_D,V_1...V_(N1*N2*...*ND),{M_1,R_1_0...R_1_(N_1)}......{M_(N_D),R_D_0...R_D_(N_D)}. D defines the number of dimensions, N_i the dimension size for dimension i, V_i table values, M_i dimension names, R_i_j, the j range bound item for dimension i.'
+            # old version text was: Items = Description.split(',')
+            Items = NestedExpressionArgumentSplit(InitString, EatFunctionWrapper = '()')
+            # Remove leading and following spaces from each item in items
+            Items = map (lambda Item: Item.strip() , Items)
+            # Interpret the number of dimensions
+            try:
+                DimNum = int (Items[0])
+            except:
+                raise ValueError, 'Table Expression Validation Error: A non integer number was detected for the number of dimensions D. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"'
+            else:
+                if not IsNumericType(DimNum) or DimNum<1:
+                    raise ValueError, 'Table Expression Validation Error: A non positive number was detected for the number of dimensions. The first argument of a table represents the number of dimensions. The table expression was: "' + InitString + '"' 
+            if "Table" in DebugPrints:
+                print 'DEBUG - Table DimNum = ' + str(DimNum)
+            # Verify there is enough information about sizes
+            if len(Items) < DimNum+1:
+                raise ValueError, 'Table Expression Validation Error: Not enough elements to define the sizes of the table. ' + TableDescriptionErrorString + ' There were not enough numbers to define N_i in the given definition. The table expression was: "' + InitString + '"' 
+            # Interpret the number of dimensions
+            Sizes = []
+            DataItemsNum = 1
+            SupportingItemsNum = 0
+            for Item in Items[1 : DimNum+1]:
+                try:
+                    Size = eval (Item , EmptyEvalDict)
+                except:
+                    raise ValueError, 'Table Expression Validation Error: Dimension size does not represent a number. ' + TableDescriptionErrorString + ' At least one of the N_i values does not evaluate to a number. The table expression was: "' + InitString + '"'
+                else:
+                    if not IsNumericType(Size) or Size<1:
+                        raise ValueError, 'Table Expression Validation Error: Dimension size does not represent a positive number. ' + TableDescriptionErrorString + ' At least one of the N_i values does not evaluate to a positive number. The table expression was: "' + InitString + '"'
+                    Sizes = Sizes + [Size]
+                    DataItemsNum = DataItemsNum * Size
+                    SupportingItemsNum = SupportingItemsNum + 2 + Size
+            if "Table" in DebugPrints:
+                print 'DEBUG - Table Sizes = ' + str(Sizes)
+            if len(Items) != 1 + DimNum + SupportingItemsNum + DataItemsNum:
+                raise ValueError, 'Table Expression Validation Error: The number of information items is incompatible with the size of the table. ' + TableDescriptionErrorString + ' There were not enough / too many members in the string to accommodate all the information as defined by D and N_i. The table expression was: "' + InitString + '"' 
+            # Convert the data into a sequence
+            IndexVector = [0] * DimNum
+            FlatSequenceString = '['
+            SequenceString = '[' * DimNum
+            for Item in Items[DimNum+1 : DimNum+DataItemsNum+1]:
+                # If the input data in the string is evaluated to a number,
+                # the item will be a number. Otherwise it will be a string
+                # representing an expression
+                if ParseOnly:
+                    # if only parsing, make sure it is a valid expression
+                    try:
+                        Expr(Item)
+                    except:
+                        (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+                        raise ValueError, 'Table Expression Validation Error: Table data value items in the table should become numeric. The item "' + str(Item) + '" is not valid. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '". Here are additional details on the Error: ' + str(ExceptValue)
+                else:
+                    # in this case just make sure this is a number
+                    # note that 1+2 or a similar constant expression 
+                    # is still considered a number
+                    try:
+                        ItemVal = eval (Item , EmptyEvalDict)
+                        if not IsNumericType(ItemVal):
+                            raise ValueError , "Non Numeric Type Detected"
+                    except:
+                        (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+                        raise ValueError, 'Table Expression Validation Error: Table data value items in the table should be numeric. The item "' + str(Item) + '" is not valid. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '" . Here are additional details on the Error: ' + str(ExceptValue)
+                ItemToAdd = Item
+                DimIndex = DimNum -1
+                Separator=','
+                # Increase index vector first digit
+                IndexVector[DimIndex] = IndexVector[DimIndex]+1
+                while DimIndex >=0 and IndexVector[DimIndex] == Sizes[DimIndex]:
+                    # Reset current dimension index counter
+                    IndexVector[DimIndex] = 0
+                    # Add parenthesis to a proper separator
+                    Separator = ']'+ Separator +'[' 
+                    # Increase the index counter
+                    DimIndex = DimIndex - 1
+                    # Increase the next dimension index counter
+                    if DimIndex >=0:
+                        IndexVector[DimIndex] = IndexVector[DimIndex]+1
+                SequenceString = SequenceString + ItemToAdd + Separator
+                FlatSequenceString = FlatSequenceString + ItemToAdd + ','
+            # Remove the unneeded brackets at the end
+            SequenceString = SequenceString[0 : -(DimNum+1)]
+            FlatSequenceString = FlatSequenceString[0:-1] +']'
+            # After the string is created turn it into a sequence
+            Values = eval(SequenceString, EmptyEvalDict)
+            FlatValues = eval(FlatSequenceString, EmptyEvalDict)
+            if "Table" in DebugPrints:
+                print 'DEBUG - Table Values = ' + str(Values)
+            ### Organize the dimension names and ranges in tuples
+            Pos = DimNum+DataItemsNum+1
+            Dimensions = []
+            for DimIndex in range(DimNum):
+                DimensionName = Items[Pos]
+                DimRangeInText = Items[Pos+1 : Pos+2+Sizes[DimIndex]]
+                # Check validity of the dimension name
+                if ParseOnly:
+                    # If only validating the table structure, dimension
+                    # names should not appear. Instead only numbers are
+                    # expected. Assert this:
+                    try:
+                        float(DimensionName)
+                    except:
+                        raise ValueError, 'ASSERTION ERROR: found a non number:' + str(DimensionName) +'" while in validate only mode while defining a table'
+                else:
+                    # In non validation mode, the dimension name should be
+                    # a valid Expression.
+                    try:
+                        Expr(DimensionName)
+                    except:
+                        (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+                        raise ValueError, 'Table Expression Validation Error: The table dimension "' + str(DimensionName) +'" contains an invalid expression. Here the table processed' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '" . Here are additional details on the Error: '+ str(ExceptValue)
+    
+                DimRange = []
+                for Item in DimRangeInText:
+                    try:
+                        ItemVal = eval (Item , EmptyEvalDict)
+                    except:
+                        raise ValueError, 'Table Expression Validation Error: Range bound item could not be evaluated. Received the value: "' + Item +'". ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"' 
+                    else:
+                        if not IsNumericType(ItemVal):
+                            raise ValueError, 'Table Expression Validation Error: Range bound items must be either a number or NaN. Received the value: "' + Item +'". ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"'
+                    # Check that items are ordered in increasing order
+                    if DimRange != [] and not IsNaN(DimRange[-1]) and DimRange[-1] > ItemVal:
+                        raise ValueError, 'Table Expression Validation Error: Range bound items are not sorted in ascending order: ' + SmartStr(DimRange[-1]) + ' is higher than ' + str(ItemVal)+'. ' + TableDescriptionErrorString + ' The table expression was: "' + InitString + '"'
+                    # Add these to the range
+                    DimRange = DimRange + [ItemVal]
+                # Add the tuple of Name and the range to the Dimensions vector
+                Dimensions = Dimensions + [(DimensionName,DimRange)]
+                # Update the position in the text
+                Pos = Pos + 2 + Sizes[DimIndex]
+            if "Table" in DebugPrints:
+                print 'DEBUG - Table Dimensions = ' + str(Dimensions)
         # Transfer calculated data to class members
-        self.Description = Description
+        self.DescriptionStr = DescriptionStr
         self.DimNum = DimNum
         self.Sizes = Sizes
         self.Values = Values
         self.FlatValues = FlatValues
         self.DataItemsNum = DataItemsNum
         self.Dimensions = Dimensions
-        self.SystemTableFlag = SystemTableFlag
         if "Table" in DebugPrints:
-            print  Description
+            print  DescriptionStr
             print  DimNum
             print  Sizes
             print  Values
             print  Dimensions
         return        
+
 
     def LocateDimIndex(self, DimName):
         """ Returns the index of a specific DimName in the Table"""
@@ -2325,6 +2470,15 @@ class TableClass():
             # If the dimension is not found return None
             RangeIndex = None        
         return (DimIndex, RangeIndex)
+        
+    def Description(self):
+        """ return a string that describes the table """
+        # if this is a new table format
+        if self.DescriptionStr == None:
+            DescriptionStr = SmartStr( (self.Dimensions , self.Values) )
+        else:
+            DescriptionStr = self.DescriptionStr
+        return DescriptionStr
 
     def Evaluate(self):
         """ Evaluate the return value of a parsed table"""
@@ -2341,18 +2495,18 @@ class TableClass():
                 DimensionNameValue = float(DimensionName)
             except:
                 (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-                raise ValueError, 'Table Evaluation Error: The dimension value for dimension #' + str(Dim) + ' : "' + str(self.Dimensions[Dim]) + '" should hold a number. The original input parameters for the table were ' + self.Description + ' Here are further details about the error: ' + str(ExceptValue)
+                raise ValueError, 'Table Evaluation Error: The dimension value for dimension #' + str(Dim) + ' : "' + str(self.Dimensions[Dim]) + '" should hold a number. The original input parameters for the table were ' + self.Description() + ' Here are further details about the error: ' + str(ExceptValue)
             # Check the validity of the accessed data
             if IsNaN(DimRange[0]):
                 # If the data is categorical, check that the index is correct
                 RangeToLookAt = DimRange[1:]
                 if DimensionNameValue not in RangeToLookAt:
-                    raise ValueError, 'Table Evaluation Error: Table access index not in defined in the index range defined by the range bounds. The Value ' + str(DimensionNameValue) + ' is not in the specified categorical range ' + SmartStr(DimRange[1:])[1:-1] + ' for dimension #' + str(Dim) + ' : "' + SmartStr(self.Dimensions[Dim]) + '". The original input parameters for the table were ' + self.Description 
+                    raise ValueError, 'Table Evaluation Error: Table access index not in defined in the index range defined by the range bounds. The Value ' + str(DimensionNameValue) + ' is not in the specified categorical range ' + SmartStr(DimRange[1:])[1:-1] + ' for dimension #' + str(Dim) + ' : "' + SmartStr(self.Dimensions[Dim]) + '". The original input parameters for the table were ' + self.Description() 
                 Index = RangeToLookAt.index(DimensionNameValue)
             else:
                 # If the data is continuous, find the correct index
                 if DimensionNameValue < DimRange[0] or DimensionNameValue > DimRange[-1]:
-                    raise ValueError, 'Table Evaluation Error: Table access value is not in the continuous range defined by the range bounds. The Value ' + str(DimensionNameValue) + ' is not in the specified categorical range ' + SmartStr(DimRange)[1:-1] + ' for dimension #' + str(Dim) + ' : "' + SmartStr(self.Dimensions[Dim]) + '". The original input parameters for the table were ' + self.Description
+                    raise ValueError, 'Table Evaluation Error: Table access value is not in the continuous range defined by the range bounds. The Value ' + str(DimensionNameValue) + ' is not in the specified categorical range ' + SmartStr(DimRange)[1:-1] + ' for dimension #' + str(Dim) + ' : "' + SmartStr(self.Dimensions[Dim]) + '". The original input parameters for the table were ' + self.Description()
                 Index = 0
                 while DimensionNameValue > DimRange[Index]:
                     Index = Index +1
@@ -2431,63 +2585,31 @@ class TableClass():
         return (FlatIndex,VectorIndex)
 
 
-    def AccessCell(self, Index, NewValue = None, AccumulateNewValue = False):
+    def AccessCell(self, Index):
         """ Access the table cell indicated by Index for update or retrieval """
         # Note that if index is an integer it is considered a flat index
         # if the index is a vector, it is considered a subscript vector index
         # Note that in both cases both the Values and FlatValues members are
-        # changed to the new value if an update is requested.
-        # Note that no checks are made on the contents of the cells if an
-        # update value is provided. This way different datatypes can be used
-        # to populate the table cells after table initialization. However,
-        # reusing a table manipulated in this way by presenting it to the user
-        # is not recommended and therefore the SystemTableFlag is Raised
-        self.SystemTableFlag = True
+        # Handled.
         # figure out the index and return both representations
         (FlatIndex,VectorIndex) = self.FigureOutIndex(Index)
-        if NewValue == None:
+        # if a flat representtion exist, use the shortcut index
+        if self.FlatValues != None:
             # in this case, only access the table to return the cell value
             RetVal = self.FlatValues[FlatIndex]
-        else:    
-            # Update both the flat and the nested array values
-            if AccumulateNewValue:
-                UpdateValue = self.FlatValues[FlatIndex] + NewValue
-            else:
-                UpdateValue = NewValue
-            self.FlatValues[FlatIndex] = UpdateValue
+        else:
+            #  There is a need to drill down the multidimentional array
             PointerToList = self.Values
             TempVectorIndex = VectorIndex[:]
             while True:
                 CurrentIndex = TempVectorIndex.pop(0)
                 if TempVectorIndex == []:
-                    # if this is the last diemnsion, deposit the value in place
-                    PointerToList[CurrentIndex] = UpdateValue
+                    # if this is the last diemnsion, retun the result
+                    RetVal = PointerToList[CurrentIndex]
                     break
                 else:
                     # otherwise, drill don in the multi-dimension Hierarchy
                     PointerToList = PointerToList[CurrentIndex]
-            RetVal = UpdateValue
-        return RetVal
-
-    def ConstructDescriptionStringByValues(self, Dimensions, FlatValues):
-        """Construct a description string to allow create a new Table"""
-        # Note that no checks are made for validness 
-        # Note that FlatValues holds string members and joining its pieces
-        # reconstructs the original string with commas
-        DimNum = len(Dimensions)
-        Sizes = map( lambda (DimensionName , DimRange) : len(DimRange) -1 , Dimensions )
-        if FlatValues == None:
-            FlatValues = [0]* ProdOp(Sizes)
-        NewDescription = 'Table('+ str(DimNum) + ', ' + str(Sizes)[1:-1] + ', ' + (','.join(map(SmartStr,FlatValues)))
-        for (DimensionName , DimRange) in Dimensions:
-            NewDescription = NewDescription + ', ' + str(DimensionName) + ', ' + ','.join(map(SmartStr,DimRange))
-        NewDescription = NewDescription + ')'
-        return NewDescription
-
-    def ReturnDummyTable(self, Value):
-        """ Return a dummy table with a single cell"""
-        NewDecription = 'Table(1,1,'+SmartStr(Value) +',Dummy,-Inf,Inf)'
-        RetVal = TableClass(NewDecription)
         return RetVal
 
 
@@ -2515,7 +2637,7 @@ class TableClass():
                 DescStrArray[FlatIndex]= DescStrArray[FlatIndex] + [DimDescStr]
                 DescStrSizeArray[DimIndex] = max(DescStrSizeArray[DimIndex], len(DimDescStr))
             # Add the value to the array of strings
-            ValDescStr = SmartStr(self.FlatValues[FlatIndex])
+            ValDescStr = SmartStr(self.AccessCell(FlatIndex))
             DimIndex = self.DimNum
             DescStrArray[FlatIndex]= DescStrArray[FlatIndex] + [ValDescStr]
             DescStrSizeArray[DimIndex] = max(DescStrSizeArray[DimIndex], len(ValDescStr))
@@ -2566,8 +2688,6 @@ class TableClass():
     # from the class without an instance to help maintain strict data integrity
     ClassVecIndexToFlatIndex = ClassFunctionWrapper(VecIndexToFlatIndex)
     ClassFlatIndexToVecIndex = ClassFunctionWrapper(FlatIndexToVecIndex)
-    ClassConstructDescriptionStringByValues = ClassFunctionWrapper(ConstructDescriptionStringByValues)
-    ClassReturnDummyTable = ClassFunctionWrapper(ReturnDummyTable)
 
 
 class Param(str):
@@ -6470,7 +6590,7 @@ class SimulationResult:
                         # If stratification by every record
                         RecordForStratification = DataRow
                     else:
-                        raise ValueError, 'Report Stratification Error - Invalid cell stratification method value ' + str(StratificationMethod) + ' in position ' + str(StratifyIndex) + ' in the stratification table: ' + str(StratifyBy.Description) + ' . Please redefine the stratification method'
+                        raise ValueError, 'Report Stratification Error - Invalid cell stratification method value ' + str(StratificationMethod) + ' in position ' + str(StratifyIndex) + ' in the stratification table: ' + str(StratifyBy.Description()) + ' . Please redefine the stratification method'
                     if GenerateStatisticsForThisStratificationCell:
                         # For all stratification indices before the last
                         # Extract the vector index using the values in the data
@@ -6661,7 +6781,7 @@ class SimulationResult:
                     ColumnIndexInResults = self.DataColumns.index(DimName)
                     StratificationColumnIndices.append(ColumnIndexInResults) 
                 except:
-                    raise ValueError, 'Summary Calculation Error: Could not locate the stratification dimension ' + str(DimName)+ ' in the results as specified by option StratifyBy ' + str(StratifyBy.Description)  + '. This column does not exist in the results columns for this project'
+                    raise ValueError, 'Summary Calculation Error: Could not locate the stratification dimension ' + str(DimName)+ ' in the results as specified by option StratifyBy ' + str(StratifyBy.Description())  + '. This column does not exist in the results columns for this project'
         # Initialize some statistics:
         EmptyCategoryVector = [0]*(len(SummaryIntervals))
         TimeInterval = EmptyCategoryVector[:]
@@ -6724,7 +6844,7 @@ class SimulationResult:
             # First check this is a valid expression
             Expr(StratifyBy)
             # Then check it is a valid table. Return the table class or None
-            StratifyBy = TableClass(StratifyBy)
+            StratifyBy = TableClass(InitString = StratifyBy)
         # ReportHeader can be used to change he header in case multiple reports
         # are generated. 
         ReportHeader = HandleOption('ReportHeader', FormatOptions, None)

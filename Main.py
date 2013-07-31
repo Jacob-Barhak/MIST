@@ -520,6 +520,10 @@ class Main(wx.Frame, listmix.ColumnSorterMixin):
 
 
 if __name__ == "__main__":
+    # uncomment the next two lines for inspection and replace the app for 
+    # inspection mode
+    #from wx.lib.mixins.inspection import InspectableApp
+    #app = InspectableApp()
     app = wx.PySimpleApp(0)
     wx.InitAllImageHandlers()
 

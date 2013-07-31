@@ -1,70 +1,6 @@
 Copyright (C) 2013 Jacob Barhak
 Copyright (C) 2009-2012 The Regents of the University of Michigan
-
-This file is part of the MIcroSimulation Tool (MIST).
-The MIcroSimulation Tool (MIST) is free software: you
-can redistribute it and/or modify it under the terms of the GNU General
-Public License as published by the Free Software Foundation, either
-version 3 of the License, or (at your option) any later version.
-
-The MIcroSimulation Tool (MIST) is distributed in the
-hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU General Public License for more details.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-ADDITIONAL CLARIFICATION
-
-The MIcroSimulation Tool (MIST) is distributed in the 
-hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY of any 
-kind, including any warranty that it will not infringe on any property 
-rights of another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or 
-FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities 
-with respect to the use of the MIcroSimulation Tool (MIST).  
-
-The MIcroSimulation Tool (MIST) was derived from the Indirect Estimation  
-and Simulation Tool (IEST) and uses code distributed under the IEST name.
-The change of the name signifies a split from the original design that 
-focuses on microsimulation. For the sake of completeness, the copyright 
-statement from the original tool developed by the University of Michigan
-is provided below and is also mentioned above.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%% Original Copyright %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-Copyright (C) 2009-2012 The Regents of the University of Michigan
-Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen Ye
-Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman
-Videos by Michael Kylman 
-
-This file is part of the Indirect Estimation and Simulation Tool (IEST).
-The Indirect Estimation and Simulation Tool (IEST) is free software: you
-can redistribute it and/or modify it under the terms of the GNU General
-Public License as published by the Free Software Foundation, either
-version 3 of the License, or (at your option) any later version.
-
-The Indirect Estimation and Simulation Tool (IEST) is distributed in the
-hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU General Public License for more details.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-ADDITIONAL CLARIFICATION
-
-The Indirect Estimation and Simulation Tool (IEST) is distributed in the 
-hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY of any 
-kind, including any warranty that it will not infringe on any property 
-rights of another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or 
-FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF MICHIGAN assumes no 
-responsibilities with respect to the use of the Indirect Estimation and 
-Simulation Tool (IEST).  
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%% End Of Original Copyright %%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+License GPL 3 - See full details below
 
 CONTENTS:
 1. INTRODUCTION
@@ -75,6 +11,7 @@ CONTENTS:
 6. VERSION HISTORY
 7. CONTACT INFORMATION
 8. ACKNOWLEDGEMENTS
+9. LICENSE
 
 
 1. INTRODUCTION:
@@ -84,6 +21,9 @@ This software supports modeling and Monte-Carlo micro-simulation of parallel sta
 The project web site is:
 https://github.com/Jacob-Barhak/MIST
 
+For a video introduction and additional information, please visit the following links:
+http://www.youtube.com/watch?v=AD896WakR94
+https://github.com/scipy/scipy2013_talks/tree/master/talks/jacob_barhak
 
 
 2. INSTALLATION:
@@ -122,8 +62,6 @@ To run MIST over the cloud a more complicated setup is needed:
 It is also possible to run MIST simulations in Multi-core environment using Sun Grid Engine. If you wish to install Sun-Grid-Engine on a single machine for testing purposes:
 1. Follow the instructions on http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/
 2. Follow the Quick Installation for Linux/OSX from above
-
-
 
 
 
@@ -193,35 +131,18 @@ This version contains only Simulation capabilities.
 
 The examples provided with the system are used for testing the system. 
 
-Running the TestCode.py script will test that the simulation system is working properly. Running this file will also create the file Testing.zip that is the data file the system can load and tests the simulation results. The file SimulationExamples.pdf analyses these examples and allows results comparison that is performed when TestCode.py is run. To run this in verbose mode from the command line, change th working dorectory to the installation directory and type nosetests -s 
+Running the TestCode.py script will test that the simulation system is working properly. Running this file will also create the file Testing.zip that is the data file the system can load and tests the simulation results. The file SimulationExamples.pdf analyses these examples and allows results comparison that is performed when TestCode.py is run. To run this in verbose mode from the command line, change the working directory to the installation directory and type nosetests -s 
 
 In addition to the above test script, below is a list of known bugs and issues uncovered during testing that were not yet addressed at the time of this release:
 
 
+Known Bugs
 
-Non-Critical known Bugs & Features:
-
-
-
-J0015: TABLES ARE LIMITED TO 255 INPUT PARAMETERS 
-The system does not support tables that are defined by more than 255 input arguments. For example a table with a single dimension of 300 cells will generate an error. This is a Python limitation. The solution should allow defining the inputs to the table as vectors rather than as a string. Meanwhile, it is possible to create a workaround by using the Iif function to split tables to tables that can be defined by fewer arguments than 255.
-
-
-J0100: Minor GUI issues occasionally encountered
-
-There are small minor issues that appear in the GUI when the system is loaded. The bugs can be bypassed at the user level and are rare and therefore not of high priority. Some issues may be cause by WxPython - see below. 
-
-Instructions to Reproduce a GUI issue
-
-1. Launch the system and load the file Testing.zip 
-2. Press on the population button to load the form 
-3. Press on the Add button to add data to the population
-4. Select the AF parameter from the lower left list box - you will notice the Popuation Sets form on the back scroll
+At the time of release, there were no known reproducible bugs.
 
 
 
 Comments/Suggestions & Feature Requests:
-
 
 
 R0021: LIST OF COEFFICIENTS FOR COST WIZARD
@@ -264,9 +185,14 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 
 
-6. VERSION HISTORY
+6. VERSION HISTORY:
 
-MIST Verion (0,87,0,0,'MIST') - 16-Jun-2013
+MIST Verion (0,88,0,0,'MIST') - 31-Jul-2013:
+	- Redefinition of Table function to improve speed and remove previous issues
+	- Documentation adjusted with additions to running MIST over the cloud
+	- GUI Bug fix 
+
+MIST Verion (0,87,0,0,'MIST') - 16-Jun-2013:
 	- Split from IEST : Estimation removed, only Simulation remains
 	- Simplification/improvement of Parameters / Models / Simulation Rules
 	- MIST runs over the cloud and on sun Grid Engine clusters
@@ -275,7 +201,7 @@ MIST Verion (0,87,0,0,'MIST') - 16-Jun-2013
 	- Documentation adjusted to the changes
 
 	
-MIST is a split from IEST. below are IEST versions
+MIST is a split from IEST. below are IEST versions:
 
 IEST Version (0,85,0,0,'Base') - 27-Feb-2012:
     - Improvements to validity checks to prevent deadlocking the user due to cyclic references and machine precision issues.
@@ -358,7 +284,7 @@ http://sites.google.com/site/jacobbarhak/
 
 
 
-8. ACKNOWLEDGEMENTS
+8. ACKNOWLEDGEMENTS:
 
 Special thanks to the pioneers who started this project and dreamed of a modeling framework before I joined the effort:
 Deanna Isaman - Who was the spirit behind the great ideas I am pursuing and who taught me my first steps in disease modeling
@@ -382,8 +308,82 @@ Aidan Feldman
 Michael Kylman 
 Continuum Analytics
 Star Cluster at MIT
+Sun Grid Engine
+Robin Dunn
+Rayson Ho
+Bruce Fields
 
 MIST was developed independently without financial support.
 
 Previous Sponsors of IEST:
 This work was supported by the National Institutes of Health through the Biostatistics Core of the Michigan Diabetes Research and Training Center under Grant P60-DK-20572, and through grant R21-DK075077 "Chronic Disease Modeling for Clinical Research Innovations" by the National Institutes of Health.
+
+
+9. LICENSE:
+
+Copyright (C) 2013 Jacob Barhak
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+
+This file is part of the MIcroSimulation Tool (MIST).
+The MIcroSimulation Tool (MIST) is free software: you
+can redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+The MIcroSimulation Tool (MIST) is distributed in the
+hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ADDITIONAL CLARIFICATION
+
+The MIcroSimulation Tool (MIST) is distributed in the 
+hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY of any 
+kind, including any warranty that it will not infringe on any property 
+rights of another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS assume no responsibilities 
+with respect to the use of the MIcroSimulation Tool (MIST).  
+
+The MIcroSimulation Tool (MIST) was derived from the Indirect Estimation  
+and Simulation Tool (IEST) and uses code distributed under the IEST name.
+The change of the name signifies a split from the original design that 
+focuses on microsimulation. For the sake of completeness, the copyright 
+statement from the original tool developed by the University of Michigan
+is provided below and is also mentioned above.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Original Copyright %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Copyright (C) 2009-2012 The Regents of the University of Michigan
+Initially developed by Deanna Isaman, Jacob Barhak, Morton Brown, Wen Ye
+Additional coding by Donghee Lee, Ray Lillywhite, Aidan Feldman
+Videos by Michael Kylman 
+
+This file is part of the Indirect Estimation and Simulation Tool (IEST).
+The Indirect Estimation and Simulation Tool (IEST) is free software: you
+can redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in the
+hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ADDITIONAL CLARIFICATION
+
+The Indirect Estimation and Simulation Tool (IEST) is distributed in the 
+hope that it will be useful, but "as is" and WITHOUT ANY WARRANTY of any 
+kind, including any warranty that it will not infringe on any property 
+rights of another party or the IMPLIED WARRANTIES OF MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE. THE UNIVERSITY OF MICHIGAN assumes no 
+responsibilities with respect to the use of the Indirect Estimation and 
+Simulation Tool (IEST).  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% End Of Original Copyright %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

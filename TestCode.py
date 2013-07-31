@@ -140,12 +140,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 1
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     DB.States.AddNew(DB.State(ID = 10021 , Name = 'Alive' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     DB.States.AddNew(DB.State(ID = 1000002 , Name = 'Dead' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = True , ChildStates = [] ), ProjectBypassID = 0)
@@ -178,12 +173,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 2
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     DB.States.AddNew(DB.State(ID = 2200001 , Name = 'State1' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -220,12 +210,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 3
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     DB.States.AddNew(DB.State(ID = 2200091 , Name = 'State1Terminal' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = True , ChildStates = [] ), ProjectBypassID = 0)
@@ -261,12 +246,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 4
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 2200001 , Name = 'State1' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -306,12 +286,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 5a
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 2200001 , Name = 'State1' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -346,12 +321,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 5b
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 2200001 , Name = 'State1' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -388,12 +358,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 6
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 2200001 , Name = 'State1' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -431,12 +396,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 7
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 2200001 , Name = 'State1' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -474,12 +434,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 8
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -517,12 +472,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 9
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -563,12 +513,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 10
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -615,12 +560,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 11
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -672,12 +612,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 12
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
@@ -743,11 +678,7 @@ def SetupFullDB():
     # Define covariates
     #DB.Params.AddNew( DB.Param(Name = 'Age', Formula = '', ParameterType = 'Covariate', ValidationRule = 'Integer', ValidationRuleParams = '[0,130]', Notes = ''), ProjectBypassID = 0)
     
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     
     #DB.States.AddNew( DB.State(ID = 2200000, Name = 'State0', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
@@ -808,12 +739,7 @@ def SetupFullDB():
     # Simulation Project - Example 14
     
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew( DB.State(ID = 2200000, Name = 'State0', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
     #DB.States.AddNew( DB.State(ID = 2200051, Name = 'EventState1', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = True, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
@@ -852,12 +778,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 15
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 2200091 , Name = 'State1Terminal' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = True , ChildStates = [] ), ProjectBypassID = 0)
@@ -872,7 +793,7 @@ def SetupFullDB():
     ### Model Transitions
     # MainProcess
 
-    DB.Transitions.AddNew(DB.Transition(StudyModelID = 15000000, FromState = 2200000, ToState = 2200091, Probability = DB.Expr('Table( 2, 2,3,  0.1,0.2,0.3,0.4,0.5,0.6, Gender,NaN,0,1, Age,-Inf,20,40,Inf )')), ProjectBypassID = 0)
+    DB.Transitions.AddNew(DB.Transition(StudyModelID = 15000000, FromState = 2200000, ToState = 2200091, Probability = DB.Expr('Table( [[Gender,[NaN,0,1]], [Age,[-Inf,20,40,Inf]]], [[0.1,0.2,0.3],[0.4,0.5,0.6]] )')), ProjectBypassID = 0)
     
     # Populate the table with population sets
     DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1150, Name='Population set for Simulation Example 15', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Gender',''), ('State0',''), ('State1Terminal','')] , Data = [[5, 0, 1, 0 ]] + [[25, 0, 1, 0]] + [[45, 0, 1, 0]] + [[5, 1, 1, 0 ]] + [[25, 1, 1, 0]] + [[45, 1, 1, 0]]), ProjectBypassID = 0)
@@ -893,14 +814,9 @@ def SetupFullDB():
     
     # Simulation Project - Example 16
     
-    # Define covariates
+    # Define Parameters
     #DB.Params.AddNew(DB.Param(Name = 'BP', Formula = '' , ParameterType = 'Covariate' , ValidationRule = 'Number' , ValidationRuleParams = '[0,Inf]', Notes = 'Blood Pressure'), ProjectBypassID = 0)
     
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
     # Define States
     #DB.States.AddNew( DB.State(ID = 2200000, Name = 'State0', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
     #DB.States.AddNew( DB.State(ID = 2200001, Name = 'State1', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
@@ -988,17 +904,12 @@ def SetupFullDB():
     
     # Simulation Project - Example 17
     
-    # Define covariates
+    # Define Parameters
     #DB.Params.AddNew( DB.Param(Name = 'Age', Formula = '', ParameterType = 'Covariate', ValidationRule = 'Integer', ValidationRuleParams = '[0,130]', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex17TestCovariate', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex17TestCovariate2', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'State2_Diagnosed', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)
 
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
     # Define States
     #DB.States.AddNew( DB.State(ID = 2200000, Name = 'State0', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
     #DB.States.AddNew( DB.State(ID = 2200001, Name = 'State1', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
@@ -1040,16 +951,11 @@ def SetupFullDB():
     # Simulation Project - Example 18
     
     
-    # Define covariates
+    # Define Parameters
     #DB.Params.AddNew( DB.Param(Name = 'Age', Formula = '', ParameterType = 'Covariate', ValidationRule = 'Integer', ValidationRuleParams = '[0,130]', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex18TestQoL', Formula = '', ParameterType = 'Number', ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex18TestCost', Formula = '', ParameterType = 'Number', ValidationRuleParams = '[0,Inf]', Notes = ''), ProjectBypassID = 0)
     
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
     # Define States
     #DB.States.AddNew( DB.State(ID = 2200000, Name = 'State0', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
     #DB.States.AddNew( DB.State(ID = 2200001, Name = 'State1', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
@@ -1088,7 +994,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 19
     
-    # Define covariates
+    # Define Parameters
     DB.Params.AddNew(DB.Param(Name = 'TestCov1', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = 'Test Covariate'), ProjectBypassID = 0)
     DB.Params.AddNew(DB.Param(Name = 'TestCov2', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = 'Test Covariate'), ProjectBypassID = 0)
     DB.Params.AddNew(DB.Param(Name = 'TestCov3', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = 'Test Covariate'), ProjectBypassID = 0)
@@ -1096,11 +1002,6 @@ def SetupFullDB():
     DB.Params.AddNew(DB.Param(Name = 'TestCov5', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = 'Test Covariate'), ProjectBypassID = 0)
 
     
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
     # Define States
     #DB.States.AddNew( DB.State(ID = 2200000, Name = 'State0', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
     #DB.States.AddNew( DB.State(ID = 2200001, Name = 'State1', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
@@ -1171,12 +1072,7 @@ def SetupFullDB():
     
     # Simulation Project - Example 20
     
-    # Define covariates
-    # Define interventions
-    # Cost
-    # Define coefficients
-    # Define Tables
-    # Define System Options
+    # Define Parameters
     # Define States
     #DB.States.AddNew(DB.State(ID = 10021 , Name = 'Alive' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 1000002 , Name = 'Dead' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = True , ChildStates = [] ), ProjectBypassID = 0)
@@ -4279,7 +4175,7 @@ class TestInvalidExpressions(GenericSetupAndTearDown):
         
         try:
             DB.Params.AddNew(DB.Param(Name = 'TestParam6', Formula = ' 0  ' , ParameterType = 'Expression' , ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)    
-            DB.Params.AddNew(DB.Param(Name = 'TestParam7', Formula = 'Table(1,1,1,TestParam6,NaN,2)  ' , ParameterType = 'Expression' , ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)
+            DB.Params.AddNew(DB.Param(Name = 'TestParam7', Formula = 'Table([[TestParam6,[NaN,2]]],[1])' , ParameterType = 'Expression' , ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)
         except:
             CheckException(None,'Invalid Expression Test e FAILURE - Parameter not created since the expression should not raise an error')
         else:
@@ -4354,7 +4250,7 @@ class TestInvalidExpressions(GenericSetupAndTearDown):
                             'IsInfiniteNumber(0)',
                             'IsFiniteNumber(0)',
                             'Iif (0, 0, TestConstant)',
-                            'Table(1,2,0,1,TestConstant,NaN,0,1)',
+                            'Table([[TestConstant,[NaN,0,1]]],[0,1])',
                             'CostWizard (0, 0, [TestConstant], [1])',
                             'Exp(0)',
                             'Log(1,1)',
@@ -4481,8 +4377,7 @@ class TestInvalidExpressions(GenericSetupAndTearDown):
         Tests.append(("""DB.IsFiniteNumber(DummyExpr.Evaluate('0'))""", 1))
         Tests.append(("""DB.Iif (0, 0,2)""", 2))
         Tests.append(("""DB.Iif (5, 0, 2)""", 0))
-        Tests.append(("""DB.TableRunTime(1,2, 4,9, 0,DB.NaN,0,1)""", 4))
-        Tests.append(("""DB.TableRunTime(1,2, 4,9, 1,DB.NaN,0,1)""", 9))
+        Tests.append(("""DB.TableRunTime([[1,[DB.NaN,0,1]]],[4,9])""", 9))
         Tests.append(("""DB.Exp(0.1)""", math.exp(0.1)))
         Tests.append(("""DB.Log(5,2)""", math.log(5,2)))
         Tests.append(("""DB.Ln(5)""", math.log(5)))
@@ -4753,7 +4648,6 @@ class TestCostWizardParser(GenericSetupAndTearDown):
                 assert False, 'CostWizard parser test #' + str(Num) + ' FAILURE - the expression was parsed correctly, while needed to raise an error'
     
     
-    
 class TestTableRepresentationInRuntime(GenericSetupAndTearDown):
 
     def test_TableRepresentationInRuntime(self):
@@ -4775,8 +4669,8 @@ class TestTableRepresentationInRuntime(GenericSetupAndTearDown):
                     else:
                         OutOfBound = True
                     try:
-                        # Simulate 'Table(3,2,3,4, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 , Gender,NaN,0,1,Age,0,20,40,60,Time,NaN,2,4,6,8)'
-                        Result = DB.TableRunTime(3,2,3,4, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 , Gender,DB.NaN,0,1,Age,0,20,40,60,Time,DB.NaN,2,4,6,8)
+                        # Simulate 'Table([[[1,2,3,4],[5,6,7,8],[9,10,11,12]],[[13,14,15,16],[17,18,19,20],[21,22,23,24]]] , [[Gender,NaN,0,1],[Age,0,20,40,60],[Time,NaN,2,4,6,8]])'
+                        Result = DB.TableRunTime([[Gender,[DB.NaN,0,1]],[Age,[0,20,40,60]],[Time,[DB.NaN,2,4,6,8]]],[[[1,2,3,4],[5,6,7,8],[9,10,11,12]],[[13,14,15,16],[17,18,19,20],[21,22,23,24]]])
                     except:
                         (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
                         if OutOfBound:            
@@ -4796,12 +4690,14 @@ class TestTableRepresentationInRuntime(GenericSetupAndTearDown):
         DB.Params.AddNew(DB.Param(Name = 'TestCovariate2', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = 'Testing'), ProjectBypassID = 0)
         
         Tests = []
-        Tests.append(("""Table(1,2, 4,9, TestCovariate1 + 1, NaN,0,1)""",9))
-        Tests.append(("""Table(1,2, TestCovariate1,TestCovariate2, 1,NaN,0,1)""",1))
-        Tests.append(("""Table(1,2, Exp(10),TestCovariate1, 0,NaN,0,1)""",DB.Exp(10)))
-        Tests.append(("""Table(1,2, 6+Min(3,2),9 , 0,NaN,0,1)""",8))
-        Tests.append(("""Table(1,2, 4,9 , 1-1,NaN,0,1)""",4))
-        Tests.append(("""Table(1,2, 4,9 , Min(Max(TestCovariate1+5,0),1),NaN,0,1)""",9))
+        Tests.append(("""Table([[TestCovariate1 + 1, [NaN,0,1]]], [4,9])""",9))
+        Tests.append(("""Table([[1,[NaN,0,1]]], [TestCovariate1,TestCovariate2])""",1))
+        Tests.append(("""Table([[0,[NaN,0,1]]], [Exp(10),TestCovariate1])""",DB.Exp(10)))
+        Tests.append(("""Table([[0,[NaN,0,1]]], [6+Min(3,2),9])""",8))
+        Tests.append(("""Table([[1-1,[NaN,0,1]]], [4,9])""",4))
+        Tests.append(("""Table([[Min(Max(TestCovariate1+5,0),1),[NaN,0,1]]], [4,9])""",9))
+        Tests.append(("""Table([[1.5, [0,1,2,3]], [0, [NaN,0,1,2,3,4,5,6,7,8,9]], [2, [NaN,0,1,2,3,4,5,6,7,8,9]]] ,  [[[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0]] , [[1,2,3000,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0]], [[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0],[1,2,3,4,5,6,7,8,9,0]] ])""",3000))
+      
         
         # Run the tests for the expression
         for (Num,(Test,TestResult)) in enumerate(Tests):
@@ -4852,6 +4748,29 @@ class TestTableRepresentationInRuntime(GenericSetupAndTearDown):
                     assert False, 'Table With Expression Test C-#' + str(Num) + ' FAILURE - Calculated value does not correspond to the expected value. Calculated value was ' + str(Value) + ' instead of the expected result of ' + str(TestResult)
                 else:
                     print 'Table With Expression Test C-#' + str(Num) + ' OK - a valid test passed'
+
+
+
+        # Invalid table test
+        Tests = []
+        Tests.append(("""Table([1, [NaN,0,1]], [4,9])""",'invalid DimensionsArray that does not contain lists'))
+        Tests.append(("""Table([[1,[NaN,0,1]]], [[1,2]])""",'Table Size Validation Error: Table sizes do not match array sizes - expected size 2 got 1 with the subset [[1, 2]]'))
+        Tests.append(("""Table([[1,[NaN,0,1,2,3,4,5]]], [4,9])""",'Table Size Validation Error: Table sizes do not match array sizes - expected size 6 got 2 with the subset [4, 9]'))
+        Tests.append(("""Table([[0.5,[-Inf,2,1]]], [1,9])""",'Table Expression Validation Error: Range bound items are not sorted in ascending order: 2 is higher than 1.'))
+        Tests.append(("""Table([[0.5,[-Inf,1,2]], [0.5,[-Inf,1,2]]], [Min(1,2),[3,4]])""",'able Size Validation Error: Table sizes do not match array sizes - the size contains more dimensions than the data - expected size 2 with the subset 1'))
+      
+        # Run the tests for the invalid tables
+        for (Num,(Test,ExceptionInString)) in enumerate(Tests):
+            try:
+                DB.Expr(Test)
+            except:
+                CheckException(ExceptionInString, 'Table With Expression Test D-#' + str(Num) + ' OK - an invalid test was detected')
+            else:
+                assert False, 'Table With Expression Test D-#' + str(Num) + ' FAiLURE - an invalid test passed'
+        
+
+
+
      
 
 class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
@@ -5705,7 +5624,7 @@ class TestReportOptions(GenericSetupAndTearDown):
         ColumnFilterDict={0:[('ColumnFilter',[('Time','No Summary',' '),('<Covariate>','Average Over All Records',''),('<State Indicator,State_Actual>','Auto Detect',''),('Age','Auto Detect',''),('<State Indicator,Sub-Process_Entered>','Sum Over All Records',''),('<State Indicator,State>','Sum Over Demographics',''),('<State Indicator,State>','Auto Detect',''),('<Header>','Auto Detect',''),('<State Indicator,Sub-Process_Entered>','Sum Over All Records',''),('<State Indicator,State>','Sum Over Demographics',''),('<State Indicator,State>','Auto Detect',''),('<Header>','Auto Detect',''),('<Header>','Auto Detect','')])], 1:[('ColumnFilter',[('Time','Auto Detect','Step'),('<Header>','Auto Detect',''),('Age','Sum Over All Records',''),('Age','Average Over All Records',''),('Age','STD Over All Records',''),('Age','Min Over All Records',''),('Age','Max Over All Records',''),('Age','Sum Over Demographics',''),('Age','Average Over Demographics',''),('Age','STD Over Demographics',''),('Age','Min Over Demographics',''),('Age','Max Over Demographics',''),('Age','Sum Over Last Observations Carried Forward',''),('Age','Average Over Last Observations Carried Forward',''),('Age','STD Over Last Observations Carried Forward',''),('Age','Min Over Last Observations Carried Forward',''),('Age','Max Over Last Observations Carried Forward',''),('Age','Record Count',''),('Age','Demographic Count',''),('Age','Last Value Count',''),('Age','Interval Start',''),('Age','Interval End',''),('Age','Interval Length',''),('Age','No Summary','')])],'Default':[]}
         SummationIntervalDict={}
         SummationIntervalDict[0]=[('SummaryIntervals',[0,1,2,[0,3]])]
-        SummationIntervalDict[1]=[('SummaryIntervals',[1,2,3]),('StratifyBy','Table(2,2,2,0,1,2,3,Alive,NaN,0,1,Age,0,31,100)')]
+        SummationIntervalDict[1]=[('SummaryIntervals',[1,2,3]),('StratifyBy','Table([[Alive,[NaN,0,1]],[Age,[0,31,100]]], [[0,1],[2,3]])')]
         SummationIntervalDict['Default']=[]
         DictByVersion = lambda DictName,Key: DictName[DB.Iif(Key in DictName.keys(),Key,'Default' )]
         OutTxt = {}
@@ -5728,7 +5647,7 @@ class TestReportMath(GenericSetupAndTearDown):
         
         # Now generate statistics for Report 0 and  Report 1
         
-        ReportOptions = [('StratifyBy', 'Table(2,2,2,0,2,1,3,Alive,NaN,0,1,Age,0,31,100)'), ('SummaryIntervals',[1,2,3]), ('ColumnNumberFormat', ['%0.14f','%i']), ('ColumnFilter', [('<Header>', 'Auto Detect', ''), ('Alive', 'Auto Detect', ''), ('Dead', 'Auto Detect', ''), ('Age','Sum Over All Records',''),('Age','Average Over All Records',''),('Age','STD Over All Records',''),('Age','Min Over All Records',''),('Age','Max Over All Records',''),('Age','Sum Over Demographics',''),('Age','Average Over Demographics',''),('Age','STD Over Demographics',''),('Age','Min Over Demographics',''),('Age','Max Over Demographics',''),('Age','Sum Over Last Observations Carried Forward',''),('Age','Average Over Last Observations Carried Forward',''),('Age','STD Over Last Observations Carried Forward',''),('Age','Min Over Last Observations Carried Forward',''),('Age','Max Over Last Observations Carried Forward',''),('Age','Record Count',''),('Age','Demographic Count',''),('Age','Last Value Count',''),('Age','Valid Count of All Records',''),('Age','Valid Count of Demographics',''),('Age','Valid Count of Last Observations Carried Forward',''),('Age','Interval Start',''),('Age','Interval End',''),('Age','Interval Length',''),('Age','No Summary','')] )]
+        ReportOptions = [('StratifyBy', 'Table([[Alive,[NaN,0,1]],[Age,[0,31,100]]], [[0,2],[1,3]])'), ('SummaryIntervals',[1,2,3]), ('ColumnNumberFormat', ['%0.14f','%i']), ('ColumnFilter', [('<Header>', 'Auto Detect', ''), ('Alive', 'Auto Detect', ''), ('Dead', 'Auto Detect', ''), ('Age','Sum Over All Records',''),('Age','Average Over All Records',''),('Age','STD Over All Records',''),('Age','Min Over All Records',''),('Age','Max Over All Records',''),('Age','Sum Over Demographics',''),('Age','Average Over Demographics',''),('Age','STD Over Demographics',''),('Age','Min Over Demographics',''),('Age','Max Over Demographics',''),('Age','Sum Over Last Observations Carried Forward',''),('Age','Average Over Last Observations Carried Forward',''),('Age','STD Over Last Observations Carried Forward',''),('Age','Min Over Last Observations Carried Forward',''),('Age','Max Over Last Observations Carried Forward',''),('Age','Record Count',''),('Age','Demographic Count',''),('Age','Last Value Count',''),('Age','Valid Count of All Records',''),('Age','Valid Count of Demographics',''),('Age','Valid Count of Last Observations Carried Forward',''),('Age','Interval Start',''),('Age','Interval End',''),('Age','Interval Length',''),('Age','No Summary','')] )]
         
         MultiRunSimulationStatisticsAsCSV.GenerateMultiRunSimulationStatistics(DB.SessionTempDirecory+os.sep+'Testing_RepRndSeed0.zip',1,ReportOptions)[0]
         MultiRunSimulationStatisticsAsCSV.GenerateMultiRunSimulationStatistics(DB.SessionTempDirecory+os.sep+'Testing_RepRndSeed1.zip',1,ReportOptions)[0]
@@ -6191,7 +6110,7 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
         # loading the CSV files containing the simulation results in test C
         MockFile = open(DB.SessionTempDirecory + os.sep + 'TestColumnFilter.txt','w')
         MockFile.write('StratifyBy\n')
-        MockFile.write('"Table(2,2,2,0,2,1,3,Alive,NaN,0,1,Age,0,31,100)"\n')
+        MockFile.write('"Table([[Alive,[NaN,0,1]],[Age,[0,31,100]]], [[0,2],[1,3]])"\n')
         MockFile.write('SummaryIntervals\n')
         MockFile.write('[[0,0],1,2,3]\n')
         MockFile.write('ColumnFilter\n')
@@ -6233,7 +6152,7 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
         MockFile.write('\n')
         MockFile.write('\n')
         MockFile.write('StratifyBy\n')
-        MockFile.write('"Table(2,2,2,0,2,1,3,Alive,NaN,0,1,Age,0,31,100)"\n')
+        MockFile.write('"Table([[Alive,[NaN,0,1]],[Age,[0,31,100]]], [[0,2],[1,3]])"\n')
         MockFile.write('DetailLevel\n')
         MockFile.write('0\n')
         MockFile.write('SummaryIntervals\n')
@@ -6410,7 +6329,7 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
             print ('Supporting Script test I-4 OK.')
 
 
-            
+
 # this code was generated 
 if __name__ == "__main__":
     Argv = sys.argv[:]

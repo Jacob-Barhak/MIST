@@ -146,7 +146,7 @@ def GenerateCombinedReport(ListOfDataBasesWithResults, SimulationResultIDsToComb
                 #28 = Summaries                      *** This will be different
                 #29 = SummariesBaseForNextResultBatch*** This will be different                    
                     
-                if PreCalculatedResults[:10] != OldPreCalculatedResults [:10] or ( (PreCalculatedResults[10] and PreCalculatedResults[10].Description) != (OldPreCalculatedResults[10] and OldPreCalculatedResults[10].Description)) or PreCalculatedResults[11:14] != OldPreCalculatedResults [11:14] or PreCalculatedResults[15:-2] != OldPreCalculatedResults [15:-2]:
+                if PreCalculatedResults[:10] != OldPreCalculatedResults [:10] or ( (PreCalculatedResults[10] and PreCalculatedResults[10].Description()) != (OldPreCalculatedResults[10] and OldPreCalculatedResults[10].Description())) or PreCalculatedResults[11:14] != OldPreCalculatedResults [11:14] or PreCalculatedResults[15:-2] != OldPreCalculatedResults [15:-2]:
                     raise ValueError, 'Results for the file "'+str(FileName)+'" and result set ' + str(SimulationResultID) + ' is not compatible with previous simulation results processed'
             OldPreCalculatedResults = copy.deepcopy(PreCalculatedResults[:])
     if ConstructReportHeader:

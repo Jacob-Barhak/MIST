@@ -88,7 +88,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
 <h2 class="chapter">12 Expressions</h2>
 
-<p>The system uses expressions in parameters and in simulation rules. Expressions include mathematical and logical formulas. Expressions can be a simple as 1+2; they can use another parameter as in Age +1; They can be complex expressions using mathematical functions as in Exp(-Age); They can even use if statements as in Iif(Gr(Age+1,50),1,0); These expressions can also represent tables as in Table(1,3,0,0.5,1,Age,NaN,20,30,40) . These formulas may contain, as literals, parameter names (including parameters that hold values, parameters that specify user defined functions, state indicator names, and some reserved words), mathematical operators, system built in functions. Below is a list of allowed operators:
+<p>The system uses expressions in parameters and in simulation rules. Expressions include mathematical and logical formulas. Expressions can be a simple as 1+2; they can use another parameter as in Age +1; They can be complex expressions using mathematical functions as in Exp(-Age); They can even use if statements as in Iif(Gr(Age+1,50),1,0); These expressions can also represent tables as in Table([[Age,[NaN,20,30,40]],[1,3,0,0.5,1]) . These formulas may contain, as literals, parameter names (including parameters that hold values, parameters that specify user defined functions, state indicator names, and some reserved words), mathematical operators, system built in functions. Below is a list of allowed operators:
 
 <h3 class="section">12.1 Supported arithmetic functions</h3>
 
@@ -177,8 +177,10 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <ul>
 <li><strong>Iif(Statement,TrueResult,FalseResult)</strong>: Returns TrueResult if Statement is not 0, FalseResult if Statement is 0. 
-<li><strong>Table (TableParameters)</strong>: A multi-dimensional table. TableParameters are provided as a string of comma-separated values. The Table Input argument pattern is: D,N_1,N_2,...,N_D,V_1...V_(N1*N2*...*ND),M_1,R_1_0...R_1_(N_1)......M_D,R_D_0...R_D_(N_D).  Where D defines the number of dimensions, N_i the dimension size for dimension i, V_i table values, M_i dimension names, R_i_j, the j range value definition item for dimension i . NaN value in R_i_0 means the dimension is discrete rather than continuous and the range bounds provided later represent values rather than lower and upper bounds associated with cells. For example Table(2,2,3,1,2,3,4,5,6, Gender, NaN,0,1, Age,0,30,60,120) defines a D=2 dimensional table with the dimensions M_1=Gender and M_2=Age. The levels of each dimension are defined by cutpoints which represent the lower and upper bounds for each interval; &gt; lower bound and &lt;= upper bound.  When the dimension is categorical, such as Gender, the first cutpoint should be NaN, followed by the values of the categories.  When the dimension is continuous, the first cutpoint is less than the minimum and the last cutpoint is &gt;= the maximum.  In our example, . the Gender Dimension has N_1 =2 categories with the discrete values of R_1_0 =NaN,  R_1_1 = 0 and R_1_2 = 1, and the Age dimension has N_2=3 categories defined by  R_2_0= 0&lt;Age&lt;=30= R_2_1, R_2_1= 30&lt;Age&lt;=60= R_2_2, R_2_2= 60&lt;Age&lt;=120= R_2_3.The values that the table holds are V1...V6=1,2,3,4,5,6. as can be seen in the following table:
-<table width="200" border="1">
+<li><strong>Table (DimensionsArray, ValueArray)</strong>: A multi-dimensional table. DimensionsArray defines the dimensions and range information while ValueArray holds the multidimensional data. DimensionsArray is in the following format: [[Dim_1, [R_1_0,.., R_1_N1]],..,[Dim_D, [R_D_0,.., R_D_ND]]] where Dim_i hold the dimension name/value and i=1..D. N_i is the dimension size for dimension i and R_i_j holds the cell range separator j value for dimension i. Note that NaN value in R_i_0 means the dimension is discrete rather than continuous and the range bounds provided later represent values rather than lower and upper bounds associated with table cells in that dimension. ValueArray is multidimensional array with dimensions N_1 , N_2 , ... , N_D where each set of dimensions is enclosed with brackets [] and dimensions are nested in the order they are defined - i.e. there will be N_1 elements separated by commas corresponding to Dim_1 in the topmost level and the lower most nested level will have N_D elements separated by commas. 
+For example Table([[Gender, [NaN,0,1]], [Age,[0,30,60,120]]], [[1,2,3],[4,5,6]] ) defines a D=2 dimensional table with the dimensions Dim_1=Gender and Dim_2=Age. The levels of each dimension are defined by cut-points which represent the lower and upper bounds for each interval; &gt; lower bound and &lt;= upper bound.  When the dimension is categorical, such as Gender, the first cut-point should be NaN, followed by the values of the categories.  When the dimension is continuous, the first cut-point is less than the minimum and the last cut-point is &gt;= the maximum.  In our example, the Gender Dimension has N1=2 categories with the discrete values of R_1_0 =NaN,  R_1_1 = 0 and R_1_2 = 1, and the Age dimension has N2=3 categories defined by  R_2_0=0&lt;Age&lt;=30=R_2_1, R_2_1=30&lt;Age&lt;=60=R_2_2, R_2_2=60&lt;Age&lt;=120=R_2_3. The values that the table holds are 1,2,3,4,5,6. as can be seen in the following table illustration:
+
+     <p><table width="200" border="1">
   <tr>
     <th scope="col">&nbsp;</th>
     <th scope="col">0&lt;Age&lt;=30</th>
@@ -197,7 +199,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
     <td><div align="center">5</div></td>
     <td><div align="center">6</div></td>
   </tr>
-</table></ul>
+</table>Note that an older version of the table format is still supported for compatibility yet should be considered deprecated. The new format described above should be used instead of the older format that is no longer described.
+
+</ul>
 
 <h3 class="section">12.10 Application specific</h3>
 

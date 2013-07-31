@@ -143,6 +143,11 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, id=cdml.IDF_BUTTON2, id2=cdml.IDF_BUTTON6)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, self.btn_add)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, self.btn_del)
+        # The next line fixes the bug of the parent window scrolling because
+        # of a click in this window - focus is captured here and not
+        # propagated to the parent window
+        self.Bind(wx.EVT_CHILD_FOCUS, lambda Event: None)
+
 
         # closing the child parameter form triggers this
         self.Bind(wx.EVT_END_PROCESS, self.OnRefresh)
