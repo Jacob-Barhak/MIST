@@ -54,7 +54,7 @@ import sys
 def MultipleExportAsCSV(FilePatternForFilesWithSimulationResults, SimulationResultID = None, ColumnsToExport = '' ):
     """ Generate a CSV file from multiple result files """
 
-    ListOfDataFilesWithResultsUnfiltered = DB.glob.glob(FilePatternForFilesWithSimulationResults)
+    ListOfDataFilesWithResultsUnfiltered = DB.FilePatternMatchOptimizedForNFS(FilePatternForFilesWithSimulationResults)
     # Filter out files with a wrong extension as these may be from a previous
     # run of this script
     ListOfDataFilesWithResults = filter(lambda Entry: DB.os.path.splitext(Entry)[1].lower()!='.csv', ListOfDataFilesWithResultsUnfiltered)

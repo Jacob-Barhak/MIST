@@ -73,16 +73,16 @@ Scenario = 'TEST'
 
 # Name the file name to run - without the zip extension
 FileNamePrefix='Testing'
-# define the email to which results will be sent
-MailFinalResultsTo='jbarhak.barhak@gmail.com'
+
 
 # This will be the name for the job - this line can be changed by the user
 JobName = Scenario +'_'+ FileNamePrefix +'_'+ StartTimeStr
 
 # Define the enviroment for each phase
-Phase1Environemnt = '-cwd'
+Phase1Environemnt = '-cwd -p -100'
 Phase2Environemnt = '-cwd'
 Phase3Environemnt = '-cwd'
+Phase4Environemnt = '-cwd'
 
 # Decide which phases to run
 # Run simulation and create a zip file with results for each run
@@ -92,19 +92,59 @@ RunPhase1B = True
 # Collect statistics from all CSV files into a single CSV file
 RunPhase2 = True
 # Assmble final report
-RunPhase3A = True
-# Generate plots
-RunPhase3B = True
+RunPhase3 = True
 # Analyze the results - need to define processing before enabling this stage
-RunPhase3C = False
-# email results and plots
-RunPhase3D = False
+RunPhase4A = False
+# Generate plots - Nice to have
+RunPhase4B = True
+
+# if DebugRun is at least:
+#    1 - commands are printed and not passed to the OS, Directories not created
+#    2 - skipped report scenarios are printed - possiblly very long list
+DebugRun = (DB.sys.platform == 'win32')*1
+
+# define disk usage - this may also speed up computations on a cluster
+# Empty List = Leave all files
+# 'NoZip' = remove zip files after csv created at RunPhase1B - Low Disk usage
+# 'LessCSV' = remove csv files after csv created at RunPhase2 - Lower NFS IO 
+# 'NoErr' = do not create log files - can reduce disk space yet not recommended
+# 'NoLog' = Do not create Err files - can reduce disk space yet not recommended
+# A run that minimizes disk use would be:
+# DiskUsage = ['NoZip', 'LessCSV', 'NoErr', 'NoLog']
+# Yet for initial runs it is recommended to leave all files and use 
+# DiskUsage = []
+DiskUsage = []
 
 # Reproduce Results from TraceBack of a previous Run if True
 ReproduceResultsFromTraceback = False
 
-# if DebugRun is true, commands are printed and not passed to the OS
-DebugRun = (DB.sys.platform == 'win32')
+
+# For Reconstruction Purposes in case of a bad run, rerun only those scenario
+# ranges where each range is (Start, End) and only variations in between
+# where Start<=VariationEnum<=End are executed. Note that all repetitions
+# for the variation will be rerun and codes will remain the same so results
+# can be remerged into a previous run. Note that generating plots for these
+# partial runs may not make sense and phase 3A may generate a report that will
+# need manual merging with a previous incomplete report. also note that the
+# enumerated variation name appears on reports with a leading 1 and zeros
+# and (Start,End) tuples will have this prefix as well
+
+RunOnlyTheseScenarioEnumRanges = []
+
+
+# Define directories to organize data, results, and log files
+DirInput = 'InData' + DB.os.sep
+DirLog = 'Log' + DB.os.sep 
+DirErr = 'Err' + DB.os.sep 
+DirPhase1A = 'Phase1A' + DB.os.sep 
+DirPhase1B = 'Phase1B' + DB.os.sep 
+DirPhase2 = 'Phase2' + DB.os.sep 
+DirPhase3 = 'Phase3' + DB.os.sep 
+DirPhase4 = 'Phase4' + DB.os.sep 
+DirTemp = DB.DefaultTempPathName + DB.os.sep
+
+Dirs = (DirInput, DirLog, DirErr, DirPhase1A, DirPhase1B, DirPhase2, DirPhase3, DirPhase4, DirTemp) 
+
 
 
 # Define running parameters for each scenario
@@ -113,7 +153,6 @@ if Scenario in ['TEST']:
     Repetitions = 100
     SimulationTimeOverride = '10'
     PopulationRepetitionsOverride = 'None'
-
 
 
 
@@ -218,11 +257,17 @@ if Scenario in ['TEST']:
 
 
 # Define the column Filter File Name to be used
-ReportFilterFileName = 'ReportFilter.opt'
+ReportFilterFileName = DirTemp + 'ReportFilter.opt'
 
 ###########################################################
 ################ End of Define Scenario  ##################
 ###########################################################
+
+# Make sure all directories exist:
+if DebugRun < 1:
+    for Dir in Dirs:
+        if not DB.os.path.exists(Dir):
+            DB.os.mkdir(Dir)
 
 
 # Now write the report filter to file
@@ -244,6 +289,10 @@ SimulationVariationCodes = {}
 
 # Recall the ID for the first variation
 FirstVariationID = [ProjectsToUse[0][0], ModelsToUse[0][0], PopulationsToUse[0][0], OptionsSeperation1[0][0], OptionsSeperation2[0][0], OptionsSeperation3[0][0], OptionsSeperation4[0][0], OptionsSeperation5[0][0], OptionsSeperation6[0][0]]
+
+if RunOnlyTheseScenarioEnumRanges != []:
+    # If codes were defined - look at the previous last code to deduce digits
+    CodeDigitsForVariations = int(DB.math.log10(RunOnlyTheseScenarioEnumRanges[-1][-1]))
 
 OptionsRunningIndex = 0
 TheStr = ""
@@ -277,8 +326,21 @@ for (ProjectIDToUse,ProjectTitleToUse) in ProjectsToUse:
                                         continue
                                     if Inclusions==[] or any([all([(TitleTest in TitleForCheck) for TitleTest in TestStrings]) for TestStrings in Inclusions]):
                                         # Include variation in list
-                                        SimulationVariationCodes[OptionsKeyTuple] = OptionsRunningIndex
+                                        IsVariationEnumWithinRange = True
+                                        if RunOnlyTheseScenarioEnumRanges != []:
+                                            IsVariationEnumWithinRange = False
+                                            for (StartRange,EndRange) in RunOnlyTheseScenarioEnumRanges:
+                                                if (StartRange <= ((10**CodeDigitsForVariations) + OptionsRunningIndex) <= EndRange):
+                                                    IsVariationEnumWithinRange = True
+                                        if IsVariationEnumWithinRange:
+                                            SimulationVariationCodes[OptionsKeyTuple] = OptionsRunningIndex
                                         OptionsRunningIndex = OptionsRunningIndex + 1
+
+if RunOnlyTheseScenarioEnumRanges == []:
+    # Code digits are determined at the end if not deduced from existing code
+    CodeDigitsForVariations = int(DB.math.log10(OptionsRunningIndex))+2
+    
+CodeDigitsForRepetitions = int(DB.math.log10(Repetitions))+2
 
 
 ###########################################################
@@ -286,19 +348,18 @@ for (ProjectIDToUse,ProjectTitleToUse) in ProjectsToUse:
 ###########################################################
 
 
-CodeDigitsForRepetitions = int(DB.math.log10(Repetitions))+2
-CodeDigitsForVariations = int(DB.math.log10(OptionsRunningIndex))+2
 # Process Phase 1
 if RunPhase1A or RunPhase1B:
-    # Loop through repetitions
-    for RepeatEnum in range(Repetitions):
-        # Loop through variations 
-        for (Variation, VariationEnum) in sorted(SimulationVariationCodes.iteritems(), key = lambda Entry:Entry[1]):
+    # Loop through variations 
+    for (Variation, VariationEnum) in sorted(SimulationVariationCodes.iteritems(), key = lambda Entry:Entry[1]):
+        for RepeatEnum in range(Repetitions):
             (ProjectIDToUse, ModelIDToUse, PopulationIDToUse, ValueSeperation1, ValueSeperation2, ValueSeperation3, ValueSeperation4, ValueSeperation5, ValueSeperation6) = Variation
             RunningIndex = ((10**CodeDigitsForVariations) + (VariationEnum)) * 10**CodeDigitsForRepetitions + RepeatEnum
             JobEnv = 'qsub ' + Phase1Environemnt
-            JobEnv = JobEnv + ' -o Out'+str(RunningIndex)+'_'+str(RepeatEnum) +'.log'
-            JobEnv = JobEnv + ' -e Out'+str(RunningIndex)+'_'+str(RepeatEnum) +'.err'
+            if 'NoLog' not in DiskUsage:
+                JobEnv = JobEnv + ' -o ' + DirLog + 'Out'+str(RunningIndex)+'_'+str(RepeatEnum) +'.log'
+            if 'NoErr' not in DiskUsage:
+                JobEnv = JobEnv + ' -e ' + DirErr + 'Out'+str(RunningIndex)+'_'+str(RepeatEnum) +'.err'
             JobEnv = JobEnv + ' -N ' + JobName + 'V' + str(VariationEnum) + 'R' +str(RepeatEnum)
             #--dependency=singleton
             ScriptToRun = '#!/bin/bash\n'
@@ -310,12 +371,14 @@ if RunPhase1A or RunPhase1B:
                     OverWriteFilesOrReconstructFromTraceback = 'R'
                 else:
                     OverWriteFilesOrReconstructFromTraceback = 'Y'
-                ScriptToRun = ScriptToRun + 'python MultiRunSimulation.py ' + FileNamePrefix + '.zip ' + ProjectIDToUse + ' 1 ' + str(RunningIndex) + ' ' + OverWriteFilesOrReconstructFromTraceback + ' ' + SimulationTimeOverride  + ' ' + PopulationRepetitionsOverride + ' ' + ModelIDToUse + ' ' + PopulationIDToUse + '   ' + ValueSeperation1 + ' ' + ValueSeperation2 + ' ' + ValueSeperation3 + ' ' + ValueSeperation4 + ' ' +  ValueSeperation5 + ' ' + ValueSeperation6 + '\n'
+                ScriptToRun = ScriptToRun + 'python MultiRunSimulation.py ' + DirInput + FileNamePrefix + '.zip ' + ProjectIDToUse + ' 1 ' + str(RunningIndex) + ' ' + OverWriteFilesOrReconstructFromTraceback + ' ' + SimulationTimeOverride  + ' ' + PopulationRepetitionsOverride + ' ' + ModelIDToUse + ' ' + PopulationIDToUse + '   ' + ValueSeperation1 + ' ' + ValueSeperation2 + ' ' + ValueSeperation3 + ' ' + ValueSeperation4 + ' ' +  ValueSeperation5 + ' ' + ValueSeperation6 + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_'+ str(RunningIndex) + '.zip' + ' ' + DirPhase1A + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_'+ str(RunningIndex) + '_TraceBack.txt' + ' ' + DirPhase1A + '\n'
             else:
                 ScriptToRun = ScriptToRun + 'echo "Phase1A disabled by request"\n'
             # Write the command that converts the zip file to results csv report
             if RunPhase1B:
-                ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py ' + FileNamePrefix + '_'+ str(RunningIndex) + '.zip 1 ' + ReportFilterFileName
+                ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py ' + DirPhase1A + FileNamePrefix + '_'+ str(RunningIndex) + '.zip 1 ' + ReportFilterFileName + ' ' + DirPhase1B + FileNamePrefix + '_'+ str(RunningIndex) + (' y' * ('NoZip' in DiskUsage)) + '\n'
             else:
                 ScriptToRun = ScriptToRun + 'echo "Phase1B disabled by request"\n'
             print '#'*70
@@ -348,13 +411,15 @@ if RunPhase2:
     for (Variation, VariationEnum) in sorted(SimulationVariationCodes.iteritems(), key = lambda Entry:Entry[1]):
         RunningIndex = (10**CodeDigitsForVariations) + VariationEnum
         JobEnv = 'qsub ' + Phase2Environemnt
-        JobEnv = JobEnv + ' -o OutCollect'+str(RunningIndex)+'.log'
-        JobEnv = JobEnv + ' -e OutCollect'+str(RunningIndex)+'.err'
+        if 'NoLog' not in DiskUsage:
+            JobEnv = JobEnv + ' -o ' + DirLog + 'OutCollect'+str(RunningIndex)+'.log'
+        if 'NoErr' not in DiskUsage:
+            JobEnv = JobEnv + ' -e ' + DirErr + 'OutCollect'+str(RunningIndex)+'.err'
         JobEnv = JobEnv + ' -N ' + JobName + 'V' + str(VariationEnum) + 'Collect'
         JobEnv = JobEnv + ' -hold_jid "' + JobName + 'V' + str(VariationEnum) + 'R*"'
         ScriptToRun = '#!/bin/bash\n'
         ScriptToRun = ScriptToRun + 'echo "Collecting Variation ' + str(VariationEnum) + '"\n'
-        ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py "' + FileNamePrefix + '_' + str(RunningIndex) + '[0-9]'*(CodeDigitsForRepetitions)+'.csv"' + ' None None ' + FileNamePrefix + '_' + str(RunningIndex) + '\n'
+        ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py "' + DirPhase1B + FileNamePrefix + '_' + str(RunningIndex) + '[0-9]'*(CodeDigitsForRepetitions)+'.csv"' + ' None None ' + DirPhase2 + FileNamePrefix + '_' + str(RunningIndex) + (' y' * ('LessCSV' in DiskUsage)) + '\n'
         print '#'*70
         print 'Running the following job command:'
         print JobEnv
@@ -387,17 +452,17 @@ print '#'*20 + '  Creating Reports and Plots  ' + '#'*20
 
 #Construct ReportStr
 
-PlotStr = ''
+PlotStrList = []
 ReportStr = ''
 RunningIndexBase = (10**CodeDigitsForVariations)
 
-TempFilePrefix = DB.DefaultTempPathName + DB.os.sep + FileNamePrefix
+TempFilePrefix = DirTemp + FileNamePrefix
 
 # If no reference file is defined, the first file will be used to create the
 # two first reference columns. Note that an error will be generated at the top
 # of the thirs column to indicate no reference was provided by the user
 if ReportReferenceFileName=='':
-    ReportReferenceFileName = FileNamePrefix + "_" + str(RunningIndexBase) + "Mean.csv"
+    ReportReferenceFileName = DirPhase2 + FileNamePrefix + "_" + str(RunningIndexBase) + "Mean.csv"
     UserReferenceFileExists = False
     ReportReferenceColumnTuple =''    
 else:
@@ -455,16 +520,16 @@ if Scenario in [Scenario]:
                                                 except KeyError:
                                                     TitleSkip.append(TheTitle)
                                                     continue
-                                                TheStr = TheStr + "('" + FileNamePrefix + "_" + str(RunningIndex) + "Mean.csv','"+StartTime+"','"+EndTime+"','"+ValueStratifications+"','"+TheTitle+"'), \n"
+                                                TheStr = TheStr + "('" + DirPhase2 + FileNamePrefix + "_" + str(RunningIndex) + "Mean.csv','"+StartTime+"','"+EndTime+"','"+ValueStratifications+"','"+TheTitle+"'), \n"
     TheStr = TheStr + "('"+ReportReferenceFileName+"','','')"+UserReferenceFileExists*(","+str(ReportReferenceColumnTuple)) +" ] "
-    if DebugRun:
+    if DebugRun>=2:
         print ' INFO: The report skipped the following combinatorial variations during creation: ' + str(set(TitleSkip))
     
     # create a report instructions file
     TempFile = open(TempFilePrefix+'_Temp.txt','w')
     TempFile.write(TheStr)
     TempFile.close()
-    ReportStr = ReportStr + 'python AssembleReportCSV.py ' + TempFilePrefix + '_Temp.txt '+ FileNamePrefix + "_Out.csv\n"
+    ReportStr = ReportStr + 'python AssembleReportCSV.py ' + TempFilePrefix + '_Temp.txt '+ DirPhase3 + FileNamePrefix + "_Out.csv\n"
     
     
     
@@ -491,25 +556,25 @@ if Scenario in [Scenario]:
                                                 except KeyError:
                                                     TitleSkip.append(TheTitle)
                                                     continue
-                                                TheStr = TheStr + "('" + FileNamePrefix + "_" + str(RunningIndex) + "Mean.csv','"+StartTime+"','"+EndTime+"','"+ValueStratifications+"','"+TheTitle+"'), \n"
+                                                TheStr = TheStr + "('" + DirPhase2 + FileNamePrefix + "_" + str(RunningIndex) + "Mean.csv','"+StartTime+"','"+EndTime+"','"+ValueStratifications+"','"+TheTitle+"'), \n"
                                             if TheTitle not in TitleSkip: TitleList = TitleList + [TheTitle]
         PlotTitles = PlotTitles + [TitleList]
     TheStr = TheStr + "('"+ReportReferenceFileName+"','','')"+UserReferenceFileExists*(","+str(ReportReferenceColumnTuple)) +" ] "
-    if DebugRun:
+    if DebugRun>=2:
         print ' INFO: The report skipped the following combinatorial variations during creation: ' + str(set(TitleSkip))
     
     # create a report instructions file
     TempFile = open(TempFilePrefix+'_Temp_Yearly.txt','w')
     TempFile.write(TheStr)
     TempFile.close()
-    ReportStr = ReportStr + 'python AssembleReportCSV.py ' + TempFilePrefix + '_Temp_Yearly.txt '+ FileNamePrefix + "_Out_Yearly.csv\n"
+    ReportStr = ReportStr + 'python AssembleReportCSV.py ' + TempFilePrefix + '_Temp_Yearly.txt '+ DirPhase3 + FileNamePrefix + "_Out_Yearly.csv\n"
     
     # Create the non stratified plots
     PlotInstructions = [PlotFilter, PlotTitles[0], PlotStyles]
     TempFile = open(TempFilePrefix+'_Temp_Yearly.plt','w')
     TempFile.write(str(PlotInstructions))
     TempFile.close()
-    PlotStr = PlotStr + "python CreatePlotsFromCSV.py " + FileNamePrefix + "_Out_Yearly.csv " + FileNamePrefix + "_Out_Yearly.pdf " + TempFilePrefix + "_Temp_Yearly.plt\n"
+    PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly.pdf " + TempFilePrefix + "_Temp_Yearly.plt\n")
     
     if len(Stratifications) >1:
         # Create the diabetic stratified plots
@@ -517,82 +582,127 @@ if Scenario in [Scenario]:
         TempFile = open(TempFilePrefix+'_Temp_Yearly_Strat.plt','w')
         TempFile.write(str(PlotInstructions))
         TempFile.close()
-        PlotStr = PlotStr + "python CreatePlotsFromCSV.py " + FileNamePrefix + "_Out_Yearly.csv " + FileNamePrefix + "_Out_Yearly_Strat.pdf " + TempFilePrefix + "_Temp_Yearly_Strat.plt\n"
+        PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_Strat.pdf " + TempFilePrefix + "_Temp_Yearly_Strat.plt\n")
     
     
     # To Allow viewing also create graph for each population if there are a few of these
     if len(PopulationsToUse) > 1:
         for (PopulationEnum,(PopulationIDToUse,PopulationTitleToUse)) in enumerate(PopulationsToUse):
             # Isolate population Titles to show from the list by title
-            PlotTitlesToUse = [Entry for Entry in PlotTitles[0] if (PopulationTitleToUse in Entry)]
+            PlotTitlesToUse = [Entry for Entry in PlotTitles[0] if ((PopulationTitleToUse+' ') in Entry)]
             # Create the non stratified plots
             PlotInstructions = [PlotFilter, PlotTitlesToUse, PlotStyles]
             TempFile = open(TempFilePrefix+'_Temp_Yearly_'+PopulationTitleToUse+'.plt','w')
             TempFile.write(str(PlotInstructions))
             TempFile.close()
-            PlotStr = PlotStr + "python CreatePlotsFromCSV.py " + FileNamePrefix + "_Out_Yearly.csv " + FileNamePrefix + "_Out_Yearly_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_"+PopulationTitleToUse+".plt\n"
+            PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_"+PopulationTitleToUse+".plt\n")
     
             if len(Stratifications) >1:
                 # Isolate population Titles to show from the list by title
-                PlotTitlesToUse = [Entry for Entry in PlotTitles[1] + PlotTitles[2] if (PopulationTitleToUse in Entry)]
+                PlotTitlesToUse = [Entry for Entry in PlotTitles[1] + PlotTitles[2] if ((PopulationTitleToUse+' ') in Entry)]
                 # Create the diabetic stratified plots
                 PlotInstructions = [PlotFilter, PlotTitlesToUse, PlotStyles]
                 TempFile = open(TempFilePrefix+'_Temp_Yearly_Strat_'+PopulationTitleToUse+'.plt','w')
                 TempFile.write(str(PlotInstructions))
                 TempFile.close()
-                PlotStr = PlotStr + "python CreatePlotsFromCSV.py " + FileNamePrefix + "_Out_Yearly.csv " + FileNamePrefix + "_Out_Yearly_Strat_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_Strat_"+PopulationTitleToUse+".plt\n"
+                PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_Strat_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_Strat_"+PopulationTitleToUse+".plt\n")
+
 
 
 
 # Process Phase 3
-print '#'*70
-JobEnv = 'qsub ' + Phase3Environemnt
-JobEnv = JobEnv + ' -o OutPhase3.log'
-JobEnv = JobEnv + ' -e OutPhase3.err'
-JobEnv = JobEnv + ' -N ' + JobName + '_Finalize'
-JobEnv = JobEnv + ' -hold_jid "' + JobName + 'V*"'
-
-ScriptToRun = '#!/bin/bash\n'
-ScriptToRun = ScriptToRun + 'echo "Final Report Collection"\n'
-if RunPhase3A:
+if RunPhase3:
+    print '#'*70
+    JobEnv = 'qsub ' + Phase3Environemnt
+    if 'NoLog' not in DiskUsage:
+        JobEnv = JobEnv + ' -o ' + DirLog + 'OutPhase3.log'
+    if 'NoErr' not in DiskUsage:
+        JobEnv = JobEnv + ' -e ' + DirErr + 'OutPhase3.err'
+    JobEnv = JobEnv + ' -N ' + JobName + '_FinalRep'
+    JobEnv = JobEnv + ' -hold_jid "' + JobName + 'V*"'
+    
+    ScriptToRun = '#!/bin/bash\n'
+    ScriptToRun = ScriptToRun + 'echo "Final Report Collection"\n'
     ScriptToRun = ScriptToRun + ReportStr
-if RunPhase3B:
-    ScriptToRun = ScriptToRun + PlotStr
-if RunPhase3C:
+    
+    print '#'*70
+    print 'Running the following job command:'
+    print JobEnv
+    print 'With the script:'
+    print ScriptToRun
+    # Actual script To Run
+    # For each such project collect all the csv reports previously
+    # calculated into csv statistics
+    if DebugRun:
+        (CommandStdOut, CommandStdErr) = ('Debug Mode','')
+    else:
+        (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
+        if CommandStdErr!='':
+            print '!'*10 + 'ERROR DETECTED' + '!'*10
+            print CommandStdErr
+            ErrorCount = ErrorCount + 1
+    print 'Out:'
+    print CommandStdOut
+
+
+# Process Phase 4
+print '#'*70
+
+ScriptList = []
+if RunPhase4A:
     for ValidationQueryFile in FinalReportValidationQueries:
         # AnalyzeSimulationResults.py is not part of the core MIST distribution
         # It is intended for analysis of results. Replace this command with
         # your own processing mechanism.
-        ScriptToRun = ScriptToRun + 'python AnalyzeSimulationResults.py ' + FileNamePrefix + '_Out.csv ' + ValidationQueryFile + '\n'
-if RunPhase3D:
-    import __main__ as MyMain
-    ScriptToRun = ScriptToRun + 'mutt -s "Simulation Complete ' + JobName + '" -a ' + FileNamePrefix + '.zip ' + RunPhase3A*(FileNamePrefix + '_Out*.csv ') + RunPhase3B*(FileNamePrefix + '_Out*.pdf ') + '"' + MyMain.__file__ + '" ' + UserReferenceFileExists*ReportReferenceFileName + ' '+ReportFilterFileName+' -- ' + MailFinalResultsTo + ' < /dev/null\n'
-    ScriptToRun = ScriptToRun + 'echo "Results emailed to: ' + MailFinalResultsTo + '"\n'
+        ScriptToRun = '#!/bin/bash\n'
+        ScriptToRun = ScriptToRun + 'echo "Post Processing Final Report"\n'
+        ScriptToRun = ScriptToRun + 'python AnalyzeSimulationResults.py ' + DirPhase3 + FileNamePrefix + '_Out.csv ' + ValidationQueryFile + ' ' + DirPhase4 + 'QueryOut_' + FileNamePrefix + '_' + ValidationQueryFile + '\n'
+        ScriptList.append(ScriptToRun)
+    
+if RunPhase4B:
+    for PlotStr in PlotStrList:
+        ScriptToRun = '#!/bin/bash\n'
+        ScriptToRun = ScriptToRun + 'echo "Post Processing Plots from Final Report"\n'
+        ScriptToRun = ScriptToRun + PlotStr
+        ScriptList.append(ScriptToRun)
 
-print '#'*70
-print 'Running the following job command:'
-print JobEnv
-print 'With the script:'
-print ScriptToRun
-# Actual script To Run
-# For each such project collect all the csv reports previously
-# calculated into csv statistics
-if DebugRun:
-    (CommandStdOut, CommandStdErr) = ('Debug Mode','')
-else:
-    (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
-    if CommandStdErr!='':
-        print '!'*10 + 'ERROR DETECTED' + '!'*10
-        print CommandStdErr
-        ErrorCount = ErrorCount + 1
-print 'Out:'
-print CommandStdOut
+for (ScriptEnum,ScriptToRun) in enumerate(ScriptList):
+    JobEnv = 'qsub ' + Phase4Environemnt
+    if 'NoLog' not in DiskUsage:
+        JobEnv = JobEnv + ' -o ' + DirLog + ('OutPhase4_%0.'+str(int(DB.Log10(len(ScriptList)))+1)+'i.log')%(ScriptEnum)
+    if 'NoErr' not in DiskUsage:
+        JobEnv = JobEnv + ' -e ' + DirErr + ('OutPhase4_%0.'+str(int(DB.Log10(len(ScriptList)))+1)+'i.err')%(ScriptEnum)
+    JobEnv = JobEnv + ' -N ' + JobName + '_PostFinalRep'
+    JobEnv = JobEnv + ' -hold_jid "' + JobName + '_FinalRep"'
+
+    print '#'*70
+    print 'Running the following job command:'
+    print JobEnv
+    print 'With the script:'
+    print ScriptToRun
+    # Actual script To Run
+    # For each such project collect all the csv reports previously
+    # calculated into csv statistics
+    if DebugRun:
+        (CommandStdOut, CommandStdErr) = ('Debug Mode','')
+    else:
+        (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
+        if CommandStdErr!='':
+            print '!'*10 + 'ERROR DETECTED' + '!'*10
+            print CommandStdErr
+            ErrorCount = ErrorCount + 1
+    print 'Out:'
+    print CommandStdOut
+
+
+
 
 print '#'*70
 print 'Scenario is: ' + Scenario
 print 'Total Number of Variations is %i' % len(SimulationVariationCodes)
 print 'Total Number of Repetitions is %i' % Repetitions
-print 'Total Number of Jobs is %i = %i + %i + %i for phases 1,2,3' %( len(SimulationVariationCodes)*(Repetitions + 1) + 1,  len(SimulationVariationCodes)*Repetitions, len(SimulationVariationCodes), 1)
+CountVec = (len(SimulationVariationCodes)*Repetitions, len(SimulationVariationCodes), 1, len(ScriptList))
+print 'Total Number of Jobs is %i = %i + %i + %i + %i for phases 1,2,3,4' %( (sum(CountVec),) + CountVec )
 print '#'*70
 
 if ErrorCount > 0:
@@ -606,7 +716,7 @@ if ErrorCount > 0:
 else:
     print 'OK '*20
     print 'OK '*20
-    print  ' '*20 + 'SCRIPT LAUNCHED OK' 
+    print ' '*20 + 'SCRIPT LAUNCHED OK' 
     print 'OK '*20
     print 'OK '*20
     

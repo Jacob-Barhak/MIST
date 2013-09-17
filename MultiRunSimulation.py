@@ -146,14 +146,15 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
     (FileNameBase,FileNameExt) = DB.os.path.splitext(InputFileName)
     (PathOnly , FileNameOnly, FileNameFullPath) = DB.DetermineFileNameAndPath(InputFileName)
     (FileNameBaseNoPath,TempFileNameExt) = DB.os.path.splitext(FileNameOnly)
+
     OutputFileNames = []
     ErrorsDetected = []
     # Load the data
     ProjectToRun = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
     for Repetition in range(NumberOfRepeats):
         FileEnumerationSufix = '_' + ('%0'+str(len(str(StartRunningIndex+NumberOfRepeats-1)))+'i')%(StartRunningIndex + Repetition)
-        FileNameToUse = FileNameBase + FileEnumerationSufix
-        TraceBackFileNameToUse = DB.SessionTempDirecory + DB.os.sep + FileNameBaseNoPath + FileEnumerationSufix + '_TraceBack.txt'
+        FileNameToUse = FileNameBaseNoPath + FileEnumerationSufix
+        TraceBackFileNameToUse = FileNameBase + FileEnumerationSufix + '_TraceBack.txt'
         if ReconstructFromTraceback:
             try:
                 TraceBackFile = open(TraceBackFileNameToUse,'r')
@@ -190,7 +191,7 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
             # Reload data to wipe results from previous run
             ProjectToRun = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
             # Recacluate filename
-            NewFileName = FileNameToUse + FileNameExt
+            NewFileName = PathOnly + DB.os.sep + FileNameToUse + FileNameExt
             print '#'*70
             print '#'*70
             print '# Repetition number: ' + str (Repetition)
@@ -271,7 +272,7 @@ if __name__ == "__main__":
         print '  OverWriteFilesOrReconstructFromTraceback: If y (default), then output'
         print '                                            files will overwrite old ones. '
         print '                                            If r then reconstruct simulation'
-        print '                                            from TraceBack files in Temp dir'
+        print '                                            from TraceBack files in same dir'
         print '  NumberOfSimulationStepsOverride: Defines a new number of simulation steps'
         print '                                   for the project. Use None for no override'
         print '  PopulationRepetitionsOverride: Defines a new number of times to repeat the'

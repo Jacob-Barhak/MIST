@@ -432,7 +432,8 @@ class MainFrame(cdml.CDMFrame):
                                 # Compile the generation script with default options
                                 ScriptFileNameFullPath = Pop.CompilePopulationGeneration(GeneratedPopulationSize = NumberOfIndividuals, GenerationFileNamePrefix = None, OutputFileNamePrefix = None , RandomStateFileNamePrefix = None, GenerationOptions = None, RecreateFromTraceBack = PopulationTraceBack)
                                 # run the generation script
-                                (ProcessList, PipeList) = Pop.RunPopulationGeneration(GenerationFileName = ScriptFileNameFullPath, NumberOfProcessesToRun = -1)
+                                DeleteScriptFileAfterRun = not cdml.GetAdminMode()
+                                (ProcessList, PipeList) = Pop.RunPopulationGeneration(GenerationFileName = ScriptFileNameFullPath, NumberOfProcessesToRun = -1, DeleteScriptFileAfterRun = DeleteScriptFileAfterRun)
                                 return (ProcessList, PipeList)
                             
                             def GenerationEndMiniScript(ProcessList, PipeList):

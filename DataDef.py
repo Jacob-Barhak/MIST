@@ -92,7 +92,7 @@ LoadedModuleNames = dir()
 # different revisions of a similar data structure than may or may not be
 # compatible with each other. It is the responsibility of the code to
 # check what code versions and revisions are compatible with it.
-Version = (0,88,0,0,'MIST')
+Version = (0,89,0,0,'MIST')
 
 # DEBUG variables
 # DebugPrints options are ['Table','TBD','Matrix', 'ExprParse','ExprConstruct', 'PrepareSimulation', 'Load' , 'MultiProcess', 'CSV', 'TempDir']
@@ -350,6 +350,44 @@ def RedirectOutputBackwards(TheFile, BackupOfOriginal):
         # if a file was open during redirection, close it
         TheFile.close()
     return RetVal
+
+    
+def FilePatternMatchOptimizedForNFS(FilePattern):
+    "An optimized version of glob optimized for NFS by skip dir list for file"
+    # This function behaves almost exactly like glob. However, if no wildcards
+    # are found in the pattern name, then the system skips retrieving the 
+    # entire directory and just checks if the file exists. Otherwise the 
+    # system will just use glob. This is important when accessing files over
+    # NFS in cases where there are many files in a directory and they need to 
+    # be transferred to different machines. The problem intensifies over large
+    # cluster runs and becomes a bottleneck - therefore there is a need to
+    # avoid it. 
+    # the return is always a list of filenames that match the pattern.
+    # The following wildcards in the file pattern will indicated that the slow
+    # version of glob has to used: *?[]!. Otherwise it is assumed that
+    # the file pattern has only a single file.
+    #
+    IsWildCardInPattern = False
+    WildCardList = '*?[]!'
+    for WildChar in WildCardList:
+        if WildChar in FilePattern:
+            IsWildCardInPattern = True
+            break
+    if IsWildCardInPattern:
+        # if wildcards found use glob
+        RetVal = glob.glob(FilePattern)
+    else:
+        # otherwise just check if the file exists and return a list
+        if os.path.exists(FilePattern):
+            # Note that os.path.exists is used rather than os.path.isfile
+            # so the behavior will match glob that may return a directory
+            # return the file name if found
+            RetVal = [FilePattern]
+        else:
+            # return an empty list if not found
+            RetVal = []
+    return RetVal
+
 
 
 # Useful string functions
@@ -4409,12 +4447,12 @@ class PopulationSet:
             print 'RevisedPopulationSet Data is:' + str(SimulationPopulationSet.Data)
         return SimulationPopulationSet    
 
-    def GenerateDataPopulationFromDistributionPopulation(self, GeneratedPopulationSize, GenerationFileNamePrefix = None, OutputFileNamePrefix = None , RandomStateFileNamePrefix = None, GenerationOptions = None, SkipDumpingFilesIfError = True , RecreateFromTraceBack = None):
+    def GenerateDataPopulationFromDistributionPopulation(self, GeneratedPopulationSize, GenerationFileNamePrefix = None, OutputFileNamePrefix = None , RandomStateFileNamePrefix = None, GenerationOptions = None, SkipDumpingFilesIfError = True , RecreateFromTraceBack = None, DeleteScriptFileAfterRun = True):
         " Generate a new data population from distributions - encapsulating"
         # Compile the generation script with default options
         ScriptFileNameFullPath = self.CompilePopulationGeneration (GeneratedPopulationSize, GenerationFileNamePrefix , OutputFileNamePrefix , RandomStateFileNamePrefix , GenerationOptions, SkipDumpingFilesIfError, RecreateFromTraceBack )
         # run the generation script and collect results
-        Results = self.RunGenerationAndCollectResults(ScriptFileNameFullPath)
+        Results = self.RunGenerationAndCollectResults(GenerationFileName = ScriptFileNameFullPath, NumberOfProcessesToRun = 0, OutputConnection = None, DeleteScriptFileAfterRun = DeleteScriptFileAfterRun)
         return Results           
 
 
@@ -4593,34 +4631,35 @@ class PopulationSet:
         for (FuncName, RunTimeFuncName) in RuntimeFunctionNames:
             WriteGenLine (FuncName + ' = DataDef.' + RunTimeFuncName)
         WriteGenLine ('#### Random seed ####')
-        VerboseComment = Iif(VerboseLevel >= 3,'','#')
+        VerboseComment = Iif(VerboseLevel >= 6,'','#')
         if not IsNumericType(RandomSeed) or IsNaN(RandomSeed):
             RandomSeed = None
         # If not recreating from TraceBack figure out the random seed and
         # record the random state on file
         if RecreateFromTraceBack == None:
-            WriteGenLine (VerboseComment + 'try:')
-            WriteGenLine (VerboseComment + Tab + 'DataDef.numpy.random.seed(' + SmartStr(RandomSeed) +  ')')
-            WriteGenLine (VerboseComment + Tab + '# Record the initial state of the random generator')
-            WriteGenLine (VerboseComment + Tab + '_InitialRandomState = DataDef.numpy.random.get_state()')
+            WriteGenLine ('try:')
+            WriteGenLine (Tab + 'DataDef.numpy.random.seed(' + SmartStr(RandomSeed) +  ')')
+            WriteGenLine (Tab + '# Record the initial state of the random generator')
+            WriteGenLine (Tab + '_InitialRandomState = DataDef.numpy.random.get_state()')
+            WriteGenLine (Tab + '_RandomStateFileName = ""')
             WriteGenLine (VerboseComment + Tab + '(_RandomStateFileDescriptor, _RandomStateFileName) = tempfile.mkstemp ( ' + repr(TextSuffix) + ' , os.path.splitext(__file__)[0] + "_" + ' + repr(RandomStateFileNamePrefix) + '+ "_" , ' + repr(SessionTempDirecory) + ', True)')
             WriteGenLine (VerboseComment + Tab + "_OutFile = os.fdopen (_RandomStateFileDescriptor , 'w')")
             WriteGenLine (VerboseComment + Tab + 'pickle.dump(_InitialRandomState , _OutFile)')
             WriteGenLine (VerboseComment + Tab + "_OutFile.close()")
-            WriteGenLine (VerboseComment + 'except:')
+            WriteGenLine ('except:')
             if SkipDumpingFilesIfError:
-                WriteGenLine (VerboseComment + Tab + "print 'Warning - could not write the Initial Random State to file, writing to screen instead'")
-                WriteGenLine (VerboseComment + Tab + "print _InitialRandomState")
+                WriteGenLine (Tab + "print 'Warning - could not write the Initial Random State to file, writing to screen instead'")
+                WriteGenLine (Tab + "print _InitialRandomState")
             else:
-                WriteGenLine (VerboseComment + Tab + "_WarningErrorHandler()")
+                WriteGenLine (Tab + "_WarningErrorHandler()")
         else:
             # If recreating from TraceBack then use the random state stored 
             # in the traceback
-            WriteGenLine (VerboseComment + '# Reproduce the Random state from given TraceBack information')
-            WriteGenLine (VerboseComment + '_InitialRandomState = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[2])) + ')')
+            WriteGenLine ('# Reproduce the Random state from given TraceBack information')
+            WriteGenLine ('_InitialRandomState = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[2])) + ')')
             # use original see file name rather than None in case it exists
-            WriteGenLine (VerboseComment + '_RandomStateFileName = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[3])) + ')')
-            WriteGenLine (VerboseComment + 'DataDef.numpy.random.set_state(_InitialRandomState)')
+            WriteGenLine ('_RandomStateFileName = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[3])) + ')')
+            WriteGenLine ('DataDef.numpy.random.set_state(_InitialRandomState)')
         WriteGenLine ()
         WriteGenLine ('####### Initialize Results Vector #######')
         WriteGenLine ('_ResultsVector = []')
@@ -4690,7 +4729,7 @@ class PopulationSet:
             raise ValueError, 'Generation Compilation Error: Error encountered while closing simulation script file ' + ScriptFileNameFullPath  +'. Please make sure that the file was not locked by the system due to quota or other reasons. The error was detected for the population set ' + self.Name + '. Here are details about the error: ' + str(ExceptValue)
         return ScriptFileNameFullPath
 
-    def RunPopulationGenerationSpawned (self, GenerationFileName, OutputConnection = None):
+    def RunPopulationGenerationSpawned (self, GenerationFileName, OutputConnection = None, DeleteScriptFileAfterRun = True):
         """ Runs the generation """
         # Determine the file names
         (ScriptPathOnly, ScriptFileNameOnly, ScriptFileNameFullPath) = DetermineFileNameAndPath(GenerationFileName)
@@ -4716,6 +4755,16 @@ class PopulationSet:
             ReturnedPopulationSetData = RunGeneration._ResultPopulationSetData
             # remove the module from sys.modules to force reload later on
             del(sys.modules[ScriptFileNameNoExtension])
+            if DeleteScriptFileAfterRun:
+                # in case of an error before here- the file will not be 
+                # deleted, so it would be possible to debug 
+                try:
+                    os.remove(ScriptFileNameFullPath)
+                    os.remove(ScriptFileNameFullPath+'c')
+                except:
+                    # ignore delete error if happens - the file will be left
+                    # in the temp dir - no harm donw
+                    pass                
         except:
             (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
             if ScriptFileNameNoExtension in sys.modules:
@@ -4735,7 +4784,7 @@ class PopulationSet:
             OutputConnection.send(ReturnedPopulationSetData)
         return ReturnedPopulationSetData 
 
-    def RunPopulationGeneration (self, GenerationFileName, NumberOfProcessesToRun = 0, OutputConnection = None):
+    def RunPopulationGeneration (self, GenerationFileName, NumberOfProcessesToRun = 0, OutputConnection = None, DeleteScriptFileAfterRun = True):
         """ Runs the Generation if possible/requested as a different process """
         # if NumberOfProcessesToRun = 0, this means run the generation 
         # without opening a new process, i.e. within this process.
@@ -4763,7 +4812,7 @@ class PopulationSet:
                 OutputConnection = PipeMock()
                 if 'MultiProcess' in DebugPrints:
                     print 'running the file ' + GenerationFileName
-                self.RunPopulationGenerationSpawned (GenerationFileName, OutputConnection)
+                self.RunPopulationGenerationSpawned (GenerationFileName, OutputConnection, DeleteScriptFileAfterRun)
                 if 'MultiProcess' in DebugPrints:
                     print 'finished running the file ' + GenerationFileName
                 # store the result, errors will be handled later
@@ -4777,7 +4826,7 @@ class PopulationSet:
                 # create processes
                 if 'MultiProcess' in DebugPrints:
                     print 'spawning a process for file ' + GenerationFileName
-                TheProcess = multiprocessing.Process(target = self.RunPopulationGenerationSpawned, args = (GenerationFileName, ChildConnection))
+                TheProcess = multiprocessing.Process(target = self.RunPopulationGenerationSpawned, args = (GenerationFileName, ChildConnection, DeleteScriptFileAfterRun))
                 ProcessList = ProcessList + [TheProcess]
                 if 'MultiProcess' in DebugPrints:
                     print 'process spawned'
@@ -4842,10 +4891,10 @@ class PopulationSet:
             RetVal = RetValArray
         return RetVal
 
-    def RunGenerationAndCollectResults(self, GenerationFileName, NumberOfProcessesToRun = 0, OutputConnection = None):
+    def RunGenerationAndCollectResults(self, GenerationFileName, NumberOfProcessesToRun = 0, OutputConnection = None, DeleteScriptFileAfterRun = True):
         """ Runs the simulation and collects the results and returns them """
-        # this function combines RunSimulation and CollectResults
-        (ProcessList, PipeList) = self.RunPopulationGeneration (GenerationFileName, NumberOfProcessesToRun, OutputConnection)
+        # this function combines RunPopulationGeneration and CollectResults
+        (ProcessList, PipeList) = self.RunPopulationGeneration (GenerationFileName, NumberOfProcessesToRun, OutputConnection, DeleteScriptFileAfterRun)
         RetVal = self.CollectResults(ProcessList, PipeList)
         return RetVal
 
@@ -5387,32 +5436,36 @@ class Project:
             WriteSimLine (FuncName + ' = DataDef.' + RunTimeFuncName)
 
         WriteSimLine ('#### Random seed ####')
-        VerboseComment = Iif(VerboseLevel >= 3,'','#')
+
+        VerboseComment = Iif(VerboseLevel >= 6,'','#')
         if not IsNumericType(RandomSeed) or IsNaN(RandomSeed):
             RandomSeed = None
+        # If not recreating from TraceBack figure out the random seed and
+        # record the random state on file
         if RecreateFromTraceBack == None:
-            WriteSimLine (VerboseComment + 'try:')
-            WriteSimLine (VerboseComment + Tab + 'DataDef.numpy.random.seed(' + SmartStr(RandomSeed) +  ')')
-            WriteSimLine (VerboseComment + Tab + '# Record the initial state of the random generator')
-            WriteSimLine (VerboseComment + Tab + '_InitialRandomState = DataDef.numpy.random.get_state()')
-            WriteSimLine (VerboseComment + Tab + '(_RandomStateFileDescriptor, _RandomStateFileName) = tempfile.mkstemp ( ' + repr(TextSuffix) + ' , os.path.splitext(__file__)[0] + "_" + ' + repr(RandomStateFileNamePrefix) + ' + "_" , ' + repr(SessionTempDirecory) + ', True)')
+            WriteSimLine ('try:')
+            WriteSimLine (Tab + 'DataDef.numpy.random.seed(' + SmartStr(RandomSeed) +  ')')
+            WriteSimLine (Tab + '# Record the initial state of the random generator')
+            WriteSimLine (Tab + '_InitialRandomState = DataDef.numpy.random.get_state()')
+            WriteSimLine (Tab + '_RandomStateFileName = ""')
+            WriteSimLine (VerboseComment + Tab + '(_RandomStateFileDescriptor, _RandomStateFileName) = tempfile.mkstemp ( ' + repr(TextSuffix) + ' , os.path.splitext(__file__)[0] + "_" + ' + repr(RandomStateFileNamePrefix) + '+ "_" , ' + repr(SessionTempDirecory) + ', True)')
             WriteSimLine (VerboseComment + Tab + "_OutFile = os.fdopen (_RandomStateFileDescriptor , 'w')")
             WriteSimLine (VerboseComment + Tab + 'pickle.dump(_InitialRandomState , _OutFile)')
             WriteSimLine (VerboseComment + Tab + "_OutFile.close()")
-            WriteSimLine (VerboseComment + 'except:')
+            WriteSimLine ('except:')
             if SkipDumpingFilesIfError:
-                WriteSimLine (VerboseComment + Tab + "print 'Warning - could not write the Initial Random State to file, writing to screen instead'")
-                WriteSimLine (VerboseComment + Tab + "print _InitialRandomState")
+                WriteSimLine (Tab + "print 'Warning - could not write the Initial Random State to file, writing to screen instead'")
+                WriteSimLine (Tab + "print _InitialRandomState")
             else:
-                WriteSimLine (VerboseComment + Tab + "_WarningErrorHandler()")
+                WriteSimLine (Tab + "_WarningErrorHandler()")
         else:
             # If recreating from TraceBack then use the random state stored 
             # in the traceback
-            WriteSimLine (VerboseComment + '# Reproduce the Random state from given TraceBack information')
-            WriteSimLine (VerboseComment + '_InitialRandomState = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[2])) + ')')
+            WriteSimLine ('# Reproduce the Random state from given TraceBack information')
+            WriteSimLine ('_InitialRandomState = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[2])) + ')')
             # use original see file name rather than None in case it exists
-            WriteSimLine (VerboseComment + '_RandomStateFileName = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[3])) + ')')
-            WriteSimLine (VerboseComment + 'DataDef.numpy.random.set_state(_InitialRandomState)')
+            WriteSimLine ('_RandomStateFileName = pickle.loads(' + repr(pickle.dumps( RecreateFromTraceBack[3])) + ')')
+            WriteSimLine ('DataDef.numpy.random.set_state(_InitialRandomState)')
         WriteSimLine ()
         # reserved words
         WriteSimLine ('#### Reserved variables words ####')
@@ -5849,7 +5902,7 @@ class Project:
         return ScriptFileNameFullPath
 
 
-    def RunSimulationSpawned (self, SimulationFileName, DumpOutputAsCSV = False, FullResultsOutputFileName = None, FinalResultsOutputFileName = None, OutputConnection = None):
+    def RunSimulationSpawned (self, SimulationFileName, DumpOutputAsCSV = False, FullResultsOutputFileName = None, FinalResultsOutputFileName = None, OutputConnection = None, DeleteScriptFileAfterRun = True):
         """ Runs the simulation """
         if FullResultsOutputFileName == None:
             FullResultsOutputFileName = DefaultFullResultsOutputFileName
@@ -5883,6 +5936,17 @@ class Project:
             # remove the module from sys.modules to force reload later on
             ResultsInfo = RunSimulationScript._ResultsInfo
             del(sys.modules[ScriptFileNameNoExtension])
+            # if Requested, delete the .py and .pyc script files
+            if DeleteScriptFileAfterRun:
+                # in case of an error before here- the file will not be 
+                # deleted, so it would be possible to debug 
+                try:
+                    os.remove(ScriptFileNameFullPath)
+                    os.remove(ScriptFileNameFullPath+'c')
+                except:
+                    # ignore delete error if happens - the file will be left
+                    # in the temp dir - no harm donw
+                    pass
         except:
             (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
             if ScriptFileNameNoExtension in sys.modules:
@@ -5903,7 +5967,7 @@ class Project:
         return ResultsInfo
 
 
-    def RunSimulation (self, SimulationFileName, NumberOfProcessesToRun = 0, DumpOutputAsCSV = False, FullResultsOutputFileName = None, FinalResultsOutputFileName = None):
+    def RunSimulation (self, SimulationFileName, NumberOfProcessesToRun = 0, DumpOutputAsCSV = False, FullResultsOutputFileName = None, FinalResultsOutputFileName = None, DeleteScriptFileAfterRun = True):
         """ Runs the simulation if possible/requested as a different process """
         # if NumberOfProcessesToRun = 0, this means run the simulation 
         # without opening a new process, i.e. within this process.
@@ -5931,7 +5995,7 @@ class Project:
                 OutputConnection = PipeMock()
                 if 'MultiProcess' in DebugPrints:
                     print 'running the file ' + SimulationFileName
-                self.RunSimulationSpawned (SimulationFileName, DumpOutputAsCSV, FullResultsOutputFileName, FinalResultsOutputFileName, OutputConnection)
+                self.RunSimulationSpawned (SimulationFileName, DumpOutputAsCSV, FullResultsOutputFileName, FinalResultsOutputFileName, OutputConnection, DeleteScriptFileAfterRun)
                 if 'MultiProcess' in DebugPrints:
                     print 'finished running the file ' + SimulationFileName
                 # store the result, errors will be handled later
@@ -5945,7 +6009,7 @@ class Project:
                 # create processes
                 if 'MultiProcess' in DebugPrints:
                     print 'spawning a process for file ' + SimulationFileName
-                TheProcess = multiprocessing.Process(target = self.RunSimulationSpawned, args = (SimulationFileName, DumpOutputAsCSV, FullResultsOutputFileName, FinalResultsOutputFileName, ChildConnection))
+                TheProcess = multiprocessing.Process(target = self.RunSimulationSpawned, args = (SimulationFileName, DumpOutputAsCSV, FullResultsOutputFileName, FinalResultsOutputFileName, ChildConnection, DeleteScriptFileAfterRun))
                 ProcessList = ProcessList + [TheProcess]
                 if 'MultiProcess' in DebugPrints:
                     print 'process spawned'
@@ -5999,10 +6063,10 @@ class Project:
         return RetVal
 
 
-    def RunSimulationAndCollectResults (self, SimulationFileName, NumberOfProcessesToRun = 0, DumpOutputAsCSV = False, FullResultsOutputFileName = None, FinalResultsOutputFileName = None):
+    def RunSimulationAndCollectResults (self, SimulationFileName, NumberOfProcessesToRun = 0, DumpOutputAsCSV = False, FullResultsOutputFileName = None, FinalResultsOutputFileName = None, DeleteScriptFileAfterRun = True):
         """ Runs the simulation and collects the results and returns them """
         # this function combines RunSimulation and CollectResults
-        (ProcessList, PipeList) = self.RunSimulation (SimulationFileName, NumberOfProcessesToRun , DumpOutputAsCSV , FullResultsOutputFileName , FinalResultsOutputFileName )
+        (ProcessList, PipeList) = self.RunSimulation (SimulationFileName, NumberOfProcessesToRun , DumpOutputAsCSV , FullResultsOutputFileName , FinalResultsOutputFileName, DeleteScriptFileAfterRun)
         RetVal = self.CollectResults(ProcessList, PipeList)
         return RetVal
 
@@ -7473,7 +7537,7 @@ def ExportInstance(self, FileName, Overwrite = True):
     try:
         # If overwrite is not allowed, check for existence of file name
         if Overwrite == False:
-            if glob.glob(FileName) != []:
+            if os.path.isfile(FileName):
                 raise ValueError, 'Export Instance Error: A file with the name "'+ FileName + ' already exists. The filename should be replaced with another name that is valid.'
         # Open the file
         File = open (FileName , 'w')
@@ -7569,7 +7633,7 @@ def ImportInstance(self, FileName, VariableName = None):
         if VariableName == None:
             VariableName = self.__class__.__name__[:-5]
         # Open the file
-        if glob.glob(FileName) == []:
+        if not os.path.isfile(FileName):
             raise ValueError, 'Import Instance Error: A file with the name "'+ FileName + ' does not exist. The filename should be replaced with another name that is valid.'
         File = open (FileName , 'r')
         # load the object from file using pickle
@@ -8234,7 +8298,7 @@ def SaveAllData(FileName, Overwrite = False, CompressFile = True, CreateBackupBe
     try:
         AbsoluteFileName = os.path.abspath(FileName)
         # First try to backup the current file if it exists
-        TheFileNameExists = glob.glob(AbsoluteFileName) != []
+        TheFileNameExists = os.path.isfile(AbsoluteFileName)
         CreatedBackupFileName = None
         if CreateBackupBeforeSave and TheFileNameExists:
             try:
@@ -8296,7 +8360,7 @@ def LoadAllData(FileName, TempPrefix = None):
         TempPrefix = ''
     try:
         # Check for existence of file name
-        if glob.glob(FileName) == []:
+        if not os.path.isfile(FileName):
             raise ValueError, 'Load Error: A file with the name "'+ FileName + '" does not exist. Please choose an existing file to load data from'
         # Open the archive file
         TheInputFile = zipfile.ZipFile(FileName,'r')

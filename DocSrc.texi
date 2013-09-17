@@ -1,6 +1,6 @@
 \input texinfo @c -*-texinfo-*-
 @c %**start of header
-@c ver 47.0 31-July-2013  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
+@c ver 48.0 16-Sep-2013  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
 @setfilename Documentation.info
 @settitle MIcroSimulation Tool (MIST)
 @c @setcontentfsaftertitlepage
@@ -260,7 +260,7 @@ Unzip the file MIST-master.zip in a directory of your choice. This will be your 
 @item
 From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly.
 @item
-Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-load the file Testing.zip to see the examples.
+Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-load the file @file{Testing.zip} to see the examples.
 @end enumerate
 
 
@@ -1489,9 +1489,9 @@ The script in focus is able to generate such a CSV report from a data definition
 
 It is possible to invoke the script without input parameters in the command line and enter them manually. Yet it is usually invoked from the command line as follows:
 
-@code{python MultiRunSimulationStatisticsAsCSV.py FilePattern ResultsID OptFile OutPrefix}
+@code{python MultiRunSimulationStatisticsAsCSV.py FilePattern ResultsID OptFile OutPrefix DelSrc}
 
-Note that the last three command line parameters are optional and can be omitted.  Here is a description of these inputs:
+Note that the last four command line parameters are optional and can be omitted.  Here is a description of these inputs:
 @itemize @bullet
 @item
 @code{FilePattern}: The file pattern that describes the file or files to be processed. Note that this input defines the processing tasks the script will undertake.
@@ -1509,6 +1509,8 @@ If @code{FilePattern} includes wildcards that expand to multiple CSV files such 
 @code{OptFile}: This is the report options file that can be generated and saved through the report form in the GUI. It contains report parameters of interest and calculation methods, it also contains information about stratification. Note that @code{DetailLevel} and other report options such as number format are ignored since these are not relevant for CSV reports. It is recommended to create such a file after running a small simulation in the GUI and compiling the report. If this file is not specified, all parameters will be used with the system trying to automatically determine the calculation method without stratification.
 @item
 @code{OutPrefix}: This defines the prefix for the output summary statistics filenames. If no prefix is defined, the system will use the common prefix of the input file names for the summary output. There will be 5 files generated as summary output, all having the same prefix and ending with the following endings: @file{Mean.csv}, @file{STD.csv}, @file{Median.csv}, @file{Min.csv}, @file{Max.csv}. Each such ending will report the statistics for all the files that fit the @code{FilePattern} specified. Note that @code{OutPrefix} does not influence the individual CSV file generated for each @file{zip} file, which will have the same name as the @file{zip} file.
+@item
+@code{DelSrc}: If y then upon success the source zip/csv files are removed'
 @end itemize
 
 This script enables processing of reports for multiple result files and can be invoked on a machine with a single CPU, or in parallel processing environment. Here are examples that will build upon the results from the previous example created by @file{MultiRunSimulation.py}:
@@ -1680,16 +1682,14 @@ Phase 1B: After the @file{zip} file was created process simulation results using
 @item
 Phase 2: Collect all CSV files using @file{MultiRunSimulationStatisticsAsCSV.py} to create a single CSV file for each scenario variation reporting simulation results from multiple repetitions of the same scenario variation.
 @item
-Phase 3: Create final report comparing all simulations and scenario variations and notify the user.
+Phase 3: Create summary report - this combines all simulations and possibly a reference file using @file{AssembleReportCSV.py} to create a CSV file for summary results and a CSV file for yearly results. These reports will be assembled from all simulations and include all scenario variations in a readable manner.
+@item
+Phase 4: Perform post processing operations on assembled report.
 @itemize @bullet
 @item
-Phase 3A: Assemble final reports combining all simulations and possibly a reference file using @file{AssembleReportCSV.py} to create a CSV file for summary results and a CSV file for yearly results. These reports will be assembled from all simulations and include all scenario variations in a readable manner.
+Phase 4A: Analyze the results - this requires a user specific program that is not provided with the MIST distribution.
 @item
-Phase 3B: Analyze the results - this requires a user specific program that is not provided with the MIST distribution.
-@item
-Phase 3C: Generate graphical plots using @file{CreatePlotsFromCSV.py} that show the reports graphically.
-@item
-Phase 3D: Collect all the results and send an email to the user notifying completion and summarizing results.
+Phase 4B: Generate graphical plots using @file{CreatePlotsFromCSV.py} that show the results graphically. Multiple plots are generated in parallel - each a different job.
 @end itemize
 @end itemize
 
@@ -1704,9 +1704,33 @@ Using these phases, the system can run many simulations in parallel and receive 
 @item
 @code{MailFinalResultsTo}: The email address you want the results to be sent to.
 @item
-@code{Phase1Environemnt}, @code{Phase2Environemnt}, @code{Phase3Environemnt}: the SLURM environment parameters for the SLURM @code{sbatch} command you want the simulations to run with. This includes time, memory, machine allocation and many other parameters that should be determined together with the cluster administrator.
+@code{Phase1Environemnt}, @code{Phase2Environemnt}, @code{Phase3Environemnt}, @code{Phase4Environemnt}: the SLURM environment parameters for the SLURM @code{sbatch} command you want the simulations to run with. This includes time, memory, machine allocation and many other parameters that should be determined together with the cluster administrator.
 @item
-@code{RunPhase1A}, @code{RunPhase1B}, @code{RunPhase2}, @code{RunPhase3A}, @code{RunPhase3B}, @code{RunPhase3C}: are Boolean parameters that allow the user to control what phases to run. These should normally be all set to @code{True}. However, in some cases, it is useful to have this control, especially in cases where recovery is needed.
+@code{RunPhase1A}, @code{RunPhase1B}, @code{RunPhase2}, @code{RunPhase3}, @code{RunPhase4A}, @code{RunPhase4B}: are Boolean parameters that allow the user to control what phases to run. These should normally be all set to @code{True}. However, in some cases, it is useful to have this control, especially in cases where recovery is needed.
+@item
+@code{DebugRun}: Defines level of debugging: If =0 - Normal run; If >=1 - commands are printed and not passed to the OS, Directories not created; If >=2 skipped report scenarios are printed - possibly very long list.
+@item
+@code{DiskUsage}: Define disk usage - this may also speed up computations on a cluster:
+@itemize @bullet
+@item
+Empty List @code{[]} = Leave all files
+@item
+@code{'NoZip'} = remove zip files after csv created at RunPhase1B - Low disk usage
+@item
+@code{'LessCSV'} = remove csv files after csv created at RunPhase2 - Lower NFS IO 
+@item
+@code{'NoErr'} = do not create log files - can reduce disk space yet not recommended
+@item
+@code{'NoLog'} = do not create Err files - can reduce disk space yet not recommended
+@end itemize
+A run that minimizes disk use would be:
+@code{DiskUsage = ['NoZip', 'LessCSV', 'NoErr', 'NoLog']} .
+Yet for initial runs it is recommended to leave all files and use 
+@code{DiskUsage = []}
+@item
+@code{RunOnlyTheseScenarioEnumRanges}: For reconstruction purposes in case of a bad run. If not an empty list rerun only specified scenario ranges, where each range is (Start, End). Only variations in between where Start<=VariationEnum<=End are executed. Note that all repetitions for the variation will be rerun and codes will remain the same so results can be remerged into a previous run. Note that generating plots for these partial runs may not make sense and phase 4 may generate a report that will need manual merging with a previous incomplete report. also note that the enumerated variation name appears on reports with a leading 1 and zeros and (Start,End) tuples will have this prefix as well.
+@item
+@code{DirInput}, @code{DirLog}, @code{DirErr}, @code{DirPhase1A}, @code{DirPhase1B}, @code{DirPhase2}, @code{DirPhase3}, @code{DirPhase4}, @code{DirTemp}, @code{Dirs}: Directory names to organize the files.
 @item
 @code{ReproduceResultsFromTraceback}: A Boolean that controls reproducibility. If False a new simulation is created. If True the simulation is reproduces from TraceBack files in the Temp directory. 
 @item
@@ -1757,7 +1781,7 @@ The user may wish to process simulation results using different calculation tech
 
 It is possible to invoke the script without input parameters in the command line and enter them manually. Yet it is usually invoked from the command line as follows:
 
-@code{python MultiRunSimulationStatisticsAsCSV.py FileNamePattern ResultsID ColumnName}
+@code{python MultiRunExportResultsAsCSV.py FileNamePattern ResultsID ColumnName}
 
 Where:
 @itemize @bullet
@@ -1787,7 +1811,7 @@ MIST can run over the cloud. MIST uses the
 @html
 <a href="http://aws.amazon.com/ec2/" target="_blank"> Amazon Elastic Compute Cloud (EC2)</a>
 @end html
-and 
+ and 
 @html
 <a href= "http://star.mit.edu/cluster/" target="_blank"> Star Cluster </a> 
 @end html
@@ -1797,9 +1821,9 @@ Running MIST over the cloud requires special preparation. Here is a list of thin
 
 @itemize @bullet
 @item
- MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a working directory Desktop\MIST on a windows operating system under your user account.
+MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a working directory Desktop\MIST on a windows operating system under your user account.
 @item
-You should have a MIST model zip file prepared with that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file Testing.zip and use the projects of Example5a and Example5b in this tutorial.
+You should have a MIST model zip file prepared with that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file @file{Testing.zip} and use the projects of Example5a and Example5b in this tutorial.
 @item
 You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized set up for MIST over the cloud in @ref{Setup} you will get to the
 @html
@@ -1817,9 +1841,9 @@ Once you have setup the system, you should follow several steps to launch a simu
 
 @enumerate
 @item
-Copy the model file to your working directory on your PC. 
+Copy the model file to the @file{InData} sub-directory in your working directory on your PC. 
 
-In our example @code{Testing.zip} is already in the working directory.
+In our example @file{Testing.zip} is already in the @file{InData} sub-directory.
 @item
 Modify the file ClusterRun.py to define your run on the cluster. See additional details in @ref{Utilities}. 
 
@@ -1827,7 +1851,7 @@ In our example, you can leave the file unchanged.
 @item
 Cleanup the working directory on your PC from temporary and irrelevant data. 
 
-In our case, delete the @code{Temp} directory if it exists and delete the files ending with @code{.pyc} if they exist.
+In our case, delete the @code{Temp} directory if it exists and delete the files ending with @file{.pyc} if they exist.
 
 @item
 Open a terminal/command line prompt. The command line prompt will start at your user home directory. 
@@ -1852,10 +1876,10 @@ In our example, use the command:
 
 @code{starcluster put mycluster Desktop\MIST /home}
 
-Note that the @code{/home} directory must be the destination since it is shared between all cluster machines. Also note that @code{Desktop\MIST} is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
+Note that the @file{/home} directory must be the destination since it is shared between all cluster machines. Also note that @code{Desktop\MIST} is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
 
 @item
-Run the simulations. You will have to access the @code{/home} directory on the cloud and then run the python script and this should be done with one command line. 
+Run the simulations. You will have to access the @file{/home} directory on the cloud and then run the python script and this should be done with one command line. 
 
 To do this, you should run the following command exactly as it appears: 
 
@@ -1868,7 +1892,7 @@ While the system is running you can check upon the status of the simulation.
 
 You can look at the result files accumulating in the @code{/home} directory by typing the command: 
 
-@code{starcluster sshmaster mycluster "ls /home/MIST"}
+@code{starcluster sshmaster mycluster "ls /home/MIST/Phase1A"}
 
 To see the remaining jobs the cluster needs to run use the command: 
 
@@ -1882,9 +1906,9 @@ When the simulation is done, you can now retrieve the results using the @code{ge
 
 In our example, we will retrieve only the result files to the user home directory by using the command: 
 
-@code{starcluster get mycluster /home/MIST/Testing_Out* .}
+@code{starcluster get mycluster /home/MIST/Phase*/Testing_Out* .}
 
-In our example this should retrieve 3 files with results: Testing_Out.csv, Testing_Out_Yearly.pdf, Testing_Out_Yearly.csv. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
+In our example this should retrieve 3 files with results: @file{Testing_Out.csv}, @file{Testing_Out_Yearly.pdf}, @file{Testing_Out_Yearly.csv}. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
 
 @item
 Very important to stop the cluster - otherwise you keep on paying. This is done using the command: 

@@ -3054,22 +3054,24 @@ class TestLoadSave(GenericSetupAndTearDown):
 
 
     def test_LoadSave(self):
+        if not os.path.exists('InData'):
+            os.mkdir('InData')
         # Testing loading and saving options
         # Save this data to the main file
-        DB.SaveAllData(FileName='Testing.zip',Overwrite = True)
+        DB.SaveAllData(FileName='InData'+os.sep+'Testing.zip',Overwrite = True)
         # Add some parameters 1 of each type
         DB.Params.AddNew(DB.Param(Name = 'TestVariable', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
         DB.Params.AddNew(DB.Param(Name = 'TestInteger', Formula = '' , ParameterType = 'Integer' , ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
         DB.Params.AddNew(DB.Param(Name = 'TestSystemOption', Formula = '1' , ParameterType = 'System Option' , ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
         DB.Params.AddNew(DB.Param(Name = 'TestExpression', Formula = 'TestVariable + 1' , ParameterType = 'Expression' , ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
         # load only the parameters
-        DB.Params.Load('Testing.zip')
+        DB.Params.Load('InData'+os.sep+'Testing.zip')
         # Check if the Parameter exists - should show no
         assert not DB.Params.has_key('TestVariable'), 'LoadSave test 1 FAILURE - Parameter TestVector should not exist after loading only parameters'
         # add back the parameter
         DB.Params.AddNew(DB.Param(Name = 'TestVariable', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
         # Test loading of the original data
-        DB.LoadAllData('Testing.zip')
+        DB.LoadAllData('InData'+os.sep+'Testing.zip')
         # Check if the TestVector Parameter exists
         assert not DB.Params.has_key('TestVariable'), 'LoadSave test 2 FAILURE - Parameter TestVariable should not exist after loading all data'
         return
@@ -5358,11 +5360,11 @@ class TestSimulationrunInRuntime(GenericSetupAndTearDown):
         SimulationScriptFullPathOptions = DB.Projects[9101].CompileSimulation(SimulationScriptFileNamePrefix = 'SimulationFunctionAndOptionTest', SkipDumpingFilesIfError = True, OverrideRepetitionCount = None, OverridePopulationSet = None)
         
         try:
-            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPathOptions)
+            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPathOptions, DeleteScriptFileAfterRun = False)
             FinalData = ResultsInfo.ExtractFinalOutcome()
             AllData = ResultsInfo.Data
             ResultsInfo = None
-            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPathOptions)
+            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPathOptions, DeleteScriptFileAfterRun = True)
             #FinalData1 = ResultsInfo.ExtractFinalOutcome()
             AllData1 = ResultsInfo.Data
             DataColumnNames = ResultsInfo.DataColumns
@@ -5390,10 +5392,10 @@ class TestSimulationrunInRuntime(GenericSetupAndTearDown):
         SimulationScriptFullPath1 = DB.Projects[9101].CompileSimulation(SimulationScriptFileNamePrefix = 'SimulationFunctionAndOptionTest1')
         
         try:
-            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath1)
+            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath1, DeleteScriptFileAfterRun = False)
             AllData = ResultsInfo.Data
             ResultsInfo = None
-            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath1)
+            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath1, DeleteScriptFileAfterRun = True)
             AllData1 = ResultsInfo.Data
             ResultsInfo = None
             
@@ -5416,10 +5418,10 @@ class TestSimulationrunInRuntime(GenericSetupAndTearDown):
         SimulationScriptFullPath2 = DB.Projects[9101].CompileSimulation(SimulationScriptFileNamePrefix = 'SimulationFunctionAndOptionTest2')
         
         try:
-            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath2)
+            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath2, DeleteScriptFileAfterRun = False)
             AllData = ResultsInfo.Data
             ResultsInfo = None
-            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath2)
+            ResultsInfo = DB.Projects[9101].RunSimulationAndCollectResults(SimulationScriptFullPath2, DeleteScriptFileAfterRun = True)
             AllData1 = ResultsInfo.Data
             ResultsInfo = None
         except:
@@ -6283,8 +6285,11 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
 
         # This script will test the CodeFromDocAndSpreadsheet.py script
         # There is  need for a population csv file and a rules text file
-        MockFile = open(DB.SessionTempDirecory + os.sep + 'DocRulesOverride.txt','w')
-        MockFile.write('This file includes override rules for MIST test example 20 \nInitialization Rules:\nAffected Parameter\rOccurrence probability\rUpdate Rule (New Value)\rNotes\rAge\r1\r50\rOverride age\r\nPre state transition Rules:\nAffected Parameter\rOccurrence probability\rUpdate Rule (New Value)\rNotes\rAge\r1\rAge + 0.5\rAge Increase by half\r\nPost state transition Rules:\nAffected Parameter\rOccurrence probability\rUpdate Rule (New Value)\rNotes\rAge\r1\rAge + 0.5\rAge Increase by the other half\r\n')
+        # Note that this is written as binary and read as binary since this was
+        # written by a word doc file with some tables.
+    
+        MockFile = open(DB.SessionTempDirecory + os.sep + 'DocRulesOverride.txt','wb')
+        MockFile.write('This file includes override rules for MIST test example 20 \r\nInitialization Rules:\r\nAffected Parameter\rOccurrence probability\rUpdate Rule (New Value)\rNotes\rAge\r1\r50\rOverride age\r\r\nPre state transition Rules:\r\nAffected Parameter\rOccurrence probability\rUpdate Rule (New Value)\rNotes\rAge\r1\rAge + 0.5\rAge Increase by half\r\r\nPost state transition Rules:\r\nAffected Parameter\rOccurrence probability\rUpdate Rule (New Value)\rNotes\rAge\r1\rAge + 0.5\rAge Increase by the other half\r\r\n')
         MockFile.close()
 
         MockFile = open(DB.SessionTempDirecory + os.sep + 'PopulationDistributionsOverride.csv','w')
@@ -6327,7 +6332,6 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
             assert False, ('Supporting Script test I-4 FAILURE. Population did not change in new file')
         else:
             print ('Supporting Script test I-4 OK.')
-
 
 
 # this code was generated 

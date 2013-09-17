@@ -986,7 +986,8 @@ class MainFrame(wx.Frame):
                     # Compile the generation script with default options
                     ScriptFileNameFullPath = Pop.CompilePopulationGeneration(GeneratedPopulationSize = NumberOfRepetitions, GenerationFileNamePrefix = None, OutputFileNamePrefix = None , RandomStateFileNamePrefix = None, GenerationOptions = None , RecreateFromTraceBack = PopulationTraceBack)
                     # run the generation script
-                    (ProcessList, PipeList) = Pop.RunPopulationGeneration(GenerationFileName = ScriptFileNameFullPath, NumberOfProcessesToRun = -1)
+                    DeleteScriptFileAfterRun = not cdml.GetAdminMode()
+                    (ProcessList, PipeList) = Pop.RunPopulationGeneration(GenerationFileName = ScriptFileNameFullPath, NumberOfProcessesToRun = -1, DeleteScriptFileAfterRun = DeleteScriptFileAfterRun)
                 else:
                     # otherwise don't run anything                    
                     (ProcessList, PipeList) = (None,None)
@@ -1019,7 +1020,9 @@ class MainFrame(wx.Frame):
                     OverrideRepetitionCount = 1
                 ScriptFileName = prj.CompileSimulation(OverrideRepetitionCount = OverrideRepetitionCount, OverridePopulationSet = self.TempOverridePopulationSet, RecreateFromTraceBack = SimulationTraceBack)
                 # run the simulation once without collecting results
-                (ProcessList, PipeList) = prj.RunSimulation(ScriptFileName, NumberOfProcessesToRun = -1)
+                # also do nto delete the compiled script file if in Admin mode
+                DeleteScriptFileAfterRun = not cdml.GetAdminMode()
+                (ProcessList, PipeList) = prj.RunSimulation(ScriptFileName, NumberOfProcessesToRun = -1, DeleteScriptFileAfterRun = DeleteScriptFileAfterRun)
                 return (ProcessList, PipeList)
 
             def SimulationEndMiniScript(ProcessList, PipeList):

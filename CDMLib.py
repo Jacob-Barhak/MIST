@@ -72,8 +72,8 @@ import HelpInterface
 import copy
 
 # Define the GUI version
-Version = (0,88,0,0,'MIST')
-CompatibleWithDataDefVersion = (0,88,0,0,'MIST')
+Version = (0,89,0,0,'MIST')
+CompatibleWithDataDefVersion = (0,89,0,0,'MIST')
 
 # Check that the Data Version and the GUI version are compatible
 # Currently the Last text identifier in the version is ignored in
@@ -349,12 +349,12 @@ def OpenAbout(self):
     info = wx.AboutDialogInfo()
     info.Name = "MIcro Simulation Tool (MIST)\n"
     info.Version = 'Data Definitions Version: ' + str(DB.Version) + '\n GUI Version: '+ str(Version) 
-    info.Copyright = "Copyright (C) 2013 Jacob Barhak\n Copyright (C) 2009-2012 The Regents of the University of Michigan (IEST)"
+    info.Copyright = " Copyright (C) 2013 Jacob Barhak\n Copyright (C) 2009-2012 The Regents of the University of Michigan (IEST)"
     info.Description = wordwrap(
         "The Micro-simulation tools is a Monte-Carlo simulation compiler" 
         "It has been initially designed to help model Chronic Diseases."
         "MIST is a split branch from the GPL code of the "
-        "Indirect Estimation and Simulation Tool (IEST)."
+        "Indirect Estimation and Simulation Tool (IEST). "
         "More information is available on the web site of the developer. ",
         350, wx.ClientDC(self))
     info.WebSite = ("http://sites.google.com/site/jacobbarhak/",

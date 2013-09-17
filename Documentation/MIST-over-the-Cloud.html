@@ -87,14 +87,14 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 <h2 class="chapter">15 MIST over the Cloud</h2>
 
 <p>MIST can run over the cloud. MIST uses the
-<a href="http://aws.amazon.com/ec2/" target="_blank"> Amazon Elastic Compute Cloud (EC2)</a>and
+<a href="http://aws.amazon.com/ec2/" target="_blank"> Amazon Elastic Compute Cloud (EC2)</a> and
 <a href= "http://star.mit.edu/cluster/" target="_blank"> Star Cluster </a>to run simulations in parallel in High Performance Computing (HPC) environment to reduce simulation time and Monte-Carlo uncertainty and allow exploring many more variations in simulation.
 
    <p>Running MIST over the cloud requires special preparation. Here is a list of things you should have before starting:
 
      <ul>
-<li> MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a working directory Desktop\MIST on a windows operating system under your user account. 
-<li>You should have a MIST model zip file prepared with that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file Testing.zip and use the projects of Example5a and Example5b in this tutorial. 
+<li>MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a working directory Desktop\MIST on a windows operating system under your user account. 
+<li>You should have a MIST model zip file prepared with that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file <span class="file">Testing.zip</span> and use the projects of Example5a and Example5b in this tutorial. 
 <li>You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized set up for MIST over the cloud in <a href="Setup.html#Setup">Setup</a> you will get to the
 <a href="http://aws.amazon.com/ " target="_blank"> Amazon EC2 login page </a>where you should create an account. Note that running simulations in Amazon EC2 will cost money - make sure you can pay for the mount of computation you are planning before running any simulations. 
 <li>You should have Star Cluster installed. See <a href="Setup.html#Setup">Setup</a> for specialized set up for the cloud
@@ -104,15 +104,15 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
    <p>Once you have setup the system, you should follow several steps to launch a simulation on the cloud. We will show these steps with an example.
 
      <ol type=1 start=1>
-<li>Copy the model file to your working directory on your PC.
+<li>Copy the model file to the <span class="file">InData</span> sub-directory in your working directory on your PC.
 
-     <p>In our example <code>Testing.zip</code> is already in the working directory. 
+     <p>In our example <span class="file">Testing.zip</span> is already in the <span class="file">InData</span> sub-directory. 
 <li>Modify the file ClusterRun.py to define your run on the cluster. See additional details in <a href="Utilities.html#Utilities">Utilities</a>.
 
      <p>In our example, you can leave the file unchanged. 
 <li>Cleanup the working directory on your PC from temporary and irrelevant data.
 
-     <p>In our case, delete the <code>Temp</code> directory if it exists and delete the files ending with <code>.pyc</code> if they exist.
+     <p>In our case, delete the <code>Temp</code> directory if it exists and delete the files ending with <span class="file">.pyc</span> if they exist.
 
      <li>Open a terminal/command line prompt. The command line prompt will start at your user home directory.
 
@@ -134,9 +134,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <p><code>starcluster put mycluster Desktop\MIST /home</code>
 
-     <p>Note that the <code>/home</code> directory must be the destination since it is shared between all cluster machines. Also note that <code>Desktop\MIST</code> is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
+     <p>Note that the <span class="file">/home</span> directory must be the destination since it is shared between all cluster machines. Also note that <code>Desktop\MIST</code> is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
 
-     <li>Run the simulations. You will have to access the <code>/home</code> directory on the cloud and then run the python script and this should be done with one command line.
+     <li>Run the simulations. You will have to access the <span class="file">/home</span> directory on the cloud and then run the python script and this should be done with one command line.
 
      <p>To do this, you should run the following command exactly as it appears:
 
@@ -148,7 +148,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <p>You can look at the result files accumulating in the <code>/home</code> directory by typing the command:
 
-     <p><code>starcluster sshmaster mycluster "ls /home/MIST"</code>
+     <p><code>starcluster sshmaster mycluster "ls /home/MIST/Phase1A"</code>
 
      <p>To see the remaining jobs the cluster needs to run use the command:
 
@@ -160,9 +160,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <p>In our example, we will retrieve only the result files to the user home directory by using the command:
 
-     <p><code>starcluster get mycluster /home/MIST/Testing_Out* .</code>
+     <p><code>starcluster get mycluster /home/MIST/Phase*/Testing_Out* .</code>
 
-     <p>In our example this should retrieve 3 files with results: Testing_Out.csv, Testing_Out_Yearly.pdf, Testing_Out_Yearly.csv. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
+     <p>In our example this should retrieve 3 files with results: <span class="file">Testing_Out.csv</span>, <span class="file">Testing_Out_Yearly.pdf</span>, <span class="file">Testing_Out_Yearly.csv</span>. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
 
      <li>Very important to stop the cluster - otherwise you keep on paying. This is done using the command:
 
