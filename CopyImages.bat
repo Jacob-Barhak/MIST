@@ -1,4 +1,4 @@
-REM Copyright (C) 2013 Jacob Barhak
+REM Copyright (C) 2013-2014 Jacob Barhak
 REM Copyright (C) 2009-2012 The Regents of the University of Michigan
 REM 
 REM This file is part of the MIcroSimulation Tool (MIST). The MIcroSimulation Tool (MIST) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -32,13 +32,14 @@ copy ImagePreperation\Slide3.JPG Documentation\Images\model.jpg
 copy ImagePreperation\Slide4.JPG Documentation\Images\transitionsmodel.jpg
 copy ImagePreperation\Slide5.JPG Documentation\Images\populations.jpg
 copy ImagePreperation\Slide6.JPG Documentation\Images\popdata.jpg
-copy ImagePreperation\Slide7.JPG Documentation\Images\parameter_filter.jpg
-copy ImagePreperation\Slide8.JPG Documentation\Images\parameters.jpg
-copy ImagePreperation\Slide9.JPG Documentation\Images\simulation.jpg
-copy ImagePreperation\Slide10.JPG Documentation\Images\costwizard.jpg
-copy ImagePreperation\Slide11.JPG Documentation\Images\resultviewer.jpg
-copy ImagePreperation\Slide12.JPG Documentation\Images\reportviewer.jpg
-copy ImagePreperation\Slide13.JPG Documentation\Images\reportvieweroptions.jpg
-copy ImagePreperation\Slide14.JPG Documentation\Images\copytransitions.jpg
-copy ImagePreperation\Slide15.JPG Documentation\Images\modeldiagram.jpg
+copy ImagePreperation\Slide7.JPG Documentation\Images\popobjectives.jpg
+copy ImagePreperation\Slide8.JPG Documentation\Images\parameter_filter.jpg
+copy ImagePreperation\Slide9.JPG Documentation\Images\parameters.jpg
+copy ImagePreperation\Slide10.JPG Documentation\Images\simulation.jpg
+copy ImagePreperation\Slide11.JPG Documentation\Images\costwizard.jpg
+copy ImagePreperation\Slide12.JPG Documentation\Images\resultviewer.jpg
+copy ImagePreperation\Slide13.JPG Documentation\Images\reportviewer.jpg
+copy ImagePreperation\Slide14.JPG Documentation\Images\reportvieweroptions.jpg
+copy ImagePreperation\Slide15.JPG Documentation\Images\copytransitions.jpg
+copy ImagePreperation\Slide16.JPG Documentation\Images\modeldiagram.jpg
 

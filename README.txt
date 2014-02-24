@@ -1,4 +1,4 @@
-Copyright (C) 2013 Jacob Barhak
+Copyright (C) 2013-2014 Jacob Barhak
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 License GPL 3 - See full details below
 
@@ -28,40 +28,63 @@ https://github.com/scipy/scipy2013_talks/tree/master/talks/jacob_barhak
 
 2. INSTALLATION:
 
-The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) that are for advanced and expert users. For novice users it is recommended that you use Quick Installation for Windows since it is the simplest and therefore described first.
+The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) for advanced and expert users. 
+For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was tested there. For HPC features you will need to use a Linux installation.
 
-Quick and Simple Installation for Windows Users:
-1) Download and Install Python(x,y) version 2.7 or higher. Here is a direct link http://pythonxy.googlecode.com/files/Py(x,y)-2.7.3.1.exe . Other versions can be found at http://code.google.com/p/pythonxy/wiki/Downloads
-2) Download the file MIST-master.zip from github by typing the following URL in a web browser: https://github.com/Jacob-Barhak/MIST/archive/master.zip
-3) Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. You can do this on windows by right clicking the archive and choosing Extract All.
-
-Expert Installation for Linux/OSX:
-1) Download and Install Anaconda from https://store.continuum.io/
-2) Install WxPython - this installation may require expert assistance and can be found at http://www.wxpython.org/download.php#stable 
-3) Download the file MIST-master.zip from github by typing the following URL in a web browser: https://github.com/Jacob-Barhak/MIST/archive/master.zip
-4) Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
+Installation Instructions:
+1. Download and Install Anaconda from  https://store.continuum.io/cshop/anaconda/
+2. Install the Inspyred library by typing the following text in a command terminal: pip install inspyred . For additional details see:  http://inspyred.github.io/overview.html#installation 
+3. Install WxPython library by typing the following text in a command terminal: conda install wxpython . This library is needed for GUI only. For additional details see: http://www.wxpython.org/download.php#stable 
+4. Download the file MIST-master.zip from github by typing the following URL in a web browser:  https://github.com/Jacob-Barhak/MIST/archive/master.zip 
+5. Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
 
 Alternative Expert Installation Instructions:
-1) Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in http://python-for-researchers.readthedocs.org/en/latest/distros.html . You can also Install Python, numpy, matplotlib, and nose separately.
-2) Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at http://www.wxpython.org/download.php#stable
-3) Download the file MIST-master.zip from github by typing the following URL in a web browser: https://github.com/Jacob-Barhak/MIST/archive/master.zip
-4) Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
+1. Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, pip, and nose. You can choose from a list of those in  http://python-for-researchers.readthedocs.org/en/latest/distros.html  . You can also Install Python, numpy, matplotlib, pip and nose separately. 
+2. Install the Inspyred library by typing the following text in a command terminal: pip install inspyred . For additional details see:  http://inspyred.github.io/overview.html#installation 
+3. Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at  http://www.wxpython.org/download.php#stable 
+4. Download the file MIST-master.zip from github by typing the following URL in a web browser:  https://github.com/Jacob-Barhak/MIST/archive/master.zip 
+5. Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
 
 To Test the Above Installations:
-1. From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly.
-2. Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-load the file Testing.zip to see the examples.
+1. From the command line in your working directory write the following text: python TestCode.py . It will test the data definitions and algorithms and should take a good portion of an hour - about half an hour on a descent machine. If you got an all caps "OK" at the end, then you installed the python environment correctly. 
+2. From the command line in your working directory write the following text: python Main.py . You should see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file->load the file Testing.zip in the InData sub directory to see the examples. 
 
-If you are an expert you can install and setup MIST to work in High Performance Computing (HPC) environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance.
+If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance. 
 
-To run MIST over the cloud a more complicated setup is needed:
-1. Install starcluster http://star.mit.edu/cluster/docs/latest/installation.html
-2. Follow the instructions on http://continuum.io/blog/starcluster-anaconda
-3. If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine
-4. Use the starcluster put command to transfer MIST to the /home directory on the cluster
+To run MIST Over the Cloud a More Complicated Setup is Needed:
+1. Install StarCluster 
+ http://star.mit.edu/cluster/docs/latest/installation.html 
+2. Follow the instructions on  http://continuum.io/blog/starcluster-anaconda 
+3. If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine 
+4. Install the nfsshare.py plugin by copying the file  https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975 to the StarCluster plugins directory. 
+5. Change the config file to include all plugins of interest and add plugin parameters. At the end of setup the "Configuring StarCluster Plugins" section in the config file should have the following lines: 
+
+[plugin anaconda_plugin] 
+SETUP_CLASS = anaconda_plugin.ConfigAnaconda 
+
+[plugin nfsshare] 
+SETUP_CLASS = nfsshare.NFSSharePlugin 
+SERVER_PATH = /mnt/vol0 
+CLIENT_PATH = /mnt/vol0 
+EXPORT_NFS_SETTINGS = sync,no_root_squash,no_subtree_check,rw 
+MOUNT_NFS_SETTINGS = vers=3,user,rw,exec,noauto 
+
+[plugin webapp-packages-installer] 
+setup_class = starcluster.plugins.pypkginstaller.PyPkgInstaller 
+packages = inspyred  
+Also, the plugins should be declatred under the scection that has your cluster name using the following line: 
+PLUGINS = anaconda_plugin , nfsshare , webapp-packages-installer 
+
+For additional information see the following links: 
+ http://continuum.io/blog/starcluster-anaconda 
+ http://star.mit.edu/cluster/docs/latest/plugins/pypkginstaller.html 
+ https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975 
+
+6.Use the StarCluster put command to transfer MIST to the /mnt/vol0 directory on the cluster 
 
 It is also possible to run MIST simulations in Multi-core environment using Sun Grid Engine. If you wish to install Sun-Grid-Engine on a single machine for testing purposes:
-1. Follow the instructions on http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/
-2. Follow the Quick Installation for Linux/OSX from above
+1. Follow the instructions on  http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/  
+2. Follow the Quick Installation for Linux/OSX from above 
 
 
 
@@ -136,10 +159,15 @@ Running the TestCode.py script will test that the simulation system is working p
 
 In addition to the above test script, below is a list of known bugs and issues uncovered during testing that were not yet addressed at the time of this release:
 
+The GUI was tested on Windows environment. Computations were tested on both Windows and Linux environments through the TestCode.py script. Cloud computations were also tested.
 
 Known Bugs:
 
-At the time of release, there were no known reproducible bugs.
+J0100: WXPYTHON ISSUES ON UBUNTU 12.4 
+At the time of MIST 0.90.0.0 release WxPython does not work on Ubuntu 12.4 since there is a dependency GLIBC_2.15 that is not installed. 
+This may prohibit users from using MIST GUI on the stable release of Ubuntu. 
+Fortunately this is not critical since other Linux versions may work and the user can use the GUI on windows and only run HPC computations on Ubuntu. 
+There is a partial solution of an alternative installation of WxPython, yet it brings warnings and funny behavior of WxPython and not been fully tested.
 
 
 
@@ -152,7 +180,6 @@ INSTRUCTIONS TO REPRODUCE
 1. Use Cost Wizard on a project such as example 1 
 2. Add a state that isn't in the selected project, such as Angina for example 1 
 3. Run Simulation
-
 
 
 J0007: IMPROVE MESSAGES TO USER MECHANISM FOR SIMULATION LOG
@@ -176,7 +203,6 @@ The locks are in place for a reason and the system provides a data to code tool 
 Adding a special version of the GUI that will allow making this change through forms just for the purpose of reconstructing a database will be helpful. 
 
 
-
 J0030: It is impossible to cancel simulation of population generation from GUI
 
 While running the simulation from GUI in Windows, there is no cancel button that can be pressed to stop the simulation. In some cases, this is desirable and it would be a nice to have feature.
@@ -187,6 +213,12 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 
 6. VERSION HISTORY:
+
+MIST Verion (0,90,0,0,'MIST-Dev') - 24-Feb-2014:
+	- Improved population generation with genetic algorithm optimization towards objectives 
+	- Improved instructions for cloud deployment
+	- Upgrade to higher versions of supporting packages
+
 
 MIST Verion (0,89,0,0,'MIST') - 16-Sep-2013:
 	- Speed up by reducing NFS I/O on the cloud, parallelism, auto temp file removals
@@ -297,6 +329,7 @@ Special thanks to the pioneers who started this project and dreamed of a modelin
 Deanna Isaman - Who was the spirit behind the great ideas I am pursuing and who taught me my first steps in disease modeling
 Morton Brown - Who provided guidance and challenged the system to improve and by this shaped important concepts in the system
 William H. Herman - Who provided expert advice regarding disease modeling and opened opportunities in the disease modeling world
+Aaron Lee Garrett - Who developed Inspyred and was extremely helpful by assisting and consulting me on how to best use this library to enhance population generation capabilities.
 
 Many thanks to the creators of Python, WxPython, NumPy, and SciPy that publicly released their work. Specifically, the code uses examples released by WxPython documentation and demo. These examples were extremely helpful in speeding up the development.
 
@@ -313,15 +346,16 @@ Donghee Lee
 Ray Lillywhite
 Aidan Feldman
 Michael Kylman 
-Continuum Analytics: specifically Ben Zaitlen and Ilan Schnell
-Star Cluster at MIT
+Continuum Analytics: specifically Ben Zaitlen, Ilan Schnell, Siu Kwan Lam
+Jonathan Rocher
+StarCluster team at MIT
 Sun Grid Engine
 Robin Dunn
 Rayson Ho
 Bruce Fields
 Nick Coghlan
 Lyn Gerner
-
+@scrappythekangaroo at github
 
 MIST was developed independently without financial support.
 
@@ -331,7 +365,7 @@ This work was supported by the National Institutes of Health through the Biostat
 
 9. LICENSE:
 
-Copyright (C) 2013 Jacob Barhak
+Copyright (C) 2013-2014 Jacob Barhak
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 
 This file is part of the MIcroSimulation Tool (MIST).

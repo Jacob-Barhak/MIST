@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -80,9 +80,11 @@ if SystemSupportsProcesses:
     import multiprocessing
 
 import numpy
+import scipy.stats
+import inspyred
 
-
-
+# Since used by generated scripts, this generates a warning to remove in Spyder
+RemoveWarningNotification = [scipy.stats == None, inspyred == None]
 
 # update the module names        
 LoadedModuleNames = dir()
@@ -92,7 +94,7 @@ LoadedModuleNames = dir()
 # different revisions of a similar data structure than may or may not be
 # compatible with each other. It is the responsibility of the code to
 # check what code versions and revisions are compatible with it.
-Version = (0,89,0,0,'MIST')
+Version = (0,90,0,0,'MIST')
 
 # DEBUG variables
 # DebugPrints options are ['Table','TBD','Matrix', 'ExprParse','ExprConstruct', 'PrepareSimulation', 'Load' , 'MultiProcess', 'CSV', 'TempDir']
@@ -128,7 +130,7 @@ DefaultGenerationOutputFileNamePrefix = 'GenOut'
 DefaultRandomStateFileNamePrefix = 'Rand'
 DefaultFullResultsOutputFileName = 'SimulationResultsFull.csv'
 DefaultFinalResultsOutputFileName = 'SimulationResultsFinal.csv'
-DefaultSystemOptions = {'ValidateDataInRuntime':2, 'NumberOfErrorsConsideredAsWarningsForSimulation':200, 'NumberOfErrorsConsideredAsWarningsForPopulationGeneration':200, 'NumberOfTriesToRecalculateSimulationStep':5, 'NumberOfTriesToRecalculateSimulationOfIndividualFromStart':2, 'NumberOfTriesToRecalculateIndividualDuringPopulationGeneration':5, 'SystemPrecisionForProbabilityBoundCheck':1e-14 , 'RepairPopulation':1 , 'VerboseLevel': 5 , 'RandomSeed': NaN}
+DefaultSystemOptions = {'ValidateDataInRuntime':2, 'NumberOfErrorsConsideredAsWarningsForSimulation':200, 'NumberOfErrorsConsideredAsWarningsForPopulationGeneration':400, 'NumberOfTriesToRecalculateSimulationStep':5, 'NumberOfTriesToRecalculateSimulationOfIndividualFromStart':2, 'NumberOfTriesToRecalculateIndividualDuringPopulationGeneration':5, 'SystemPrecisionForProbabilityBoundCheck':1e-14 , 'RepairPopulation':1 , 'VerboseLevel': 5 , 'RandomSeed': NaN, 'GeneticAlgorithmCandidatesPerSelectedIndividual': 10, 'GeneticAlgorithmMaxEvalsTerminator': 7500, 'GeneticAlgorithmMaxStableGenerationCountTerminator':6, 'GeneticAlgorithmTournamentSize': 5, 'GeneticAlgorithmNumberOfElitesToSurviveIfBetterThanWorstOffspring': 15, 'GeneticAlgorithmSolutionPopulationSize': 100, 'GeneticAlgorithmMutationRate': 0.002}
 StateIndicatorNotePrefix = 'A State Indicator Automatically Generated for State: '
 
 ParameterTypes = ['Number','Integer','Expression','State Indicator','System Option','System Reserved']
@@ -138,7 +140,7 @@ ReportCalculationMethodShortTitles = ['', 'Sum All', 'Avg All', 'STD All', 'Min 
 ReportStratificationHeader = 'Stratification - '
 ReportStratificationDescriptionDict = {-1:'None: ', 1:'By initial demographics for cell: ', 2:'By entry demographics to time interval for cell: ', 3:'By record for cell: '}
 
-
+StatFunctions = ['MEAN', 'STD', 'MEDIAN', 'MIN', 'MAX', 'SUM', 'COUNT'] + ['PERCENT%0.2i'%(Entry) for Entry in range(1,100)]
 
 
 # A list of reserved words not to be used as parameter names and related
@@ -146,7 +148,7 @@ ReportStratificationDescriptionDict = {-1:'None: ', 1:'By initial demographics f
 # filter (lambda Entry: Entry[0]!='_', dir(__builtins__))
 BannedSymbolsInExpression = ["'",'"','`','~','!','@','#','$','%','^','&',':',';','?','<','>','=','{','}', '//', '\n', '\x0b','\x0c','\r']
 PythonReservedWords = ['and','del','from','not','while','as','elif','global','or','with','assert','else','if','pass','yield','break','except','import','print','class','exec','in', 'raise','continue','finally','is','return','def','for','lambda','try','self']
-ProgramReservedWords = ['division','DataDef','sys','pickle','tempfile','os']
+ProgramReservedWords = ['division','DataDef','sys','pickle','tempfile','os','random','args']
 BuiltinReservedWords = ['ArithmeticError', 'AssertionError', 'AttributeError', 'BaseException', 'DeprecationWarning', 'EOFError', 'Ellipsis', 'EnvironmentError', 'Exception', 'False', 'FloatingPointError', 'FutureWarning', 'GeneratorExit', 'IOError', 'ImportError', 'ImportWarning', 'IndentationError', 'IndexError', 'KeyError', 'KeyboardInterrupt', 'LookupError', 'MemoryError', 'NameError', 'None', 'NotImplemented', 'NotImplementedError', 'OSError', 'OverflowError', 'PendingDeprecationWarning', 'ReferenceError', 'RuntimeError', 'RuntimeWarning', 'StandardError', 'StopIteration', 'SyntaxError', 'SyntaxWarning', 'SystemError', 'SystemExit', 'TabError', 'True', 'TypeError', 'UnboundLocalError', 'UnicodeDecodeError', 'UnicodeEncodeError', 'UnicodeError', 'UnicodeTranslateError', 'UnicodeWarning', 'UserWarning', 'ValueError', 'Warning', 'WindowsError', 'ZeroDivisionError', 'abs', 'all', 'any', 'apply', 'basestring', 'bool', 'buffer', 'callable', 'chr', 'classmethod', 'cmp', 'coerce', 'compile', 'complex', 'copyright', 'credits', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval', 'execfile', 'exit', 'file', 'filter', 'float', 'frozenset', 'getattr', 'globals', 'hasattr', 'hash', 'help', 'hex', 'id', 'input', 'int', 'intern', 'isinstance', 'issubclass', 'iter', 'len', 'license', 'list', 'locals', 'long', 'map', 'max', 'min', 'object', 'oct', 'open', 'ord', 'pow', 'property', 'quit', 'range', 'raw_input', 'reduce', 'reload', 'repr', 'reversed', 'round', 'set', 'setattr', 'slice', 'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'type', 'unichr', 'unicode', 'vars', 'xrange', 'zip']
 OtherReservedWords = ['oo','pi','E','MyLn']
 StatisticalContinuousDistributionNames = ['Uniform','Gaussian']
@@ -3421,7 +3423,7 @@ class Transition:
             raise ValueError, 'ASSERTION ERROR: StudyModel ID' + str(StudyModelID) + ' does not exist in the Studies table'
         # Verify no transitions out of and into the null state 
         if (FromState == 0 or ToState == 0): 
-            raise ValueError, 'Transition Validation Error: The from state and the to state in the transition must by defined for a model. Make sure the states and the model/study are properly defined. The error was detected in the transition: ' + self.Describe(StudyModelID, FromState, ToState) 
+            raise ValueError, 'Transition Validation Error: The from state and the to state in the transition must by defined for a model. Make sure the states and the model/study are properly defined and are not empty. '
         # Check if the state exists
         if FromState != 0 and not States.has_key(FromState):
             raise ValueError, 'ASSERTION ERROR: The FromState State ID used in transition does not exist in the States table in transition: (' + 'StudyModelID = ' + str (StudyModelID) + ' FromState = ' + str (FromState) + ' , ToState = ' + str (ToState) + ' )'
@@ -3968,6 +3970,34 @@ class PopulationSet:
                 # Individual record in the internal sequence. The internal
                 # sequence holds data for the parameters in the same order
                 # These are defined in DataColumns
+    Objectives = [] # a sequence of tuples that contain:
+                    # FilterExpr - a string/Expr that is evaluated and only 
+                    #              Data records that are non zero/None/NaN are
+                    #              used in calculating the statistics.
+                    # StatExpr - a string/Expr that calculated the statistics
+                    #            to be evaluated from the filtered records.
+                    # StatFunction - a string from StatFunctions that 
+                    #                defines the statistics to be applied on
+                    #                StatExpr after filtering Data records with
+                    #                FilterExpr.
+                    # TargetValue - A target number that the should be reached
+                    #               by applying StatFunction on StatExpr for
+                    #               Data records filtered by FilterExpr.
+                    # Weight - The weight of (TargetValue - StatFunction)^2 in
+                    #          the final fitness function. This is a number. 
+                    # CalcValue - The value calculated by the Generation
+                    #             algorithm for this objective statistiic
+                    #             This is None for a distribution based
+                    #             population.
+                    # CalcError - The error contribution of ths objective 
+                    #             to the final error. The error is 
+                    #             ((CalcValue-TargetValue)*Weight)**2
+                    #             This is None for a distribution based
+                    #             population.
+                    # Note that Objectives is empty in a data population that
+                    # has been changed by hand. It will appear only in a data
+                    # population generated by the system or in a distribution
+                    # based population defined by the user.
     TraceBack = () # Traceability data is a tuple with information that
                    # allows tracing back the simulation to support
                    # reproducibility. This is a hidden entity for debug
@@ -3998,10 +4028,10 @@ class PopulationSet:
                    # definitions. 
                    
 
-    def __init__(self, ID = 0, Name = '', Source = '', Notes = '', DerivedFrom = 0, DataColumns = [], Data = []):
+    def __init__(self, ID = 0, Name = '', Source = '', Notes = '', DerivedFrom = 0, DataColumns = [], Data = [], Objectives = []):
         """Constructor with default values and some consistency checks"""
         # Verify that the data is consistent
-        self.VerifyData(Data,DataColumns)
+        self.VerifyData(Data,DataColumns,Objectives)
         if DerivedFrom !=0 and not PopulationSets.has_key(DerivedFrom):
             raise ValueError, 'ASSERTION ERROR: Derived From record does not exist in collection'
         # Copy variables
@@ -4013,14 +4043,17 @@ class PopulationSet:
         self.LastModified = datetime.datetime.now()
         self.DerivedFrom = DerivedFrom
         self.DataColumns = copy.deepcopy(DataColumns)
+        self.Objectives = copy.deepcopy(Objectives)
         self.Data = copy.deepcopy(Data)
         self.TraceBack = ()
         return
 
-    def IsDistributionBased(self, DataColumns = None):
+    def IsDistributionBased(self, DataColumns = None, Objectives = None):
         """return true if defined by distributions"""
         if DataColumns == None:
             DataColumns = self.DataColumns
+        if Objectives == None:
+            Objectives = self.Objectives
         ColumnNames = map(lambda (ColumnName , Distribution) : ColumnName + ', ', DataColumns)
         DuplicateColumns = FindDuplicatesInSequence(ColumnNames)
         if DuplicateColumns != []:
@@ -4045,6 +4078,30 @@ class PopulationSet:
             ColumnsDefinedByData = ''.join(FilterByAnother(ColumnNames, HasData) )[:-2]
             raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of the data columns in the population set. Mixing distributions and data parameters is not supported in the population set. Make sure all data columns are either all defined by data parameters or all defined by distribution. Currently the following columns are defined by distribution: ' + ColumnsDefinedByDistribution + '. The Following columns are defined by data: ' + ColumnsDefinedByData
         DefinedByDistribution = HasDistribution[0]
+        for Objective in Objectives:
+            if len(Objective)!=7:
+                raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective is not full with 5 elements: (FilterExpr, StatExpr, StatFunction, TargetValue, Weight). The problematic objective is: ' + str(Objective)
+            else:
+                (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) = Objective
+                if not IsStr(FilterExpr):
+                    raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid FilterExpr. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str(FilterExpr)
+                if not IsStr(StatExpr):
+                    raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid StatExpr. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str(StatExpr)
+                if StatFunction not in StatFunctions:
+                    raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid StatFunction. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str(StatFunction)
+                if not IsFinite(TargetValue):
+                    raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid TargetValue. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str(TargetValue)
+                if not IsFinite(Weight):
+                    raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid Weight. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str(Weight)
+                if DefinedByDistribution:
+                    if CalcValue != None and CalcError != None:
+                        raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid CalcValue, CalcError. For a distribution based population these have None. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str((CalcValue,CalcError))
+                else:
+                    if not IsNumericType(CalcValue):
+                        raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid CalcValue. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str(CalcValue)
+                    if not IsNumericType(CalcError):
+                        raise ValueError, 'Population Set Data Columns Validation Error: Invalid definition of Objectives - objective has an invalid CalcError. The problematic objective is: ' + str(Objective) + 'The invalid value is: ' + str(CalcError)
+
         return DefinedByDistribution
 
     # The following line will allow calling the method directly
@@ -4052,7 +4109,7 @@ class PopulationSet:
     ClassIsDistributionBased = ClassFunctionWrapper(IsDistributionBased)
 
 
-    def VerifyColumns(self, DataColumns = None):
+    def VerifyColumns(self, DataColumns = None, Objectives = None):
         """Check columns, return dependancies if defined by distributions"""
         # Note that if defined by distributions, the full list of dependencies
         # for each column is returned to later allow distinguishing the order
@@ -4093,15 +4150,38 @@ class PopulationSet:
             # will be created. Also note that the result is a list.
             RetVal = list(set(DepedencySet))
             return RetVal
+
+        def CheckDependenciesInObjectives(DestinationColumns, Objectives):
+            """ Check if there is an invalid dependency in Objectives """
+            DepedencySet = []
+            for Objective in Objectives:
+                (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) = Objective
+                TempStatExpr = Expr(StatExpr)
+                TempFilterExpr = Expr(FilterExpr)
+                DependantParams = TempStatExpr.DependantParams + TempFilterExpr.DependantParams
+                DepedencySet = DepedencySet + DependantParams
+                for DependantParam in DependantParams:
+                    # ignore functions and system reserved parameters
+                    if Params[DependantParam].ParameterType not in ['System Reserved']:
+                        # If the dependant parameter is not in a population
+                        # column that will be calculated, then raise an error
+                        # since there will be no value for this
+                        if DependantParam not in DestinationColumns:
+                            raise ValueError, 'Population Set Objectives Validation Error: Population Dependency on a parameter that is not calculated: The parameter ' + DependantParam + ' does is not a calculated parameter in the population set. This will result in an error while generating a population set. This reference was detected while analyzing the Objective ' + str(Objective)
+            # Trancate the set
+            RetVal = list(set(DepedencySet))
+            return RetVal
         
         if DataColumns == None:
             DataColumns = self.DataColumns
-        DefinedByDistribution = PopulationSet.ClassIsDistributionBased(None,DataColumns)
+        if Objectives == None:
+            Objectives = self.Objectives
+        DefinedByDistribution = PopulationSet.ClassIsDistributionBased(None,DataColumns,Objectives)
         ReturnDependancyList = []
         if DefinedByDistribution:
             # reformat list to reuse later when calling recursive function
-            DestinationColumns = map ( lambda (ColumnName , Distribution): ColumnName , DataColumns)
-            SourceExpressions = map ( lambda (ColumnName , Distribution): Distribution, DataColumns)
+            DestinationColumns = map (lambda (ColumnName , Distribution): ColumnName , DataColumns)
+            SourceExpressions = map (lambda (ColumnName , Distribution): Distribution, DataColumns)
             # Check if data columns are valid parameters and distributions
             for (ColumnName , Distribution) in DataColumns:
                 # Previously checked for validity of Assigned parameter
@@ -4112,22 +4192,26 @@ class PopulationSet:
                 # would have been returned if this was the case
                 DependanciesForThisColumn.remove(ColumnName)
                 ReturnDependancyList = ReturnDependancyList + [ DependanciesForThisColumn ]
+            DependanciesForObjectives = CheckDependenciesInObjectives(DestinationColumns, Objectives)
+            ReturnDependancyList = ReturnDependancyList + DependanciesForObjectives
         return ReturnDependancyList
 
     # The following line will allow calling the method directly
     # from the class without an instance to help maintain strict data integrity
     ClassVerifyColumns = ClassFunctionWrapper(VerifyColumns)
 
-
-    def VerifyData(self , Data = None , DataColumns = None, VerifyValues = True):
+    def VerifyData(self , Data = None , DataColumns = None, Objectives = None, VerifyValues = True):
         """Check that the data include all columns"""
         # If input variable not supplied, use the data in self
         if Data == None:
             Data = self.Data
         if DataColumns == None:
             DataColumns = self.DataColumns
-        # Check that the population is not defined by both data and distribution
-        IsDistributionType = PopulationSet.ClassVerifyColumns(None,DataColumns)
+        if Objectives == None:
+            Objectives = self.Objectives
+        # Check that the population is not defined by data, distribution, and
+        # Objectives
+        IsDistributionType = PopulationSet.ClassVerifyColumns(None,DataColumns,Objectives)
         if IsDistributionType and Data != []:
             raise ValueError, 'ASSERTION ERROR: A population set defined by distributions has data attached to it.'
         elif not IsDistributionType and Data == []:
@@ -4156,13 +4240,15 @@ class PopulationSet:
 
     def ImportDataFromCSV(self, FileName, ImportColumnNames = True):
         """Import data and column names from a CSV file"""
+        # Note that Distribution based population import is not supported and
+        # neither objectives uplod from CSV
         # First open the file and read data from it
         (DataColumns,Data)=ImportDataFromCSV(self, FileName,  ImportColumnNames, ConvertTextToProperDataType = True, TextCellsAllowed = False)
         # Verify the information in the columns, avoid using self keyword
         PopulationSet.ClassVerifyColumns(None,DataColumns)
         # Now verify that this data is valid and corresponds to the columns
         # again avoid using the self keyword
-        PopulationSet.ClassVerifyData(None , Data , DataColumns)
+        PopulationSet.ClassVerifyData(None , Data , DataColumns, [])
         self.DataColumns = DataColumns
         self.Data = Data
         return (DataColumns,Data)
@@ -4177,6 +4263,7 @@ class PopulationSet:
             if self.IsDistributionBased():
                 # Note that currently distribution based population sets cannot
                 # be loaded back to the system using the import function. 
+                # also objectives are not saved
                 ColumnHeaders = self.DataColumns
             else:
                 ColumnHeaders = map(lambda (ColumnName , Distribution) : ColumnName, self.DataColumns)
@@ -4186,13 +4273,12 @@ class PopulationSet:
         return
 
 
-
     def PreparePopulationSetForSimulation(self, StudyModelID , RepairPopulation = DefaultSystemOptions['RepairPopulation'], VerboseLevel = DefaultSystemOptions['VerboseLevel']):
         """ Returns a Population set suitable for simulation of the model """
         if "PreparePopulationSetForSimulation" in DebugPrints:
             print 'ID:' + str(StudyModelID)
         # First create a new population set copied from this population set
-        SimulationPopulationSet = PopulationSet( ID = 0, Name = self.Name, Source = 'Prepared for Simulation from: ' + self.Source , Notes = 'Original Notes Before Preparation were: ' + self.Notes, DerivedFrom = self.ID, DataColumns = self.DataColumns, Data = self.Data)
+        SimulationPopulationSet = PopulationSet( ID = 0, Name = self.Name, Source = 'Prepared for Simulation from: ' + self.Source , Notes = 'Original Notes Before Preparation were: ' + self.Notes, DerivedFrom = self.ID, DataColumns = self.DataColumns, Data = self.Data, Objectives = self.Objectives)
         # Extract all parameter names from the parameter list of the population set
         PopSetParamNames = map(lambda (ParamName, Distribution): ParamName , self.DataColumns )
         # All new parameters will be added from this index position
@@ -4447,6 +4533,7 @@ class PopulationSet:
             print 'RevisedPopulationSet Data is:' + str(SimulationPopulationSet.Data)
         return SimulationPopulationSet    
 
+
     def GenerateDataPopulationFromDistributionPopulation(self, GeneratedPopulationSize, GenerationFileNamePrefix = None, OutputFileNamePrefix = None , RandomStateFileNamePrefix = None, GenerationOptions = None, SkipDumpingFilesIfError = True , RecreateFromTraceBack = None, DeleteScriptFileAfterRun = True):
         " Generate a new data population from distributions - encapsulating"
         # Compile the generation script with default options
@@ -4556,6 +4643,17 @@ class PopulationSet:
         #RepairPopulation = HandleOption('RepairPopulation', GenerationOptionsToUse)
         VerboseLevel = HandleOption('VerboseLevel', GenerationOptionsToUse)
         RandomSeed = HandleOption('RandomSeed', GenerationOptionsToUse)
+        # Define how many candidates there are per selected individual
+        SystemPrecisionForProbabilityBoundCheck = HandleOption('SystemPrecisionForProbabilityBoundCheck', GenerationOptionsToUse)
+        GeneticAlgorithmCandidatesPerSelectedIndividual = HandleOption('GeneticAlgorithmCandidatesPerSelectedIndividual', GenerationOptionsToUse)
+        GeneticAlgorithmMaxStableGenerationCountTerminator = HandleOption('GeneticAlgorithmMaxStableGenerationCountTerminator', GenerationOptionsToUse)
+        GeneticAlgorithmMaxEvalsTerminator = HandleOption('GeneticAlgorithmMaxEvalsTerminator', GenerationOptionsToUse)
+        GeneticAlgorithmTournamentSize = HandleOption('GeneticAlgorithmTournamentSize', GenerationOptionsToUse)
+        GeneticAlgorithmNumberOfElitesToSurviveIfBetterThanWorstOffspring = HandleOption('GeneticAlgorithmNumberOfElitesToSurviveIfBetterThanWorstOffspring', GenerationOptionsToUse)
+        GeneticAlgorithmSolutionPopulationSize = HandleOption('GeneticAlgorithmSolutionPopulationSize', GenerationOptionsToUse)
+        GeneticAlgorithmMutationRate = HandleOption('GeneticAlgorithmMutationRate', GenerationOptionsToUse)
+
+       
         # Extract Default file names
         # Extract Default file names, but first create the TimeStamp
         if GenerationFileNamePrefix == None:
@@ -4662,12 +4760,21 @@ class PopulationSet:
             WriteGenLine ('DataDef.numpy.random.set_state(_InitialRandomState)')
         WriteGenLine ()
         WriteGenLine ('####### Initialize Results Vector #######')
+        WriteGenLine ('_CandidatesResultsVector = []')
         WriteGenLine ('_ResultsVector = []')
+        WriteGenLine ('_IndividualObjectives = []')
+        WriteGenLine ('_ReturnedObjectives = []')
+        WriteGenLine ('_ErrorSum = None')
         WriteGenLine ('############### Execute Generation ###############')
         WriteGenLine ('####### Subject Loop #######')
         WriteGenLine ('IndividualID = 0')
         WriteGenLine ('_NumberOfTriesToGenerateThisIndividual = 0')
-        WriteGenLine ('while IndividualID < '+ str(GeneratedPopulationSize) + ':')
+        # Generate extra population only if a genetic algorithm is defined
+        if self.Objectives != []:
+            CandidatePopulationSizeBeforeSelection = GeneratedPopulationSize*GeneticAlgorithmCandidatesPerSelectedIndividual
+        else:
+            CandidatePopulationSizeBeforeSelection = GeneratedPopulationSize
+        WriteGenLine ('while IndividualID < '+ str(CandidatePopulationSizeBeforeSelection) + ':')
         WriteGenLine (Tab + '# Reset Warning/Error Count')
         WriteGenLine (Tab + '_WarningCountBeforeThisIndividual = _WarningCount')
         WriteGenLine (Tab + '# Increase the number of Tries counter')
@@ -4695,13 +4802,197 @@ class PopulationSet:
         # Expand the expression and write it down. It is assumed that the
         # expression was validated and the expanded version exists
         WriteGenLine (Tab + Tab + '# update the results vector')
-        WriteGenLine (Tab + Tab + '_ResultsVector.append([' + AllParamsStr +'])')
+        WriteGenLine (Tab + Tab + '_CandidatesResultsVector.append([' + AllParamsStr +'])')
+        # Increase indvidual count
         WriteGenLine (Tab + Tab + 'IndividualID = IndividualID + 1')
         WriteGenLine (Tab + Tab + '_NumberOfTriesToGenerateThisIndividual = 0')
         WriteGenLine (Tab + 'elif _NumberOfTriesToGenerateThisIndividual >= ' + SmartStr(NumberOfTriesToRecalculateIndividualDuringPopulationGeneration) + ':')
         # Handle the case where the program should raise a fatal error due to
         # too many tries to process the same person
         WriteGenLine (Tab + Tab + '_WarningErrorHandler(_InputErrorString = "The generation was halted since the number of tries to recalculate the same person has been exceeded. If this problem consistently repeats itself, check the formulas to see if these cause too many out of bounds numbers to be generated. Alternatively, try raising the system option NumberOfTriesToRecalculateIndividualDuringPopulationGeneration which is now defined as ' + SmartStr(NumberOfTriesToRecalculateIndividualDuringPopulationGeneration) + '  .  ", _FatalError = True)')
+        WriteGenLine ('')
+
+        if self.Objectives!=[]:
+            # For each Objective, calculate the Filter and Statistics for this 
+            # individual and store it for future use
+            WriteGenLine (Tab + '# Calculate Objectives Filter and Statistics')
+            WriteGenLine (Tab + '_ObjectivesForThisIndividual = []')
+            for Objective in self.Objectives:
+                WriteGenLine (Tab + '# Processing the objective: ' +str(Objective))
+                (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) = Objective
+                LastValidityCheckCode = 'if not (' + repr(-SystemPrecisionForProbabilityBoundCheck) + ' <= _Temp  <= ' + repr(1.0+SystemPrecisionForProbabilityBoundCheck) + '):'
+                ErrorHandlerCode = Tab + '_WarningErrorHandler(_InputErrorString = "The filter probability threshold defined by an objective does not evaluate to a number between 0 and 1 within a tolerance specified by the system option parameter SystemPrecisionForProbabilityBoundCheck. The objective filter evaluated to: " + str(_Temp) + " for the Objective: " + ' + repr(Objective) + ', _FatalError = True)'
+                SourceExpr=Expr(FilterExpr)
+                SourceExpr.WriteCodeForExpression (AssignedParameterName = '_FilterExprValue', SourceExprText = None, ValidateDataInRuntime = ValidateDataInRuntime, WriteLnFunction = WriteGenLine, Lead = Tab , Tab = Tab, TempTokenPrefix = '_Temp', OverrideLastCheck = [LastValidityCheckCode, ErrorHandlerCode])
+                LastValidityCheckCode = 'if not (DataDef.IsFinite(_Temp)):'
+                ErrorHandlerCode = Tab + '_WarningErrorHandler(_InputErrorString = "The filter expression defined by an objective does not evaluate to a number, the objective expression evaluated to: " + str(_Temp) + " for the Objective: " + ' + repr(Objective) + ', _FatalError = True)'
+                SourceExpr=Expr(StatExpr)
+                SourceExpr.WriteCodeForExpression (AssignedParameterName = '_StatExprValue', SourceExprText = None, ValidateDataInRuntime = ValidateDataInRuntime, WriteLnFunction = WriteGenLine, Lead = Tab, Tab = Tab, TempTokenPrefix = '_Temp', OverrideLastCheck = [LastValidityCheckCode, ErrorHandlerCode])
+                WriteGenLine (Tab + '# Processing the objective: ' +str(Objective))
+                WriteGenLine (Tab + '_ObjectivesForThisIndividual.append((_FilterExprValue, _StatExprValue))')
+            WriteGenLine (Tab + '# Collect the calculated objectives information for this individual')
+            WriteGenLine (Tab + '_IndividualObjectives.append(_ObjectivesForThisIndividual)')
+
+        if self.Objectives==[]:
+            WriteGenLine ('# No Optimization by Genetic Algorithm Defined by Objectives - result is final')
+            WriteGenLine ('_ResultsVector = _CandidatesResultsVector')
+        else:
+            # Define the fitness function
+            WriteGenLine ('# The Evolutionary code below is inspired by code initially ' )
+            WriteGenLine ('# written as an example by Aaron Lee Garrett who maintains Inspyred ' )
+            WriteGenLine ('# Aaron did not ask to maintain any ownership fo the code - he was ' )
+            WriteGenLine ('# just trying to help use Inspyerd to solve this. Never the less ' )
+            WriteGenLine ('# his help was far and beyond what is normally given as support ' )
+            WriteGenLine ('# therefore he is acknowledged in this code. His contribution saved ' )
+            WriteGenLine ('# many hours of learning a new library. ' )
+            WriteGenLine ('')
+   
+            WriteGenLine ('def _CandidateGroupEvaluate(_CandidateGroup):')
+            WriteGenLine (Tab + '"Define candidate fitness score calculator"')
+            WriteGenLine (Tab + '_CandidateGroupInformation = [_IndividualObjectives[_IndividualIndex] for _IndividualIndex in _CandidateGroup]')
+            WriteGenLine (Tab + '_CandidateGroupInformationTransposed = map(None,*_CandidateGroupInformation)')
+            WriteGenLine (Tab + '_StatisticsVector = []')
+            WriteGenLine (Tab + '_ErrortVector = []')
+            WriteGenLine (Tab + '_ErrorSum = 0')
+    
+            for (ObjectiveEnum,Objective) in enumerate(self.Objectives):
+                (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) = Objective
+                WriteGenLine (Tab + '# Processing the objective: ' +str(Objective))            
+                WriteGenLine (Tab + '_StatsVector = [_StatExprValue for (_FilterExprValue, _StatExprValue) in _CandidateGroupInformationTransposed['+str(ObjectiveEnum)+'] if _FilterExprValue]')
+                WriteGenLine (Tab + 'if _StatsVector == []:')
+                WriteGenLine (Tab + Tab + '_StatisticForThisObjective = Inf')
+                WriteGenLine (Tab + Tab + '_WarningErrorHandler(_InputErrorString = "There were no records found that satisfy the filter expression ' + repr(FilterExpr) + ' , check if population size is sufficient to produce any records for this objective", _FatalError = False)')
+                WriteGenLine (Tab + 'else:')                
+                if StatFunction == 'MEAN':
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = DataDef.numpy.mean (_StatsVector)')
+                elif StatFunction == 'STD':
+                    # Use ddof = 1 when calculaing std
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = DataDef.numpy.std(_StatsVector, None, None, None, 1)')
+                elif StatFunction == 'MEDIAN':
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = DataDef.numpy.median(_StatsVector)')
+                elif StatFunction.startswith('PERCENT'):                    
+                    # The last two digits defien the range
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = DataDef.scipy.stats.scoreatpercentile(_StatsVector,'+StatFunction[-2:] + ' )')
+                elif StatFunction == 'MIN':
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = min(_StatsVector)')
+                elif StatFunction == 'MAX':
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = max(_StatsVector)')
+                elif StatFunction == 'SUM':
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = sum(_StatsVector)')
+                elif StatFunction == 'COUNT':
+                    WriteGenLine (Tab + Tab + '_StatisticForThisObjective = len(_StatsVector)')
+                else:
+                    raise ValueError, 'ASSERTION ERROR: Unknown StatFunction type - this should be caught during data entry'
+                WriteGenLine (Tab + '_ErrorElement = ((_StatisticForThisObjective - ' + SmartStr(TargetValue) + ') * ' + SmartStr(Weight) + ')**2 ')
+                WriteGenLine (Tab + '_ErrortVector.append(_ErrorElement)')
+                WriteGenLine (Tab + '_ErrorSum = _ErrorSum + _ErrorElement')
+                WriteGenLine (Tab + '_StatisticsVector.append(_StatisticForThisObjective)')
+            WriteGenLine (Tab + 'return (_ErrorSum,_StatisticsVector,_ErrortVector)')
+    
+            WriteGenLine ('')
+            WriteGenLine ('# Defining the Genetic Algorithm')
+            WriteGenLine ('class _NumpyRandomWrapper(DataDef.numpy.random.RandomState):')
+            WriteGenLine (Tab + 'def __init__(self, _seed=None):')
+            WriteGenLine (Tab + Tab + 'super(_NumpyRandomWrapper, self).__init__(_seed)')
+            WriteGenLine (Tab + 'def sample(self, _Population, _K):')
+            WriteGenLine (Tab + Tab + 'return self.choice(_Population, _K, replace=False)')
+            WriteGenLine (Tab + 'def random(self):')
+            WriteGenLine (Tab + Tab + 'return self.random_sample()')
+            WriteGenLine ('')
+            WriteGenLine ('# Define a set of candidate indices before entering the mutator' )
+            WriteGenLine ('_FullPopulationIndexList = list(range('+str(CandidatePopulationSizeBeforeSelection)+'))' )
+            WriteGenLine ('_FullPopulationIndexSet = set(_FullPopulationIndexList)' )
+                
+            WriteGenLine ('')
+            WriteGenLine ('def _Generator(random, args):')
+            WriteGenLine (Tab + '"Generate a random candidate represented as a list of unique index values."')
+            WriteGenLine (Tab + '_RandomCandidate = list(random.sample(_FullPopulationIndexList, ' + str(GeneratedPopulationSize) + '))')
+            WriteGenLine (Tab + 'return _RandomCandidate')
+            WriteGenLine ('')
+            WriteGenLine ('@DataDef.inspyred.ec.evaluators.evaluator')
+            WriteGenLine ('def _Evaluator(_Candidate, args):')
+            WriteGenLine (Tab + '"Evaluate a candidate group - Inspyred wrapper for the Evaluation function"')
+            WriteGenLine (Tab + '(_ErrorSum,_StatisticsVector,_ErrortVector) = _CandidateGroupEvaluate(_Candidate)')
+            WriteGenLine (Tab + 'return _ErrorSum')
+            WriteGenLine ('')
+            WriteGenLine ('@DataDef.inspyred.ec.variators.crossover')
+            WriteGenLine ('def _Crossover(random, _Mom, _Dad, args):')
+            WriteGenLine (Tab + '"Crossover two candidates by randomly reassigning non duplicates"')
+            WriteGenLine (Tab + '_DadSet = set(_Dad)')
+            WriteGenLine (Tab + '_MomSet = set(_Mom)')
+            WriteGenLine (Tab + '_Duplicates = list(_DadSet.intersection(_MomSet))')
+            WriteGenLine (Tab + '_DifferentElements = list(_DadSet.symmetric_difference(_MomSet))')
+            WriteGenLine (Tab + '_DifferentElementsRandomOrder = list(random.permutation(_DifferentElements))')
+            WriteGenLine (Tab + '_OutBrother = _Duplicates + _DifferentElementsRandomOrder [:((len(_DadSet)-len(_Duplicates)))]')
+            WriteGenLine (Tab + '_OutSister = _Duplicates + _DifferentElementsRandomOrder [-((len(_MomSet)-len(_Duplicates))):]')
+            WriteGenLine (Tab + 'return [_OutBrother, _OutSister]')
+            WriteGenLine ('')
+
+            WriteGenLine ('@DataDef.inspyred.ec.variators.mutator')
+            WriteGenLine ('def _Mutator(random, candidate, args):')
+            WriteGenLine (Tab + '"Mutate a candidate. randomly select a legal index at the mutation rate"')
+            WriteGenLine (Tab + '_MutationRate = args["mutation_rate"]')
+            WriteGenLine (Tab + '_MutationIndices=[]')
+            WriteGenLine (Tab + '_Mutant = candidate[:]')
+            WriteGenLine (Tab + '_LegalValuesOutOfMutant = list(_FullPopulationIndexSet - set(_Mutant))')
+            WriteGenLine (Tab + 'for (_MutantIndex,_MutantValue) in enumerate(_Mutant):')
+            WriteGenLine (Tab + Tab + 'if random.random() <= _MutationRate:')
+            WriteGenLine (Tab + Tab + Tab + '_MutationIndices.append(_MutantIndex)')
+            WriteGenLine (Tab + Tab + Tab + '_LegalValuesOutOfMutant.append(_MutantValue)')
+            WriteGenLine (Tab + '# Sample legal values - there is a small possiblilty of no mutation by self replacement')
+            WriteGenLine (Tab + '_MutationValues = random.sample(_LegalValuesOutOfMutant,len(_MutationIndices))')
+            WriteGenLine (Tab + 'for (_MutantEnum, _MutationIndex) in enumerate(_MutationIndices):')
+            WriteGenLine (Tab + Tab + '_Mutant[_MutationIndex] = _MutationValues[_MutantEnum]')
+            WriteGenLine (Tab + 'return _Mutant')
+            WriteGenLine ('')
+
+            WriteGenLine ('def _BestSolutionStableTermination(population, num_generations, num_evaluations, args):')
+            WriteGenLine (Tab + '"Return True if the best fitness does not change for a number of generations."')
+            WriteGenLine (Tab + '_StableGenerationCount = args["GeneticAlgorithmMaxStableGenerationCountTerminator"]')
+            WriteGenLine (Tab + '(_PrevBestFitness, _PrevBestGeneration) = args.setdefault("BestFitnessInfo", (DataDef.Inf,0))')
+            WriteGenLine (Tab + '_CurrentBestFitness = max(population).fitness')
+            WriteGenLine (Tab + 'if _CurrentBestFitness < _PrevBestFitness:')
+            WriteGenLine (Tab + Tab + 'args["BestFitnessInfo"] = (_CurrentBestFitness, num_generations)')
+            WriteGenLine (Tab + Tab + '_RetValue = False')
+            WriteGenLine (Tab + 'else:')
+            WriteGenLine (Tab + Tab + '_RetValue = (num_generations - _PrevBestGeneration ) >= _StableGenerationCount')
+            WriteGenLine (Tab + 'return _RetValue')
+            WriteGenLine ('')
+
+            WriteGenLine ('# Prepare for launching the genetic algorithm')
+            WriteGenLine ('_RandomStateBeforeGeneticAlgorithm = DataDef.numpy.random.get_state()')
+            WriteGenLine ('_RandomGeneratorInstance = _NumpyRandomWrapper()')
+            WriteGenLine ('_RandomGeneratorInstance.set_state(_RandomStateBeforeGeneticAlgorithm)')
+            WriteGenLine ('_GeneticAlgorithmInstance = DataDef.inspyred.ec.EvolutionaryComputation(_RandomGeneratorInstance)')
+            WriteGenLine ('_GeneticAlgorithmInstance.variator = [_Crossover, _Mutator]')
+            WriteGenLine ('_GeneticAlgorithmInstance.replacer = DataDef.inspyred.ec.replacers.generational_replacement')
+            WriteGenLine ('_GeneticAlgorithmInstance.terminator = [ DataDef.inspyred.ec.terminators.evaluation_termination, _BestSolutionStableTermination]')
+            WriteGenLine ('_GeneticAlgorithmInstance.observer = DataDef.inspyred.ec.observers.stats_observer')
+            WriteGenLine ('_FinalGeneration = _GeneticAlgorithmInstance.evolve(generator = _Generator, evaluator = _Evaluator, pop_size = ' + str(GeneticAlgorithmSolutionPopulationSize) + ' , bounder = DataDef.inspyred.ec.DiscreteBounder(_FullPopulationIndexList) , maximize=False, tournament_size = ' +str(GeneticAlgorithmTournamentSize) + ' ,  num_selected= ' + str(GeneticAlgorithmCandidatesPerSelectedIndividual) + ' , num_elites = ' + str(GeneticAlgorithmNumberOfElitesToSurviveIfBetterThanWorstOffspring) + ' , max_evaluations = ' + str(GeneticAlgorithmMaxEvalsTerminator) + ', mutation_rate = ' + str (GeneticAlgorithmMutationRate) +', GeneticAlgorithmMaxStableGenerationCountTerminator = ' +str(GeneticAlgorithmMaxStableGenerationCountTerminator) + ' )')
+            WriteGenLine ('_BestCandidateFound = max(_FinalGeneration)')
+            WriteGenLine ('_BestCandidateFound.candidate.sort()')
+            WriteGenLine ('(_ErrorSum,_StatisticsVector,_ErrortVector) = _CandidateGroupEvaluate(_BestCandidateFound.candidate)')
+            WriteGenLine ('# Define final results vector by looping over best solution indices')
+            WriteGenLine ('_ResultsVector = [_CandidatesResultsVector[_IndividualIndex] for _IndividualIndex in _BestCandidateFound.candidate]')
+            WriteGenLine ('')
+
+            # write the result to file
+            WriteGenLine ('# Comment/Uncomment the next lines to disable/enable dumping objective statistics')
+            VerboseComment = Iif(VerboseLevel >= 5,'','#')
+            WriteGenLine (VerboseComment + 'print "Final Statistics Per Objective Using the Following Format:"')
+            WriteGenLine (VerboseComment + 'print "Calculated Statistic $ Target Value $ Error from target $ Weight $ Statistics Expression $ Statistics function $ Filter Expression:" ')
+            for ObjectiveEnum, Objective in enumerate(self.Objectives):
+                (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) = Objective
+                WriteGenLine (VerboseComment + 'print ( DataDef.SmartStr(_StatisticsVector['+ str(ObjectiveEnum) +']) + " $ ' + SmartStr(TargetValue) + ' $ " + DataDef.SmartStr(_ErrortVector['+ str(ObjectiveEnum) +']) + " $ ' + SmartStr(Weight) + '  $ ' + repr(StatExpr) + ' $ ' + repr(StatFunction) + ' $ ' + repr(FilterExpr)+ '" ) ')
+            WriteGenLine (VerboseComment + 'print "Final Weighted Error Sum Was:" + DataDef.SmartStr(_ErrorSum)')
+
+            WriteGenLine ('# update the objectives vector for output')
+            WriteGenLine ('for (_ObjectiveEnum,_Objective) in enumerate(_PopulationSetInfo.Objectives):')
+            WriteGenLine (Tab +'(_FilterExpr, _StatExpr, _StatFunction, _TargetValue, _Weight, _CalcValue, _CalcError) = _Objective')
+            WriteGenLine (Tab +'_CalcValue = _StatisticsVector[_ObjectiveEnum]')
+            WriteGenLine (Tab +'_CalcError = _ErrortVector[_ObjectiveEnum]')
+            WriteGenLine (Tab +'_ReturnedObjectives.append((_FilterExpr, _StatExpr, _StatFunction, _TargetValue, _Weight, _CalcValue, _CalcError))')
+
         # write the result to file
         WriteGenLine ('# Comment/Uncomment the next lines to disable/enable dumping output file')
         VerboseComment = Iif(VerboseLevel >= 7,'','#')
@@ -4719,7 +5010,7 @@ class PopulationSet:
         # Figure out column names
         NewDataColumns = map( lambda (ParamName,DistributionParam): (ParamName,'') , self.DataColumns)
         WriteGenLine ('# Return PopulationSet parameters. These are: (ID of source population set, column name definitions, results array)')
-        WriteGenLine ("_ResultPopulationSetData = ("+ str(self.ID)+' , _GeneratingVersion , _InitialRandomState , os.path.split(_RandomStateFileName)[1] , os.path.split(__file__)[1] , _CompileArguments , ' + repr(NewDataColumns) + " , _ResultsVector )")
+        WriteGenLine ("_ResultPopulationSetData = ("+ str(self.ID)+' , _GeneratingVersion , _InitialRandomState , os.path.split(_RandomStateFileName)[1] , os.path.split(__file__)[1] , _CompileArguments , ' + repr(NewDataColumns) + ", _ReturnedObjectives, _ErrorSum , _ResultsVector )")
         WriteGenLine ('# Comment/Uncomment the next line to disable/enable printing of verbose information')
         WriteGenLine (Iif(VerboseLevel >= 10,'','#') + "print 'Info: population set generation was successful. A total number of ' + str(_WarningCount) + ' warnings were raised.'")
         try:
@@ -4870,8 +5161,13 @@ class PopulationSet:
                     # Note that position 0 in the tuple holds the original
                     # population ID, position 1 in the tuple holds column names
                     # and position 2 in the tuple holds the data
-                    DerivedFrom, GeneratingVersion, InitialRandomState , RandomStateFileName , TemporaryScriptFile, CompileArguments, DataColumns, Data = ResultsInfo
-                    ReturnedPopulationSet = PopulationSet(ID = 0, Name = 'Randomly Generated Data', Source = 'Automatically generated from distributions' , Notes = 'Automatically generated from distributions. The original population set had the following notes: ' + str(PopulationSets[DerivedFrom].Notes) , DerivedFrom = DerivedFrom, DataColumns = DataColumns, Data = Data)
+                    DerivedFrom, GeneratingVersion, InitialRandomState , RandomStateFileName , TemporaryScriptFile, CompileArguments, DataColumns, ReturnedObjectives, ErrorSum,  Data = ResultsInfo
+                    NewNotes = 'Automatically generated from distributions'
+                    if (ErrorSum != None):
+                        NewNotes = NewNotes + ' with the objective error sum of: ' + SmartStr(ErrorSum)
+                    NewNotes = NewNotes + ' . The original population set had the following notes: ' + str(PopulationSets[DerivedFrom].Notes)
+                    # Create the population set and use ReturnedObjectives
+                    ReturnedPopulationSet = PopulationSet(ID = 0, Name = 'Randomly Generated Data', Source = 'Automatically generated from distributions' , Notes = NewNotes , DerivedFrom = DerivedFrom, DataColumns = DataColumns, Data = Data, Objectives = ReturnedObjectives)
                     # Add TraceBack information to the results
                     ReturnedPopulationSet.TraceBack = (DerivedFrom, GeneratingVersion, InitialRandomState , RandomStateFileName , TemporaryScriptFile, CompileArguments)
                     # Since a record is added rather than modified,
@@ -4939,7 +5235,9 @@ class PopulationSet:
         DummyExpr = Expr('')
         # Check all data columns names and distributions
         Result = map(lambda (ColumnName , Distribution) : ColumnName, self.DataColumns) 
-        Result = Result + reduce(SumOp,map(lambda (ColumnName , Distribution) : DummyExpr.FindDependantParams(ExprText = Distribution), self.DataColumns) )
+        Result = Result + reduce(SumOp,map(lambda (ColumnName , Distribution) : DummyExpr.FindDependantParams(ExprText = Distribution), self.DataColumns), [])
+        Result = Result + reduce(SumOp,map(lambda (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) : DummyExpr.FindDependantParams(ExprText = FilterExpr), self.Objectives), [])
+        Result = Result + reduce(SumOp,map(lambda (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) : DummyExpr.FindDependantParams(ExprText = StatExpr), self.Objectives), [])
         # If a datatype is specified filter the results by the data type
         if ParamType != None:
             Result = filter(lambda Entry: Params[Entry].ParameterType == ParamType, Result)
@@ -4973,8 +5271,23 @@ class PopulationSet:
             # This means the population id defined by Distribution:
             ReportString = ReportString + TotalIndent + 'The population is based on the following distributions:' + LineDelimiter
             for (ParamName,Distribution) in self.DataColumns:
+                ReportString = ReportString + LineDelimiter
                 ReportString = ReportString + TotalIndent + FieldHeader * 'Parameter: ' + str(ParamName) + LineDelimiter
                 ReportString = ReportString + TotalIndent + FieldHeader * 'Distributed as: ' + str(Distribution) + LineDelimiter
+            ReportString = ReportString + LineDelimiter
+            if self.Objectives!=[]:
+                ReportString = ReportString + TotalIndent + 'The population holds the following objectives:' + LineDelimiter
+                for Objective in self.Objectives:
+                    (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) = Objective
+                    ReportString = ReportString + LineDelimiter
+                    ReportString = ReportString + TotalIndent + FieldHeader * 'Filter Expression: ' + str(FilterExpr) + LineDelimiter
+                    ReportString = ReportString + TotalIndent + FieldHeader * 'Statistics Expression: ' + str(StatExpr) + LineDelimiter
+                    ReportString = ReportString + TotalIndent + FieldHeader * 'Statistics Function: ' + str(StatFunction) + LineDelimiter
+                    ReportString = ReportString + TotalIndent + FieldHeader * 'Target Value: ' + str(TargetValue) + LineDelimiter
+                    ReportString = ReportString + TotalIndent + FieldHeader * 'Weight: ' + str(Weight) + LineDelimiter
+                    ReportString = ReportString + TotalIndent + FieldHeader * 'Calculated Value: ' + str(CalcValue) + LineDelimiter
+                    ReportString = ReportString + TotalIndent + FieldHeader * 'Calculated Error: ' + str(CalcError) + LineDelimiter
+                ReportString = ReportString + LineDelimiter
         else:
             # This means the population set is based in Data, print it
             # First calculate the largest length string for each column while
@@ -5001,7 +5314,7 @@ class PopulationSet:
     def Copy(self, NewName = None):
         """ Returns an object that copies this one """
         NewName = CalcCopyName(self, NewName)
-        NewRecord = PopulationSet(ID = 0, Name = NewName, Source = self.Source, Notes = self.Notes, DerivedFrom = self.ID, DataColumns = self.DataColumns, Data = self.Data)
+        NewRecord = PopulationSet(ID = 0, Name = NewName, Source = self.Source, Notes = self.Notes, DerivedFrom = self.ID, DataColumns = self.DataColumns, Data = self.Data, Objectives = self.Objectives)
         return NewRecord
 
     # Description String
@@ -6201,7 +6514,7 @@ class Project:
         if FirstState.IsSplit or FirstState.JoinerOfSplitter!=0 or FirstState.ChildStates != []:
             raise ValueError, 'ASSERTION ERROR: The first state in the model is not a regular state or an event state'
         StateIndicator = FirstState.GenerateAllStateIndicatorNames()[0]
-        NewPopulationSet = PopulationSet( Name = NewName, Source = 'Automatically Generated', Notes = 'Default Population Set that was automatically generated for an estimation project', DerivedFrom = 0, DataColumns = [(StateIndicator,'')], Data = [[1]])
+        NewPopulationSet = PopulationSet( Name = NewName, Source = 'Automatically Generated', Notes = 'Default Population Set that was automatically generated for an estimation project', DerivedFrom = 0, DataColumns = [(StateIndicator,'')], Data = [[1]], Objectives = [])
         return NewPopulationSet
 
         
@@ -8188,7 +8501,14 @@ def ReconstructDataFileAndCheckCompatibility(InputFileName, JustCheckCompatibili
                     if 'Load' in DebugPrints:
                         MessageToUser ('***************ID ' + str(ID)+ ' passed***************')
                 else:
-                    Out = Out + "try: DB.PopulationSets.AddNew( DB.PopulationSet(ID = " + ToStr(Entry.ID)+ ", Name = " + ToStr(Entry.Name)+ ", Source = " + ToStr(Entry.Source)+ ", Notes = " + ToStr(Entry.Notes)+ ", DerivedFrom = " + ToStr(Entry.DerivedFrom)+ ", DataColumns = " + ToStr(Entry.DataColumns)+ ", Data = " + ToStr(Entry.Data)+ "), ProjectBypassID = 0)\nexcept: AnalyzeVersionConversionError()\n"
+                    # Process Objectives - exist only from version (0,90,0,0) 
+                    if FileVersion[:-1] < (0,90,0,0):
+                        # before this version no objectives were defined
+                        EntryObjectivesStr = "[]"
+                    else:
+                        # if versin is proper use the defined objectives
+                        EntryObjectivesStr = ToStr(Entry.Objectives)                        
+                    Out = Out + "try: DB.PopulationSets.AddNew( DB.PopulationSet(ID = " + ToStr(Entry.ID)+ ", Name = " + ToStr(Entry.Name)+ ", Source = " + ToStr(Entry.Source)+ ", Notes = " + ToStr(Entry.Notes)+ ", DerivedFrom = " + ToStr(Entry.DerivedFrom)+ ", DataColumns = " + ToStr(Entry.DataColumns)+ ", Data = " + ToStr(Entry.Data)+ ", Objectives = " + EntryObjectivesStr + " ), ProjectBypassID = 0)\nexcept: AnalyzeVersionConversionError()\n"
             KeysToProcess = sorted(globals()['TempProjects'].keys())
             while KeysToProcess != []:
                 ID = KeysToProcess.pop(0)

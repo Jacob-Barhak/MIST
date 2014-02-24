@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -52,12 +52,34 @@ import DataDef as DB
 import sys
 import pickle
 
-def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRunningIndex, OverWriteFiles, ReconstructFromTraceback, NumberOfSimulationStepsOverride, PopulationRepetitionsOverride, ModelOverride, PopulationSetOverride, InitializeCoefficientValues):
+def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRunningIndexStr, OverWriteFiles, ReconstructFromTraceback, NumberOfSimulationStepsOverride, PopulationRepetitionsOverride, ModelOverride, PopulationSetOverride, InitializeCoefficientValues):
     """ Run a specific project in the input FileName Multiple Times """
     def LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues):
         " Loads the data file, and applies overrides for further handling "
         # First load the data - this also erases old results
         DB.LoadAllData(InputFileName)
+        # First detect the population override 
+        try:
+            # Handle PopulationSetOverride
+            if DB.IsList(PopulationSetOverride):
+                # [x] means ModelID = x
+                # The override is provided as a list, pull out the number is the
+                # list. This number is the actual ID, not the sort order
+                PopulationToUseID = PopulationSetOverride[0]
+            elif DB.IsInt(PopulationSetOverride):
+                # Extract the PopulationSetID from the sort order of populations
+                # This way the user has to tell the index the same way it is
+                #  shown in the GUI
+                PopulationToUseID = sorted(DB.PopulationSets.keys())[PopulationSetOverride]
+            elif PopulationSetOverride==None:
+                PopulationToUseID = None                
+            elif PopulationSetOverride!=None:
+                # raise the error to show the error message
+                raise ValueError, "Unrecognized input for population"
+        except:
+            (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+            raise ValueError, 'Run Multiple Simulations Error: The system could not figure out the index of the populations set - please make sure there are population sets in your file and that you specified the index correctly. Note that a populations set index of 0 means the first populations set and if there are n population sets in a file, the index of the last population set is n-1. If you specified the population set index in bracket, make sure you are not using the population set sort order as without brackets. Here are more details regarding the error: ' + str(ExceptValue)
+
         # Find the project to use if not defined - auto detect
         try:
             if DB.IsList(ProjectIndex):
@@ -71,7 +93,7 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
                 # This way the user has to tell the index the same way it is 
                 # shown in the GUI
                 ProjectID = sorted(DB.Projects.keys())[ProjectIndex]
-            elif ProjectIndex == None:
+            elif ProjectIndex == None and PopulationToUseID != None:
                 # None means the first project in the list
                 ProjectID = sorted(DB.Projects.keys())[0]
             else:
@@ -80,68 +102,55 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
             (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
             raise ValueError, 'Run Multiple Simulations Error: The system could not figure out the index of the project - please make sure there are projects in your file and that you specified the index correctly. Note that a project index of 0 means the first project and if there are n projects in a file, the index of the last project is n-1. If you specified the project index in bracket, make sure you are not using the project sort order as without brackets. Here are more details regarding the error: ' + str(ExceptValue)
         ProjectToRun = DB.Projects[ProjectID]
-        # Handle NumberOfSimulationStepsOverride
-        if NumberOfSimulationStepsOverride != None:
-            ProjectToRun.NumberOfSimulationSteps = NumberOfSimulationStepsOverride
-        # Handle PopulationRepetitionsOverride
-        if PopulationRepetitionsOverride != None:
-            ProjectToRun.NumberOfRepetitions = PopulationRepetitionsOverride
-        try:
-            # Handle ModelOverride
-            if DB.IsList(ModelOverride):
-                # [x] means ModelID = x
-                # The override is provided as a list, pull out the number in the
-                # list. This number is the actual ID, not the sort order
-                ProjectToRun.PrimaryModelID = ModelOverride[0]
-                ProjectToRun.Notes = '!!! Model override during simulation launch !!! ' + ProjectToRun.Notes
-            elif DB.IsInt(ModelOverride):
-                # Extract the ModelID from the sort order of Models
-                # This way the user has to tell the index the same way it is 
-                # shown in the GUI
-                ProjectToRun.PrimaryModelID = sorted(DB.StudyModels.keys())[ModelOverride]
-                ProjectToRun.Notes = '!!! Model override during simulation launch !!! ' + ProjectToRun.Notes
-            elif ModelOverride!=None:
-                # raise the error to show the error message
-                raise ValueError, "Unrecognized input for model"
-        except:
-            (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-            raise ValueError, 'Run Multiple Simulations Error: The system could not figure out the index of the model - please make sure there are models in your file and that you specified the index correctly. Note that a model index of 0 means the first model and if there are n models in a file, the index of the last model is n-1. If you specified the model index in bracket, make sure you are not using the model sort order as without brackets. Here are more details regarding the error: ' + str(ExceptValue)
-        try:
-            # Handle PopulationSetOverride
-            if DB.IsList(PopulationSetOverride):
-                # [x] means ModelID = x
-                # The override is provided as a list, pull out the number is the
-                # list. This number is the actual ID, not the sort order
-                ProjectToRun.PrimaryPopulationSetID = PopulationSetOverride[0]
+        # Do not continue changing the ptoject if no simulation requested
+        if NumberOfSimulationStepsOverride != 0:
+            # Handle NumberOfSimulationStepsOverride - ignore zero since it 
+            # means population generation
+            if NumberOfSimulationStepsOverride != None:
+                ProjectToRun.NumberOfSimulationSteps = NumberOfSimulationStepsOverride
+            # Handle PopulationRepetitionsOverride
+            if PopulationRepetitionsOverride != None:
+                ProjectToRun.NumberOfRepetitions = PopulationRepetitionsOverride
+            try:
+                # Handle ModelOverride
+                if DB.IsList(ModelOverride):
+                    # [x] means ModelID = x
+                    # The override is provided as a list, pull out the number
+                    # in the list. This number is the actual ID, not sort order
+                    ProjectToRun.PrimaryModelID = ModelOverride[0]
+                    ProjectToRun.Notes = '!!! Model override during simulation launch !!! ' + ProjectToRun.Notes
+                elif DB.IsInt(ModelOverride):
+                    # Extract the ModelID from the sort order of Models
+                    # This way the user has to tell the index the same way it
+                    # is shown in the GUI
+                    ProjectToRun.PrimaryModelID = sorted(DB.StudyModels.keys())[ModelOverride]
+                    ProjectToRun.Notes = '!!! Model override during simulation launch !!! ' + ProjectToRun.Notes
+                elif ModelOverride!=None:
+                    # raise the error to show the error message
+                    raise ValueError, "Unrecognized input for model"
+            except:
+                (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+                raise ValueError, 'Run Multiple Simulations Error: The system could not figure out the index of the model - please make sure there are models in your file and that you specified the index correctly. Note that a model index of 0 means the first model and if there are n models in a file, the index of the last model is n-1. If you specified the model index in bracket, make sure you are not using the model sort order as without brackets. Here are more details regarding the error: ' + str(ExceptValue)
+            # Record the population Override in Project
+            if PopulationToUseID != None:
+                ProjectToRun.PrimaryPopulationSetID = PopulationToUseID
                 ProjectToRun.Notes = '!!! Population set override during simulation launch !!! ' + ProjectToRun.Notes
-            elif DB.IsInt(PopulationSetOverride):
-                # Extract the PopulationSetID from the sort order of populations
-                # This way the user has to tell the index the same way it is
-                #  shown in the GUI
-                ProjectToRun.PrimaryPopulationSetID = sorted(DB.PopulationSets.keys())[PopulationSetOverride]
-                ProjectToRun.Notes = '!!! Population set override during simulation launch !!! ' + ProjectToRun.Notes
-            elif PopulationSetOverride!=None:
-                # raise the error to show the error message
-                raise ValueError, "Unrecognized input for population"
-        except:
-            (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-            raise ValueError, 'Run Multiple Simulations Error: The system could not figure out the index of the populations set - please make sure there are population sets in your file and that you specified the index correctly. Note that a populations set index of 0 means the first populations set and if there are n population sets in a file, the index of the last population set is n-1. If you specified the population set index in bracket, make sure you are not using the population set sort order as without brackets. Here are more details regarding the error: ' + str(ExceptValue)
-        try:
-            # Handle InitializeCoefficientValues Rule overrides
-            for (RuleEnum,InitValue) in enumerate(InitializeCoefficientValues):
-                RuleToReplace = ProjectToRun.SimulationRules[RuleEnum]
-                if RuleToReplace.SimulationPhase != 0:
-                    raise ValueError, "ASSERTION ERROR: Attempt to replace a rule not in initialization"
-                # Create a new rule using the old one
-                ReplaceRule = DB.SimulationRule(AffectedParam = RuleToReplace.AffectedParam, SimulationPhase = RuleToReplace.SimulationPhase, AppliedFormula = DB.Expr(DB.SmartStr(InitValue)), Notes = '!!! Initialization value override during simulation launch !!! ' + RuleToReplace.Notes)
-                # Now actually replace the rule in the sequence
-                ProjectToRun.SimulationRules[RuleEnum] = ReplaceRule
-        except:
-            (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
-            raise ValueError, 'Run Multiple Simulations Error: The system could not apply an initial value override to one or more of the rules. Make sure that the overrides do not exceed the number of initialization rules and that the values are reasonable. Here are more details regarding the error: ' + str(ExceptValue)
-        # Make sure that all changes made are valid
-        ProjectToRun.VerifyData()
-        return ProjectToRun
+            try:
+                # Handle InitializeCoefficientValues Rule overrides
+                for (RuleEnum,InitValue) in enumerate(InitializeCoefficientValues):
+                    RuleToReplace = ProjectToRun.SimulationRules[RuleEnum]
+                    if RuleToReplace.SimulationPhase != 0:
+                        raise ValueError, "ASSERTION ERROR: Attempt to replace a rule not in initialization"
+                    # Create a new rule using the old one
+                    ReplaceRule = DB.SimulationRule(AffectedParam = RuleToReplace.AffectedParam, SimulationPhase = RuleToReplace.SimulationPhase, AppliedFormula = DB.Expr(DB.SmartStr(InitValue)), Notes = '!!! Initialization value override during simulation launch !!! ' + RuleToReplace.Notes)
+                    # Now actually replace the rule in the sequence
+                    ProjectToRun.SimulationRules[RuleEnum] = ReplaceRule
+            except:
+                (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
+                raise ValueError, 'Run Multiple Simulations Error: The system could not apply an initial value override to one or more of the rules. Make sure that the overrides do not exceed the number of initialization rules and that the values are reasonable. Here are more details regarding the error: ' + str(ExceptValue)
+            # Make sure that all changes made are valid
+            ProjectToRun.VerifyData()
+        return (ProjectToRun, PopulationToUseID)
 
     (FileNameBase,FileNameExt) = DB.os.path.splitext(InputFileName)
     (PathOnly , FileNameOnly, FileNameFullPath) = DB.DetermineFileNameAndPath(InputFileName)
@@ -150,9 +159,17 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
     OutputFileNames = []
     ErrorsDetected = []
     # Load the data
-    ProjectToRun = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
+    (ProjectToRun, PopulationToUseID) = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
     for Repetition in range(NumberOfRepeats):
-        FileEnumerationSufix = '_' + ('%0'+str(len(str(StartRunningIndex+NumberOfRepeats-1)))+'i')%(StartRunningIndex + Repetition)
+        try:
+            StartRunningIndex = int(StartRunningIndexStr)
+            FileEnumerationSufix = '_' +('%0'+str(len(str(StartRunningIndex+NumberOfRepeats-1)))+'i')%(StartRunningIndex + Repetition)
+        except:
+            FileEnumerationSufix = '_' + StartRunningIndexStr + '_' + ('%0'+str(len(str(NumberOfRepeats-1)))+'i')%(Repetition)
+            # do not add a number at the end in case of a single repetition
+            # THe user supplies suffix only is used in this case
+            if NumberOfRepeats == 1:
+                FileEnumerationSufix = FileEnumerationSufix[:-2]
         FileNameToUse = FileNameBaseNoPath + FileEnumerationSufix
         TraceBackFileNameToUse = FileNameBase + FileEnumerationSufix + '_TraceBack.txt'
         if ReconstructFromTraceback:
@@ -173,38 +190,84 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
             SimulationTraceBack = None
             PopulationTraceBack = None
         try:
-            Pop = DB.PopulationSets[ProjectToRun.PrimaryPopulationSetID]
+            if NumberOfSimulationStepsOverride != 0 or PopulationToUseID == None:
+                Pop = DB.PopulationSets[ProjectToRun.PrimaryPopulationSetID]
+                PopulationSizeToGenerate = ProjectToRun.NumberOfRepetitions
+            else:
+                Pop = DB.PopulationSets[PopulationToUseID]
+                PopulationSizeToGenerate = PopulationRepetitionsOverride
             if Pop.IsDistributionBased():
                 # If population is distribution based - generate data for it
-                PopulationSizeToGenerate = ProjectToRun.NumberOfRepetitions
+                # Note that the new population set will have the last ID
                 print '#'*70
                 print '# Generating Population Set from Distributions' 
                 OverridePopulationSet = Pop.GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = PopulationSizeToGenerate, GenerationFileNamePrefix = FileNameToUse + '_Gen' +('Rep'*ReconstructFromTraceback) , RecreateFromTraceBack = PopulationTraceBack)
+                # keep the same population name - generation notes are still
+                # avialable - yet the name is important for reference
+                OverridePopulationSet.Name = Pop.Name
                 print '# Population Set Generated' 
                 print '#'*70
                 OverrideNumberOfRepetitions = 1
+            elif NumberOfSimulationStepsOverride == 0:
+                # If requested generating population that is data based
+                # Note that the new population set will have the last ID
+                print '#'*70
+                print '# Expanding Population Set from existing set' 
+                # keep the same population name
+                OverridePopulationSet = DB.PopulationSets.Copy(Pop.ID, Pop.Name)
+                # Figure out how many repclias of the population are needed
+                if PopulationRepetitionsOverride != None: 
+                    # If override defined, use it
+                    NumberOfPopulationReplicas = PopulationRepetitionsOverride
+                else:
+                    # otherwise, extract it from the project
+                    NumberOfPopulationReplicas = ProjectToRun.NumberOfRepetitions
+                # Now Apply the multipler to the data to expand the population
+                # so the simualtion will not need to do it. Note that
+                # in return during simulation using thes population
+                # the repetition number shoudl be adjusted to 1
+                OverridePopulationSet.Data = Pop.Data*NumberOfPopulationReplicas
+                print '# Population Set expanded' 
+                print '#'*70
+                OverrideNumberOfRepetitions = None
             else:
-                # If population is data based - just use it
+                # If population is data based and no generation request was 
+                # made then just use it
                 OverridePopulationSet = None
                 OverrideNumberOfRepetitions = None
-            ScriptFileNameFullPath = ProjectToRun.CompileSimulation(SimulationScriptFileNamePrefix = FileNameToUse + '_Sim'+('Rep'*ReconstructFromTraceback), OverrideRepetitionCount = OverrideNumberOfRepetitions, OverridePopulationSet = OverridePopulationSet , RecreateFromTraceBack = SimulationTraceBack)
-            # Reload data to wipe results from previous run
-            ProjectToRun = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
-            # Recacluate filename
+
+            if NumberOfSimulationStepsOverride != 0:
+                # do not run anything if just generating the population
+                ScriptFileNameFullPath = ProjectToRun.CompileSimulation(SimulationScriptFileNamePrefix = FileNameToUse + '_Sim'+('Rep'*ReconstructFromTraceback), OverrideRepetitionCount = OverrideNumberOfRepetitions, OverridePopulationSet = OverridePopulationSet , RecreateFromTraceBack = SimulationTraceBack)                
+                # Reload data to wipe results from previous run - deprecated 
+                # (ProjectToRun, PopulationToUseID) = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)            
+                # Recacluate filename
+                ResultsInfo = ProjectToRun.RunSimulationAndCollectResults(ScriptFileNameFullPath)
             NewFileName = PathOnly + DB.os.sep + FileNameToUse + FileNameExt
             print '#'*70
             print '#'*70
             print '# Repetition number: ' + str (Repetition)
-            print '# Generating File Name: ' + NewFileName
+            print '# Creating File Name: ' + NewFileName
             print '#'*70
             print '#'*70
-            ResultsInfo = ProjectToRun.RunSimulationAndCollectResults(ScriptFileNameFullPath)
+
+            # Save the new file anyway - if either simulation or generation were executed
             DB.SaveAllData(NewFileName, OverWriteFiles)
             # If not reproduction of previous work write TraceBack file
             # If this is reprodction, then skip writing the file
             if not ReconstructFromTraceback:
                 TraceBackFile = open(TraceBackFileNameToUse,'w')
-                pickle.dump(ResultsInfo.TraceBack,TraceBackFile)
+                # if only population generation, handle traceback differently
+                if NumberOfSimulationStepsOverride != 0:
+                    pickle.dump(ResultsInfo.TraceBack,TraceBackFile)
+                else:
+                    # For population generation, the TraceBack infromation
+                    # for the population is stored in the last tuple elelemt
+                    # Non is used as the first element to signify that no
+                    # simulation took place. Thos was it conforms with the load
+                    # TraceBack code for reconstruction regardless if 
+                    # Simulation took place.
+                    pickle.dump((None,OverridePopulationSet.TraceBack),TraceBackFile)
                 TraceBackFile.close()
             # write the file name
             print NewFileName
@@ -245,7 +308,7 @@ if __name__ == "__main__":
         if len(sys.argv) > 3:
             NumberOfRepeats = int(sys.argv[3])
         if len(sys.argv) > 4:
-            StartRunningIndex = int(sys.argv[4])
+            StartRunningIndexStr = (sys.argv[4])
         if len(sys.argv) > 5:
             OverWriteFilesOrReconstructFromTracebackStr = sys.argv[5]
         if len(sys.argv) > 6:
@@ -268,23 +331,28 @@ if __name__ == "__main__":
         print '                by brackets in which case it means the internal project ID.' 
         print '                the default is 0 - meaning the first project in the file'
         print '  Repetitions: The number of times to repeat the simulation'
-        print '  StartIndex: An integer to start the enumerated output file sequence'
+        print '  StartIndex: A string that will become a suffix to the filename in output.'
+        print '              if it is an integer - it will start the enumerated sequence of'
+        print '              output files.'
         print '  OverWriteFilesOrReconstructFromTraceback: If y (default), then output'
         print '                                            files will overwrite old ones. '
         print '                                            If r then reconstruct simulation'
         print '                                            from TraceBack files in same dir'
         print '  NumberOfSimulationStepsOverride: Defines a new number of simulation steps'
         print '                                   for the project. Use None for no override'
+        print '                                   Zero indicates population generation '
+        print '                                   alone without simulation' 
         print '  PopulationRepetitionsOverride: Defines a new number of times to repeat the'
         print '                                 population within the same file. This is '
         print '                                 especially useful for distribution based '
         print '                                 population sets. Use None for no override.'
         print '  ModelOverrideID: The sort order of the Model to override the Model in the'
-        print '                   current project. if None, then no override occurs. If '
+        print '                   current project. If None, then no override occurs. If '
         print '                   enclosed in brackets then the internal ID is used.'
         print '  PopulationOverrideID: The sort order of the PopulationSet to override the'
-        print '                        PopulationSet used in the current project. If None'
-        print '                        no override occurs. If in brackets use internal ID'
+        print '                        PopulationSet used in the current project. Negative' 
+        print '                        means counting from last. None = no override.'
+        print '                        [Number in Brackets] = use internal ID'
         print '  RuleValueOverrides: A set of numeric values to override the value in the'
         print '                      Project rules. These values should be in the same order'
         print '                      rules are defined in the project.'
@@ -313,14 +381,12 @@ if __name__ == "__main__":
             NumberOfRepeats = int(NumberOfRepeatsStr)
         # Handle Start index
         print
-        StartRunningIndexStr = raw_input( 'Please enter the start number for the running index for the simulation repeats (0 by default): ' )
-        if StartRunningIndexStr.strip() != '':
-            StartRunningIndex = int(StartRunningIndexStr)
+        StartRunningIndexStr = raw_input( 'Please enter the suffix/start number for the running index for the simulation repeats (0 by default): ' )
         # Should files be replaced
         print
         OverWriteFilesOrReconstructFromTracebackStr = raw_input( 'Should I overwrite files with the same names or reconstruct simulation from TraceBack? Y for Yes t overwrite (Default), R for Reconstruct and overwrite:' )
         # Number of repetitions override
-        NumberOfSimulationStepsOverrideStr = raw_input( 'Please enter the number of simulation steps to override the project defualt. Use None for no change (Default):' )
+        NumberOfSimulationStepsOverrideStr = raw_input( 'Please enter the number of simulation steps to override the project defualt. Zero means population generation alone without simulation. Use None for no change (Default):' )
         if NumberOfSimulationStepsOverrideStr.strip() != '':
             NumberOfSimulationStepsOverride = eval(NumberOfSimulationStepsOverrideStr, DB.EmptyEvalDict)
         # Number of population repetitions override
@@ -343,7 +409,7 @@ if __name__ == "__main__":
         print 'Here is a list of Population Sets - sorted by internal ID' 
         for (PopSetEnum,PopSet) in enumerate(PopulationSetsToParse):
             print str(PopSetEnum)+ ') ' + PopSet.Describe()
-        PopulationSetOverrideStr = raw_input( 'Enter a population set number to override the Population set used in the project. 0 Means the first Model in the list. Use None for no replacement (Default):' )
+        PopulationSetOverrideStr = raw_input( 'Enter a population set number to override the Population set used in the project. 0 Means the first Population in the list, negative means counting Backwards from last. Use None for no replacement (Default):' )
         if PopulationSetOverrideStr.strip() != '':
             PopulationSetOverride = eval(PopulationSetOverrideStr, DB.EmptyEvalDict)
         # Handle Rule value overides
@@ -359,7 +425,7 @@ if __name__ == "__main__":
     OverWriteFiles = (OverWriteFilesOrReconstructFromTracebackStr.strip().lower() in ['y' , 'r', ''])
     ReconstructFromTraceback = 'r' in OverWriteFilesOrReconstructFromTracebackStr.strip().lower()
     # Now run the simulations
-    (OutputFileNames, ErrorsDetected) = RunMultipleSimulations(InputFileName, ProjectToRun, NumberOfRepeats, StartRunningIndex, OverWriteFiles, ReconstructFromTraceback, NumberOfSimulationStepsOverride, PopulationRepetitionsOverride, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
+    (OutputFileNames, ErrorsDetected) = RunMultipleSimulations(InputFileName, ProjectToRun, NumberOfRepeats, StartRunningIndexStr, OverWriteFiles, ReconstructFromTraceback, NumberOfSimulationStepsOverride, PopulationRepetitionsOverride, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
     
     print '#'*70
     print '#'*70

@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -66,13 +66,18 @@
 #      not data populations that can be imported through the GUI
 #   2) First column contains the names of parameters and other definitions.
 #      That serve as titles for information in the rows.
-#   3) The following columns will be in groups of 3 columns, from which only
-#      the 2nd column will be imported as it contains distribution expressions. 
-#      The first and third columns are user texts that explain the second
-#      column. 
+#   3) The following columns will be in groups of 6 columns, for parameter and 
+#      Objective definitions. For distributions only the first 3 are used from 
+#      which only the 2nd column will be imported as distribution expressions, 
+#      the 1st & 3rd columns are user texts that explain the second column. 
+#      All 6 columns will be imported for Objectives. The column order is: 
+#      Filter Expression, Statistics Expression, Statistics Function, Target, 
+#      Weight. 
 #   4) The rows titled as "Group Description" and "Internal Code" define
 #      the population name and ID. All rows under the title "Parameter" are
-#      considered as column names in the population set. All other rows are
+#      considered as column names in the population set. All rows under the 
+#      title "Objective" are considered Objective and continue until the end 
+#      while Parameter distributions definitions stop. All other rows are
 #      transformed to Notes. If the row named "Internal Data" exists, it will
 #      stop adding information to the Notes otherwise all rows will be aded 
 #      until "Parameter" is reached. The row titled as "Reference" will be 
@@ -93,6 +98,7 @@
 #   3) The expressions should be valid and use a base of states/parameters that
 #      already exists in the model file. Otherwise the code script will be
 #      generated without the model and an error will be reported.
+
 
 import csv
 import sys
@@ -131,8 +137,8 @@ def CodeConvertDocAndSpreadSheet(FileNameSpreadSheet, FileNameDoc, FileNameModel
         print "Skipping population processing."
     else:
         print "Processing the population File: " + FileNameSpreadSheet
-        CommandStrTemplate = "try: DB.PopulationSets.AddNew( DB.PopulationSet(ID = %s, Name = '%s', Source = '%s', Notes = '%s', DerivedFrom = 0, DataColumns = %s, Data = []), ProjectBypassID = 0)"
-        NumberOfPopulations = (len(DataReadSpreadSheet[0])-2)/3
+        CommandStrTemplate = "try: DB.PopulationSets.AddNew( DB.PopulationSet(ID = %s, Name = '%s', Source = '%s', Notes = '%s', DerivedFrom = 0, DataColumns = %s, Data = [], Objectives = %s), ProjectBypassID = 0)"
+        NumberOfPopulations = int(DB.Ceil((len(DataReadSpreadSheet[0])-2.0)/6))
         NumberOfRows = len(DataReadSpreadSheet)
         TitleColumn=0
         # Locate title index
@@ -142,14 +148,21 @@ def CodeConvertDocAndSpreadSheet(FileNameSpreadSheet, FileNameDoc, FileNameModel
         RowIndexSource = RowTitles.index("Reference")
         StartRowIndexNotes = RowTitles.index("Study Name")
         StartRowIndexEquationData = RowTitles.index("Parameter") + 1
+        StartRowIndexObjectiveData = RowTitles.index("Objective") + 1
         EndRowIndexNotes = StartRowIndexEquationData - 2
         if "Internal Data" in RowTitles:
             EndRowIndexNotes = min ( EndRowIndexNotes, RowTitles.index("Internal Data") - 1)
 
         OutStrSpreadSheet = []
         for PopEnum in range(NumberOfPopulations):
-            DescriptionColumn = PopEnum*3+2
-            EquationColumn = PopEnum*3+3
+            DescriptionColumn = PopEnum*6+2
+            EquationColumn = PopEnum*6+3
+            FilterExprColumn = PopEnum*6+0+2
+            StatExprColumn = PopEnum*6+1+2
+            StatFunctionColumn = PopEnum*6+2+2
+            TargetValueColumn = PopEnum*6+3+2
+            WeightColumn = PopEnum*6+4+2
+            
             ID = DataReadSpreadSheet[RowIndexID][DescriptionColumn]
             Name = DataReadSpreadSheet[RowIndexName][DescriptionColumn]
             Source = DataReadSpreadSheet[RowIndexSource][DescriptionColumn]
@@ -158,10 +171,19 @@ def CodeConvertDocAndSpreadSheet(FileNameSpreadSheet, FileNameDoc, FileNameModel
             for RowIndex in range(StartRowIndexNotes, EndRowIndexNotes+1):
                 Notes = Notes + RowTitles[RowIndex] + ": " + DataReadSpreadSheet[RowIndex][DescriptionColumn] + ". "
             EquationData = "["
-            for RowIndex in range(StartRowIndexEquationData, NumberOfRows):
-                EquationData = EquationData + "('" + RowTitles[RowIndex] + "', '" + DataReadSpreadSheet[RowIndex][EquationColumn] + "'), "
+            # collect parameter data until Objectives Start
+            for RowIndex in range(StartRowIndexEquationData, StartRowIndexObjectiveData-2):
+                if len(RowTitles[RowIndex].strip()) != 0:
+                    EquationData = EquationData + "('" + RowTitles[RowIndex] + "', '" + DataReadSpreadSheet[RowIndex][EquationColumn] + "'), "
             EquationData = EquationData[:-2] + "]"
-            OutStrSpreadSheet.append(CommandStrTemplate%(ID, Name, Source, Notes, EquationData) + "\n")
+            ObjectivesData = ""
+            # collect objective data as long as there is non empty data
+            for RowIndex in range(StartRowIndexObjectiveData, NumberOfRows):
+                CurrentRow = DataReadSpreadSheet[RowIndex]
+                if len(''.join(CurrentRow[FilterExprColumn:WeightColumn+1]).strip()) != 0:
+                    ObjectivesData = ObjectivesData + " ( DB.Expr('" + CurrentRow[FilterExprColumn] + "') , DB.Expr('" + CurrentRow[StatExprColumn] + "') , '" + CurrentRow[StatFunctionColumn] + "', " + CurrentRow[TargetValueColumn] + ", " + CurrentRow[WeightColumn] + ", None, None ) ,"
+            ObjectivesData = '[' + ObjectivesData[:-1] + "]"
+            OutStrSpreadSheet.append(CommandStrTemplate%(ID, Name, Source, Notes, EquationData, ObjectivesData) + "\n")
             OutStrSpreadSheet.append(ExceptClause + "\n")
     #### Handle Doc File
     if FileNameDoc == "":

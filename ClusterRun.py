@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -79,12 +79,15 @@ FileNamePrefix='Testing'
 JobName = Scenario +'_'+ FileNamePrefix +'_'+ StartTimeStr
 
 # Define the enviroment for each phase
-Phase1Environemnt = '-cwd -p -100'
-Phase2Environemnt = '-cwd'
-Phase3Environemnt = '-cwd'
-Phase4Environemnt = '-cwd'
+Phase0Environemnt = '-V -cwd -p -100'
+Phase1Environemnt = '-V -cwd -p -50'
+Phase2Environemnt = '-V -cwd'
+Phase3Environemnt = '-V -cwd'
+Phase4Environemnt = '-V -cwd'
 
 # Decide which phases to run
+# Run population generation pre-processing
+RunPhase0 = True
 # Run simulation and create a zip file with results for each run
 RunPhase1A = True
 # Create an individual csv statistics file for each zip file
@@ -95,8 +98,12 @@ RunPhase2 = True
 RunPhase3 = True
 # Analyze the results - need to define processing before enabling this stage
 RunPhase4A = False
+# Analyze the populations generated 
+RunPhase4B = False
 # Generate plots - Nice to have
-RunPhase4B = True
+RunPhase4C = True
+# Final Cleanup - perform additional cleanup steps not carried initially
+RunPhase4D = True
 
 # if DebugRun is at least:
 #    1 - commands are printed and not passed to the OS, Directories not created
@@ -105,8 +112,8 @@ DebugRun = (DB.sys.platform == 'win32')*1
 
 # define disk usage - this may also speed up computations on a cluster
 # Empty List = Leave all files
-# 'NoZip' = remove zip files after csv created at RunPhase1B - Low Disk usage
-# 'LessCSV' = remove csv files after csv created at RunPhase2 - Lower NFS IO 
+# 'NoZip' = remove zip files use at Phase1B and Phase4D - Low Disk usage
+# 'LessCSV' = remove csv files after csv created at Phase2 - Lower NFS IO 
 # 'NoErr' = do not create log files - can reduce disk space yet not recommended
 # 'NoLog' = Do not create Err files - can reduce disk space yet not recommended
 # A run that minimizes disk use would be:
@@ -136,6 +143,7 @@ RunOnlyTheseScenarioEnumRanges = []
 DirInput = 'InData' + DB.os.sep
 DirLog = 'Log' + DB.os.sep 
 DirErr = 'Err' + DB.os.sep 
+DirPhase0 = 'Phase0' + DB.os.sep 
 DirPhase1A = 'Phase1A' + DB.os.sep 
 DirPhase1B = 'Phase1B' + DB.os.sep 
 DirPhase2 = 'Phase2' + DB.os.sep 
@@ -143,7 +151,7 @@ DirPhase3 = 'Phase3' + DB.os.sep
 DirPhase4 = 'Phase4' + DB.os.sep 
 DirTemp = DB.DefaultTempPathName + DB.os.sep
 
-Dirs = (DirInput, DirLog, DirErr, DirPhase1A, DirPhase1B, DirPhase2, DirPhase3, DirPhase4, DirTemp) 
+Dirs = (DirInput, DirLog, DirErr, DirPhase0, DirPhase1A, DirPhase1B, DirPhase2, DirPhase3, DirPhase4, DirTemp) 
 
 
 
@@ -347,6 +355,61 @@ CodeDigitsForRepetitions = int(DB.math.log10(Repetitions))+2
 ################### Run the simulations ###################
 ###########################################################
 
+JobCount=[0]*5
+PrefixFileNameFormat = 'P%s_%s_%0.'+str(int(DB.Log10(Repetitions)))+'i'
+PopulationDict = dict(PopulationsToUse)
+
+# Process Phase 0
+# Loop through variations     
+PopulationsGenerated = []
+for (Variation, VariationEnum) in sorted(SimulationVariationCodes.iteritems(), key = lambda Entry:Entry[1]):
+    (ProjectIDToUse, ModelIDToUse, PopulationIDToUse, ValueSeperation1, ValueSeperation2, ValueSeperation3, ValueSeperation4, ValueSeperation5, ValueSeperation6) = Variation
+    if (ProjectIDToUse, PopulationIDToUse) not in PopulationsGenerated:
+        # Generate unique populations only once per project and repetition
+        PopulationsGenerated.append((ProjectIDToUse, PopulationIDToUse))  
+        for RepeatEnum in range(Repetitions):
+            PopulationPrefix = (PrefixFileNameFormat%(ProjectIDToUse.strip(),PopulationIDToUse.strip(),RepeatEnum)).replace('[','_').replace(']','_')
+            JobEnv = 'qsub ' + Phase0Environemnt
+            if 'NoLog' not in DiskUsage:
+                JobEnv = JobEnv + ' -o ' + DirLog + 'Out'+ PopulationPrefix +'_'+str(RepeatEnum) +'.log'
+            if 'NoErr' not in DiskUsage:
+                JobEnv = JobEnv + ' -e ' + DirErr + 'Out'+ PopulationPrefix +'_'+str(RepeatEnum) +'.err'
+            JobEnv = JobEnv + ' -N ' + JobName + PopulationPrefix 
+            ScriptToRun = '#!/bin/bash\n'
+            ScriptToRun = ScriptToRun + 'echo "Start project ' + str(ProjectIDToUse) + ' Population Generation :' + str(PopulationIDToUse) + ' : ' + PopulationDict[PopulationIDToUse] + ' Repetition ' + str(RepeatEnum) + '"\n'
+            if RunPhase0:
+                # Run the population generation
+                if ReproduceResultsFromTraceback:
+                    OverWriteFilesOrReconstructFromTraceback = 'R'
+                else:
+                    OverWriteFilesOrReconstructFromTraceback = 'Y'
+                ScriptToRun = ScriptToRun + 'python MultiRunSimulation.py ' + DirInput + FileNamePrefix + '.zip ' + ProjectIDToUse + ' 1 ' + PopulationPrefix + ' ' + OverWriteFilesOrReconstructFromTraceback + ' 0 ' + PopulationRepetitionsOverride + ' None ' + PopulationIDToUse + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_' + PopulationPrefix + '.zip' + ' ' + DirPhase0 + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_' + PopulationPrefix + '_TraceBack.txt' + ' ' + DirPhase0 + '\n'
+            else:
+                ScriptToRun = ScriptToRun + 'echo "Phase0 disabled by request"\n'
+            print '#'*70
+            print 'Running the following job command:'
+            print JobEnv
+            print 'With the script:'
+            print ScriptToRun
+            # Actual script To Run
+            if DebugRun:
+                (CommandStdOut, CommandStdErr) = ('Debug Mode','')
+            else:
+                (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
+                if CommandStdErr!='':
+                    print '!'*10 + 'ERROR DETECTED' + '!'*10
+                    print CommandStdErr
+                    ErrorCount = ErrorCount + 1
+            JobCount[0] += 1
+            print 'Out:'
+            print CommandStdOut
+
+
+
+
+
 
 # Process Phase 1
 if RunPhase1A or RunPhase1B:
@@ -354,6 +417,7 @@ if RunPhase1A or RunPhase1B:
     for (Variation, VariationEnum) in sorted(SimulationVariationCodes.iteritems(), key = lambda Entry:Entry[1]):
         for RepeatEnum in range(Repetitions):
             (ProjectIDToUse, ModelIDToUse, PopulationIDToUse, ValueSeperation1, ValueSeperation2, ValueSeperation3, ValueSeperation4, ValueSeperation5, ValueSeperation6) = Variation
+            PopulationPrefix = (PrefixFileNameFormat%(ProjectIDToUse.strip(),PopulationIDToUse.strip(),RepeatEnum)).replace('[','_').replace(']','_')
             RunningIndex = ((10**CodeDigitsForVariations) + (VariationEnum)) * 10**CodeDigitsForRepetitions + RepeatEnum
             JobEnv = 'qsub ' + Phase1Environemnt
             if 'NoLog' not in DiskUsage:
@@ -361,7 +425,7 @@ if RunPhase1A or RunPhase1B:
             if 'NoErr' not in DiskUsage:
                 JobEnv = JobEnv + ' -e ' + DirErr + 'Out'+str(RunningIndex)+'_'+str(RepeatEnum) +'.err'
             JobEnv = JobEnv + ' -N ' + JobName + 'V' + str(VariationEnum) + 'R' +str(RepeatEnum)
-            #--dependency=singleton
+            JobEnv = JobEnv + ' -hold_jid "' + JobName + PopulationPrefix +'"'
             ScriptToRun = '#!/bin/bash\n'
             ScriptToRun = ScriptToRun + 'echo "Start Variation ' + str(VariationEnum) + ' Repetition ' + str(RepeatEnum) + '"\n'
             # Run the simulation
@@ -371,14 +435,15 @@ if RunPhase1A or RunPhase1B:
                     OverWriteFilesOrReconstructFromTraceback = 'R'
                 else:
                     OverWriteFilesOrReconstructFromTraceback = 'Y'
-                ScriptToRun = ScriptToRun + 'python MultiRunSimulation.py ' + DirInput + FileNamePrefix + '.zip ' + ProjectIDToUse + ' 1 ' + str(RunningIndex) + ' ' + OverWriteFilesOrReconstructFromTraceback + ' ' + SimulationTimeOverride  + ' ' + PopulationRepetitionsOverride + ' ' + ModelIDToUse + ' ' + PopulationIDToUse + '   ' + ValueSeperation1 + ' ' + ValueSeperation2 + ' ' + ValueSeperation3 + ' ' + ValueSeperation4 + ' ' +  ValueSeperation5 + ' ' + ValueSeperation6 + '\n'
-                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_'+ str(RunningIndex) + '.zip' + ' ' + DirPhase1A + '\n'
-                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_'+ str(RunningIndex) + '_TraceBack.txt' + ' ' + DirPhase1A + '\n'
+                # Use the previously created population in stage 0
+                ScriptToRun = ScriptToRun + 'python MultiRunSimulation.py ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix +'.zip ' + ProjectIDToUse + ' 1 ' + str(RunningIndex) + ' ' + OverWriteFilesOrReconstructFromTraceback + ' ' + SimulationTimeOverride  + ' 1 ' + ModelIDToUse + ' -1 ' + ValueSeperation1 + ' ' + ValueSeperation2 + ' ' + ValueSeperation3 + ' ' + ValueSeperation4 + ' ' +  ValueSeperation5 + ' ' + ValueSeperation6 + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '.zip' + ' ' + DirPhase1A + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '_TraceBack.txt' + ' ' + DirPhase1A + '\n'
             else:
                 ScriptToRun = ScriptToRun + 'echo "Phase1A disabled by request"\n'
             # Write the command that converts the zip file to results csv report
             if RunPhase1B:
-                ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py ' + DirPhase1A + FileNamePrefix + '_'+ str(RunningIndex) + '.zip 1 ' + ReportFilterFileName + ' ' + DirPhase1B + FileNamePrefix + '_'+ str(RunningIndex) + (' y' * ('NoZip' in DiskUsage)) + '\n'
+                ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py ' + DirPhase1A + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '.zip 1 ' + ReportFilterFileName + ' ' + DirPhase1B + FileNamePrefix + '_'+ str(RunningIndex) + (' y' * ('NoZip' in DiskUsage)) + '\n'
             else:
                 ScriptToRun = ScriptToRun + 'echo "Phase1B disabled by request"\n'
             print '#'*70
@@ -395,6 +460,7 @@ if RunPhase1A or RunPhase1B:
                     print '!'*10 + 'ERROR DETECTED' + '!'*10
                     print CommandStdErr
                     ErrorCount = ErrorCount + 1
+            JobCount[1] += 1
             print 'Out:'
             print CommandStdOut
 
@@ -441,6 +507,7 @@ if RunPhase2:
                     # Normal response is "Your job # ("Name") was submitted"
                     print '!'*10 + 'POSSIBLE ERROR - NO SUBMITTED JOB DETECTED' + '!'*10
                     ErrorCount = ErrorCount + 1
+        JobCount[2] += 1
         print 'Out:'
         print CommandStdOut
 
@@ -577,7 +644,7 @@ if Scenario in [Scenario]:
     PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly.pdf " + TempFilePrefix + "_Temp_Yearly.plt\n")
     
     if len(Stratifications) >1:
-        # Create the diabetic stratified plots
+        # Create the stratified plots
         PlotInstructions = [PlotFilter, PlotTitles[1] + PlotTitles[2], PlotStyles]
         TempFile = open(TempFilePrefix+'_Temp_Yearly_Strat.plt','w')
         TempFile.write(str(PlotInstructions))
@@ -600,7 +667,7 @@ if Scenario in [Scenario]:
             if len(Stratifications) >1:
                 # Isolate population Titles to show from the list by title
                 PlotTitlesToUse = [Entry for Entry in PlotTitles[1] + PlotTitles[2] if ((PopulationTitleToUse+' ') in Entry)]
-                # Create the diabetic stratified plots
+                # Create the stratified plots
                 PlotInstructions = [PlotFilter, PlotTitlesToUse, PlotStyles]
                 TempFile = open(TempFilePrefix+'_Temp_Yearly_Strat_'+PopulationTitleToUse+'.plt','w')
                 TempFile.write(str(PlotInstructions))
@@ -641,6 +708,7 @@ if RunPhase3:
             print '!'*10 + 'ERROR DETECTED' + '!'*10
             print CommandStdErr
             ErrorCount = ErrorCount + 1
+    JobCount[3] += 1
     print 'Out:'
     print CommandStdOut
 
@@ -658,13 +726,39 @@ if RunPhase4A:
         ScriptToRun = ScriptToRun + 'echo "Post Processing Final Report"\n'
         ScriptToRun = ScriptToRun + 'python AnalyzeSimulationResults.py ' + DirPhase3 + FileNamePrefix + '_Out.csv ' + ValidationQueryFile + ' ' + DirPhase4 + 'QueryOut_' + FileNamePrefix + '_' + ValidationQueryFile + '\n'
         ScriptList.append(ScriptToRun)
-    
 if RunPhase4B:
+        # AnalyzePopulationGeneration.py is not part of the core MIST 
+        # distribution. It is intended for analysis of population generation. 
+        # Replace this command with your own processing mechanism.
+        ScriptToRun = '#!/bin/bash\n'
+        ScriptToRun = ScriptToRun + 'echo "Post Processing Population Report"\n'
+        ScriptToRun = ScriptToRun + 'python AnalyzePopulationGeneration.py ' + DirPhase4 + 'PopulationQueryOut_' + FileNamePrefix 
+        for (ProjectIDToUse, PopulationIDToUse) in PopulationsGenerated:
+            for RepeatEnum in range(Repetitions):
+                PopulationPrefix = (PrefixFileNameFormat%(ProjectIDToUse.strip(),PopulationIDToUse.strip(),RepeatEnum)).replace('[','_').replace(']','_')
+                InputLogFileName = DirLog + 'Out'+ PopulationPrefix +'_'+str(RepeatEnum) +'.log'
+                ScriptToRun = ScriptToRun + ' ' + InputLogFileName
+        ScriptToRun = ScriptToRun + '\n'
+        ScriptList.append(ScriptToRun)    
+if RunPhase4C:
     for PlotStr in PlotStrList:
         ScriptToRun = '#!/bin/bash\n'
         ScriptToRun = ScriptToRun + 'echo "Post Processing Plots from Final Report"\n'
         ScriptToRun = ScriptToRun + PlotStr
         ScriptList.append(ScriptToRun)
+if RunPhase4D:
+        ScriptToRun = '#!/bin/bash\n'
+        ScriptToRun = ScriptToRun + 'echo "Performing Additional Cleanup"\n'
+        if 'NoZip' in DiskUsage: 
+            ScriptToRun = ScriptToRun + 'echo "Removing Phase0 zip files"\n'
+            for (ProjectIDToUse, PopulationIDToUse) in PopulationsGenerated:
+                for RepeatEnum in range(Repetitions):
+                    PopulationPrefix = (PrefixFileNameFormat%(ProjectIDToUse.strip(),PopulationIDToUse.strip(),RepeatEnum)).replace('[','_').replace(']','_')
+                    ZipFileName = DirPhase0 + FileNamePrefix + '_' + PopulationPrefix + '.zip'
+                    ScriptToRun = ScriptToRun + 'rm -f ' + ZipFileName + '\n'
+        ScriptToRun = ScriptToRun + '\n'
+        ScriptList.append(ScriptToRun)    
+
 
 for (ScriptEnum,ScriptToRun) in enumerate(ScriptList):
     JobEnv = 'qsub ' + Phase4Environemnt
@@ -673,7 +767,10 @@ for (ScriptEnum,ScriptToRun) in enumerate(ScriptList):
     if 'NoErr' not in DiskUsage:
         JobEnv = JobEnv + ' -e ' + DirErr + ('OutPhase4_%0.'+str(int(DB.Log10(len(ScriptList)))+1)+'i.err')%(ScriptEnum)
     JobEnv = JobEnv + ' -N ' + JobName + '_PostFinalRep'
+    # Wait for the final rep job
     JobEnv = JobEnv + ' -hold_jid "' + JobName + '_FinalRep"'
+    # Also wait for the popualtion jobs to finish
+    JobEnv = JobEnv + ' -hold_jid "' + JobName + 'P*"'
 
     print '#'*70
     print 'Running the following job command:'
@@ -691,6 +788,7 @@ for (ScriptEnum,ScriptToRun) in enumerate(ScriptList):
             print '!'*10 + 'ERROR DETECTED' + '!'*10
             print CommandStdErr
             ErrorCount = ErrorCount + 1
+    JobCount[4] += 1
     print 'Out:'
     print CommandStdOut
 
@@ -701,8 +799,7 @@ print '#'*70
 print 'Scenario is: ' + Scenario
 print 'Total Number of Variations is %i' % len(SimulationVariationCodes)
 print 'Total Number of Repetitions is %i' % Repetitions
-CountVec = (len(SimulationVariationCodes)*Repetitions, len(SimulationVariationCodes), 1, len(ScriptList))
-print 'Total Number of Jobs is %i = %i + %i + %i + %i for phases 1,2,3,4' %( (sum(CountVec),) + CountVec )
+print 'Total Number of Jobs is %i = %i + %i + %i + %i + %i for phases 0-4' %( (sum(JobCount),) + tuple(JobCount) )
 print '#'*70
 
 if ErrorCount > 0:

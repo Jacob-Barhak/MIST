@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -61,7 +61,7 @@ import wx.grid
 import os
 import copy
 
-class MainFrame(wx.Frame):
+class MainFrame(cdml.CDMWindow, wx.Frame):
     """ Form class to display the simulation result"""
 
     def __init__(self, mode=None, data=None, type=None, id_prj=0, *args, **kwds):
@@ -195,7 +195,7 @@ class MainFrame(wx.Frame):
         self.grid.ClearGrid()           # Clear current values in grid control
 
 
-        dlg = wx.ProgressDialog("Load Data",
+        dlg = wx.GenericProgressDialog("Load Data",
                                 "Loading Data. Please wait......",
                                 maximum = no_col + no_row,
                                 parent=self,
@@ -342,12 +342,12 @@ class MainFrame(wx.Frame):
 
 
 if __name__ == "__main__":
-    DB.LoadAllData('Testing.zip')
+    DB.LoadAllData('InData' + DB.os.sep + 'Testing.zip')
     ProjectKeyToShow = min(DB.Projects.keys())
     SimulationScriptFullPath = DB.Projects[ProjectKeyToShow].CompileSimulation()
     ResultInfo = DB.Projects[ProjectKeyToShow].RunSimulationAndCollectResults(SimulationScriptFullPath)
-    app = wx.PySimpleApp(0)
-    wx.InitAllImageHandlers()
+    app = wx.App(0)
+    #wx.InitAllImageHandlers() Deprecated
     frame_1 = MainFrame(id_prj=ProjectKeyToShow, parent=None)
     app.SetTopWindow(frame_1)
     frame_1.Center()

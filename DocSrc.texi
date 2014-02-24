@@ -1,6 +1,6 @@
 \input texinfo @c -*-texinfo-*-
 @c %**start of header
-@c ver 48.0 16-Sep-2013  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
+@c ver 52.0 20-Feb-2014  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
 @setfilename Documentation.info
 @settitle MIcroSimulation Tool (MIST)
 @c @setcontentfsaftertitlepage
@@ -9,7 +9,7 @@
 
 @copying
 
-Copyright @copyright{} 2013 Jacob Barhak
+Copyright @copyright{} 2013-2014 Jacob Barhak
 
 Copyright @copyright{} 2009-2012 The Regents of the University of Michigan
 
@@ -163,6 +163,8 @@ MIST only deals with Monte-Carlo Micro-Simulation and does not offer Markov Esti
 
 @itemize @bullet
 @item
+Improved population generation with genetic algorithm optimization towards objectives
+@item
 MIST runs over the cloud and on sun Grid Engine clusters
 @item
 Reproducibility and traceability were improved and tested
@@ -186,6 +188,11 @@ The system needs scientific Python environment which supports Python 2.7 and inc
 <a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a>
 @end html
 @item
+The system requires the library Inspyred: Bio-inspired Algorithms in Python version 1.0:
+@html
+<a href='http://inspyred.github.io/' target="_blank"> http://inspyred.github.io/ </a>
+@end html
+@item
 The system can also run simulations in High Performance Computing (HPC) environment using Sun Grid Engine or the Amazon Elastic Compute Cloud. This is highly specialized and requires experts for the setup.
 @end itemize
 
@@ -193,38 +200,26 @@ The system can also run simulations in High Performance Computing (HPC) environm
 
 @section Software Installation
 
+The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) for advanced and expert users. 
+For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was tested there. For HPC features you will need to use a Linux installation.
 
-The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) that are for advanced and expert users. For novice users it is recommended that you use Quick Installation for Windows since it is the simplest and therefore described first.
-
-@subheading Quick and Simple Installation for Windows Users:
-@enumerate
-@item
-Download and Install Python(x,y) version 2.7 or higher. Here is a direct link
-@html
-<a href='http://pythonxy.googlecode.com/files/Py(x,y)-2.7.3.1.exe' target="_blank"> http://pythonxy.googlecode.com/files/Py(x,y)-2.7.3.1.exe </a>
-@end html
-. Other versions can be found at 
-@html
-<a href='http://code.google.com/p/pythonxy/wiki/Downloads' target="_blank"> http://code.google.com/p/pythonxy/wiki/Downloads </a>
-@end html
-@item
-Download the file MIST-master.zip from github by typing the following URL in a web browser: 
-@html
-<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a>
-@end html
-@item
-Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. You can do this on windows by right clicking the archive and choosing Extract All.
-@end enumerate
-
-@subheading Expert Installation for Linux/OSX:
+@subheading Installation Instructions:
 @enumerate
 @item
 Download and Install Anaconda from 
 @html
-<a href='https://store.continuum.io/' target="_blank"> https://store.continuum.io/ </a>
+<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a>
 @end html
 @item
-Install WxPython - this installation may require expert assistance and can be found at <a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a>  
+Install the Inspyred library by typing the following text in a command terminal: @code{pip install inspyred} . For additional details see:
+@html
+<a href='http://inspyred.github.io/overview.html#installation' target="_blank"> http://inspyred.github.io/overview.html#installation </a>
+@end html
+@item
+Install WxPython library by typing the following text in a command terminal:  @code{conda install wxpython}
+@html
+<a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a>  
+@end html
 @item
 Download the file MIST-master.zip from github by typing the following URL in a web browser: 
 @html
@@ -237,9 +232,14 @@ Unzip the file MIST-master.zip in a directory of your choice. This will be your 
 @subheading Alternative Expert Installation Instructions:
 @enumerate
 @item
-Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in 
+Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, pip, and nose. You can choose from a list of those in 
 @html
-<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a> . You can also Install Python, numpy, matplotlib, and nose separately.
+<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a> . You can also Install Python, numpy, matplotlib, pip and nose separately. 
+@end html
+@item
+Install the Inspyred library by typing the following text in a command terminal: @code{pip install inspyred} . For additional details see:
+@html
+<a href='http://inspyred.github.io/overview.html#installation' target="_blank"> http://inspyred.github.io/overview.html#installation </a>
 @end html
 @item
 Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at 
@@ -260,17 +260,17 @@ Unzip the file MIST-master.zip in a directory of your choice. This will be your 
 @item
 From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly.
 @item
-Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-load the file @file{Testing.zip} to see the examples.
+Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file->load the file @file{Testing.zip} in the @file{InData} sub directory to see the examples.
 @end enumerate
 
 
 
-If you are an expert you can install and setup MIST to work in High Performance Computing (HPC) environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance.
+If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance.
 
 @subheading To run MIST Over the Cloud a More Complicated Setup is Needed:
 @enumerate
 @item
-Install starcluster 
+Install StarCluster 
 @html
 <a href='http://star.mit.edu/cluster/docs/latest/installation.html' target="_blank"> http://star.mit.edu/cluster/docs/latest/installation.html </a>
 @end html
@@ -282,7 +282,45 @@ Follow the instructions on
 @item
 If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine
 @item
-Use the starcluster put command to transfer MIST to the /home directory on the cluster
+Install the nfsshare.py plugin by copying the file 
+@html
+<a href='https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975' target="_blank"> https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975</a>
+@end html
+ to the StarCluster plugins directory.
+@item
+Change the config file to include all plugins of interest and add plugin parameters. At the end of setup the "Configuring StarCluster Plugins" section in the config file should have the following lines: @*
+@code{
+@*[plugin anaconda_plugin] 
+@*SETUP_CLASS = anaconda_plugin.ConfigAnaconda
+@*
+@*[plugin nfsshare]
+@*SETUP_CLASS = nfsshare.NFSSharePlugin
+@*SERVER_PATH = /mnt/vol0
+@*CLIENT_PATH = /mnt/vol0
+@*EXPORT_NFS_SETTINGS = sync,no_root_squash,no_subtree_check,rw
+@*MOUNT_NFS_SETTINGS = vers=3,user,rw,exec,noauto
+@*
+@*[plugin webapp-packages-installer]
+@*setup_class = starcluster.plugins.pypkginstaller.PyPkgInstaller
+@*packages = inspyred
+}
+
+Also, the plugins should be declatred under the scection that has your cluster name using the following line: 
+@*@code{PLUGINS = anaconda_plugin  , nfsshare , webapp-packages-installer}
+
+For additional information see the following links: 
+@*@html
+<a href='http://continuum.io/blog/starcluster-anaconda' target="_blank"> http://continuum.io/blog/starcluster-anaconda </a>
+@end html
+@*@html
+<a href='http://star.mit.edu/cluster/docs/latest/plugins/pypkginstaller.html' target="_blank"> http://star.mit.edu/cluster/docs/latest/plugins/pypkginstaller.html </a>
+@end html
+@*@html
+<a href='https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975' target="_blank"> https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975</a>
+@end html
+ 
+@item
+Use the StarCluster put command to transfer MIST to the @file{/mnt/vol0} directory on the cluster
 @end enumerate
 
 @subheading It is also possible to run MIST simulations in Multi-core environment using Sun Grid Engine. If you wish to install Sun-Grid-Engine on a single machine for testing purposes:
@@ -300,7 +338,7 @@ Follow the Quick Installation for Linux/OSX from above
 
 @section Running the Software - Simple Start
 
-Open the working directory created during installation and double-click @file{Main.py}. The main form of the system, titled 'Indirect Estimation and Simulation Tool', will open. This is further described in the next section, @ref{Getting Started with MIST}. 
+Open a command terminal and navigate to your working directory using the @code{cd <working directory>} command then type @code{python Main.py}. The main form of the system, titled 'MIcroSimulation Tool', will open. This is further described in the next section, @ref{Getting Started with MIST}. 
 
 After you get familiar with the system and use it for a while you may expand to expert use where you can run @ref{MIST over the Cloud}.
 
@@ -780,8 +818,16 @@ Click the 'Data' button (E) to define the population characteristics and associa
 @item
 To input a population as data: Add a characteristic by selecting a parameter from the table in the lower left (D) and Click the up arrow (C). To remove a row, highlight it in (A), then click the down arrow (B). After all the population characteristics have been added, press the Data Tab (G) and fill in data for the chosen parameters for each individual. The data can also be imported from a file using the Import button - to view or change the imported data, press the data tab (G).
 @item
-To specify a population by its distribution: Add a characteristic by selecting a parameter from the table in the lower left (D). Additionally, define the distribution expression in the text box (E), or select a predefined expression parameter from the table in the lower right (F) and it will appear in (E). Click the up arrow (B) to add a row that combines the distribution and the parameter. To remove a row from (A) highlight it, then click the down arrow (C).
+To specify a population by its distribution: Add a characteristic by selecting a parameter from the table in the lower left (D). Additionally, define the distribution expression in the text box (E), or select a predefined expression parameter from the table in the lower right (F) and it will appear in (E). Click the up arrow (B) to add a row that combines the distribution and the parameter. To remove a row from (A) highlight it, then click the down arrow (C). 
+@item
+To specify objectives for a distribution based population: press the Objectives tab (G) and the display will change to the image below. The Objectives will be listed as rows in the list (P). To Add an objective to the list fill in the Filter Expression (K) and Statistics Expression (L), select a Function to apply on the statistics expression (M), define the Target Value (N) and define the Weight of the objective (O), then click the up arrow (I) to add the new objective to the objective list (P). To remove an objective from the list, select it in the list (P) and then click the down arrow (J).
+@html
+<br><br><img src='Images/popobjectives.jpg'><br><br>
+@end html
 @end enumerate
+
+ 
+
 
 
 
@@ -805,7 +851,9 @@ The system will generate a new population set filled with data that was generate
 
 Note that generation of a data based population from distributions is controlled by multiple system option parameters that are listed in @ref{Parameters}.
 
-Also note that during generation of a population from distributions it is possible to have interdependent parameters that influence each other. For example, Blood Pressure may be a function of Age and Weight can be a function of Age and Height. The system will resolve these interdependencies upon generation as long as there are no circular conflicts such as A depends of B that depends back on A. Also note that parameter bounds are enforced during population generation and may skew a distribution. 
+Also note that during generation of a population from distributions it is possible to have interdependent parameters that influence each other. For example, Blood Pressure may be a function of Age and Weight can be a function of Age and Height. The system will resolve these interdependencies upon generation as long as there are no circular conflicts such as A depends of B that depends back on A. Also note that parameter bounds are enforced during population generation and may skew a distribution. Using Objectives may correct this phenomenon.
+
+Data populations generated from distributions with objectives will show fitness to objectives in the objectives tab just after creation. Yet this information will not be retained after modification.
 
 
 @node Parameters
@@ -825,36 +873,28 @@ The following parameter types can be defined by the system.
 @strong{System Options} - These names are set by the system by default; their values can be modified by the user to change functionality of the system. Here is a short description of these parameters by categories of influence:
 
 @itemize @bullet
+	@item
+	@code{ValidateDataInRuntime}: A number that defines the level of validity checking of expressions during simulation and population generation from distributions.  The following levels are supported: 
 	@itemize @bullet
 		@item
-		ValidateDataInRuntime: A number that defines the level of validity checking of expressions during simulation and population generation from distributions.  The following levels are supported: 
-		@itemize @bullet
-			@item
-			0: No validity checking. 
-			@item
-			1 or greater: Check that probabilities are within 0 and 1 and check that these sum to 1 when leaving event states and joiner states, and check that a value assigned to a parameter fits the validation rules defined for it. 
-			@item
-			2 or greater: Check that function parameter validity rules are honored during calculation of expressions - this is the default option. 
-			@item
-			3 or greater: Impose extra redundant validation checks on all phases of calculation.
-		@end itemize
+		0: No validity checking. 
+		@item
+		1 or greater: Check that probabilities are within 0 and 1 and check that these sum to 1 when leaving event states and joiner states, and check that a value assigned to a parameter fits the validation rules defined for it. 
+		@item
+		2 or greater: Check that function parameter validity rules are honored during calculation of expressions - this is the default option. 
+		@item
+		3 or greater: Impose extra redundant validation checks on all phases of calculation.
 	@end itemize
-
 	@item
-	NumberOfErrorsConsideredAsWarningsForSimulation: The number of times the system will accept parameter validity violation errors during simulation as warnings and will not stop simulation. When this number of errors is reached, the system will raise a fatal error to the user and stop simulation. The error messages can be seen on the console window.
-
+	@code{NumberOfErrorsConsideredAsWarningsForSimulation}: The number of times the system will accept parameter validity violation errors during simulation as warnings and will not stop simulation. When this number of errors is reached, the system will raise a fatal error to the user and stop simulation. The error messages can be seen on the console window.
 	@item
-	NumberOfTriesToRecalculateSimulationStep: The number of times that the system will force recalculation of the same time step if an error was raised during this time step. If unsuccessful after this number of recalculations then force recalculation of the entire individual from the first time step.
-
+	@code{NumberOfTriesToRecalculateSimulationStep}: The number of times that the system will force recalculation of the same time step if an error was raised during this time step. If unsuccessful after this number of recalculations then force recalculation of the entire individual from the first time step.
 	@item
-	NumberOfTriesToRecalculateSimulationOfIndividualFromStart: The number of times an individual will be recalculated from start in case errors appeared during simulation that forced restarting calculations. If this number of tries is reached, a fatal error is raised that stops simulation.
-
+	@code{NumberOfTriesToRecalculateSimulationOfIndividualFromStart}: The number of times an individual will be recalculated from start in case errors appeared during simulation that forced restarting calculations. If this number of tries is reached, a fatal error is raised that stops simulation.
 	@item
-	SystemPrecisionForProbabilityBoundCheck: This is a very small tolerance number that defines how accurate will be fatal error checks for probabilities if ValidateDataInRuntime>=1. This number allows overlooking machine precision issues. 
-
+	@code{SystemPrecisionForProbabilityBoundCheck}: This is a very small tolerance number that defines how accurate will be fatal error checks for probabilities if ValidateDataInRuntime>=1. This number allows overlooking machine precision issues. 
 	@item
-	RepairPopulation: This integer defines the level the system will try to correct a population set to fit a model before simulation. The following levels are supported:
-
+	@code{RepairPopulation}: This integer defines the level the system will try to correct a population set to fit a model before simulation. The following levels are supported:
 	@itemize @bullet
 		@item
 		0: No repairs are made and errors are generated. This forces the user to match population set parameters and model parameters very carefully, including process names. 
@@ -863,10 +903,8 @@ The following parameter types can be defined by the system.
 		@item
 		10 or Greater: The system will remove individuals with empty values in the population data before simulation, and therefore avoid generating an error that will stop the simulation process.
 	@end itemize
-
 	@item
-	VerboseLevel: Defines how much information to output during simulation. 
-
+	@code{VerboseLevel}: Defines how much information to output during simulation. 
 	@itemize @bullet
 		@item
 		Here are supported levels for output from population generation from distributions:
@@ -879,10 +917,8 @@ The following parameter types can be defined by the system.
 		10 or greater: Print an announcement each time a new individual starts generation. Also print a generation summary at the end of of population generation from distributions.
 		@end itemize
 	@end itemize
-
 	@item
 	Here are supported levels for output from bridging population set and model definitions before simulation:
-
 	@itemize @bullet
 		@item
 		1 or greater: Print summary of the bridge process.
@@ -891,7 +927,6 @@ The following parameter types can be defined by the system.
 		@item
 		10 or greater: Show each process set by the system due to a child state.
 	@end itemize
-
 	@item
 		Here are supported levels for output from simulation:
 		@itemize @bullet
@@ -908,16 +943,32 @@ The following parameter types can be defined by the system.
 			@item
 			40 or greater: Print an announcement for each state in the State Processing Queue (SPQ). This is highly advanced and requires deep understanding of the system.
 		@end itemize
-
 	@item
-	RandomSeed: Defines a random seed to start both population generation and simulation. NaN is used to indicate that system time will be used as a random seed - essentially making numbers different each simulation.
-
+	@code{RandomSeed}: Defines a random seed to start both population generation and simulation. NaN is used to indicate that system time will be used as a random seed - essentially making numbers different each simulation.
 	@item
-	NumberOfErrorsConsideredAsWarningsForPopulationGeneration: The number of times the system will accept boundary violation errors as warnings and will not stop during population generation from distributions. When this number or errors is reached, the system will raise a fatal error to the user. Error messages can be found on the console window.
-
+	@code{NumberOfErrorsConsideredAsWarningsForPopulationGeneration}: The number of times the system will accept boundary violation errors as warnings and will not stop during population generation from distributions. When this number or errors is reached, the system will raise a fatal error to the user. Error messages can be found on the console window.
 	@item
-	NumberOfTriesToRecalculateIndividualDuringPopulationGeneration: The number of time the system will try to recalculate the same individual if a non fatal error is encountered during calculation of that individual. Once this number is reached a fatal error will be raised and generation of data from distributions will stop.
-
+	@code{NumberOfTriesToRecalculateIndividualDuringPopulationGeneration}: The number of time the system will try to recalculate the same individual if a non fatal error is encountered during calculation of that individual. Once this number is reached a fatal error will be raised and generation of data from distributions will stop.
+	@item
+	@code{GeneticAlgorithmCandidatesPerSelectedIndividual}: Defines the number of candidates to generate for each individual if objectives are defined. If this number is X and an a population of size 100 is requested then the initial pool of candidates will be 100*X from which the genetic algorithm will select the 100 best individuals that fit the objectives.
+	@item
+	@code{GeneticAlgorithmSolutionPopulationSize}: The number of candidate solutions in each generation. A solution is a selection of individuals from the candidate pool group.
+	@item
+	@code{GeneticAlgorithmMutationRate}: The probability of an individual to change to another candidate in any given solution.
+	@item
+	@code{GeneticAlgorithmMaxEvalsTerminator}: A stop criteria for the genetic algorithm defined by the maximal number of evaluations of candidate solutions. This stop criteria is similar to limiting the overall number of objective computations.
+	@item
+	@code{GeneticAlgorithmMaxStableGenerationCountTerminator}: A stop criteria for the genetic algorithm defining the number of consecutive generations that the best solution does not change before stopping. Using a higher number here and in @code{GeneticAlgorithmMaxEvalsTerminator} improves the probability of reaching an optimal solution - yet this will take much more time. Note that stop criteria compete.
+	@item
+	@code{GeneticAlgorithmTournamentSize}: The number of tournaments used to define the population of the next generation. For additional information see: 
+	@html
+	<a href='http://inspyred.github.io/reference.html#selectors-parent-selection-methods' target="_blank"> http://inspyred.github.io/reference.html#selectors-parent-selection-methods</a>
+	@end html
+	@item
+	@code{GeneticAlgorithmNumberOfElitesToSurviveIfBetterThanWorstOffspring}: The number of solutions from previous generation to be kept in the next generation if better than offspring. If this number is at least 1 then it is guaranteed that the best solution in each generation is at least as good as the previous generation. For additional information see: 
+	@html
+	<a href='http://inspyred.github.io/reference.html#replacers-survivor-replacement-methods' target="_blank"> http://inspyred.github.io/reference.html#replacers-survivor-replacement-methods</a>
+	@end html
 @end itemize
 
 
@@ -1218,9 +1269,9 @@ Select the calculation method to apply to the column from the drop box (H) or le
 @item
 @strong{Auto Detect}: System automatically selects the calculation method from the list below according to the parameter characteristics and its use in the project. If this option is selected and there is ambiguity as to the calculation method required, the system will place an * in the report on this column and place a warning at the end of the report. A user should then verify that the calculation is proper and if needed manually select the calculation method for this column.
 @item
-@strong{@emph{Func} Over All Records} - will apply @emph{Func} to values from all the records in the summary interval. When @emph{Func}=Sum, the system will sum the column values for all the records in the summary interval. It is useful to count the number of occurrences of a state in a population in a given summary interval. This is the default option for Booleans that are not demographics, e.g. State indicators. When @emph{Func}=Average, the system will average the column values for all the records in the summary interval. It is useful to find the average value of a covariate changing during simulation in a given summary interval. It is equivalent to dividing the sum over all records by the total number of all records in the interval. This is the default option for non-Booleans that are not demographics, i.e. may be affected during the simulation. When @emph{Func} = STD, sample standard deviation is calculated using the method of provisional means. When @emph{Func} = Min or when @emph{Func} = Max then the minimal or maximal value of all records in the interval is reported. @emph{Func} = Valid Count will return the non NaN count.
+@strong{@emph{Func} Over All Records} - will apply @emph{Func} to values from all the records in the summary interval. When @emph{Func}=Sum, the system will sum the column values for all the records in the summary interval. It is useful to count the number of occurrences of a state in a population in a given summary interval. This is the default option for Booleans that are not demographics, e.g. State indicators. When @emph{Func}=Average, the system will average the column values for all the records in the summary interval. It is useful to find the average value of a variable changing during simulation in a given summary interval. It is equivalent to dividing the sum over all records by the total number of all records in the interval. This is the default option for non-Booleans that are not demographics, i.e. may be affected during the simulation. When @emph{Func} = STD, sample standard deviation is calculated using the method of provisional means. When @emph{Func} = Min or when @emph{Func} = Max then the minimal or maximal value of all records in the interval is reported. @emph{Func} = Valid Count will return the non NaN count.
 @item
-@strong{@emph{Func} Over Demographics} - will apply @emph{Func} to values in records entering the summary interval. When @emph{Func}=Sum, the system will sum the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographics values should not change during simulation steps. This option can be used to represent the number of occurrences of a state in a population entering the summary interval. This is the default option for Booleans that are unaffected by the simulation i.e. non state indicators not in the affected list of the simulation project. When @emph{Func} = Average, the system will average the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographic values should not change during simulation steps. This option can be used to represent the average of a covariate in a population entering the summary interval. It is equivalent to dividing the sum over demographics by the total number of records entering the interval. This is the default option for non-Boolean parameters that are in the affected list of the simulation. When @emph{Func} = STD, sample standard deviation is calculated using the method of provisional means. When @emph{Func} = Min or when @emph{Func} = Max then the minimal/maximal value of demographics records entering the interval is reported. @emph{Func} = Valid Count will return the non NaN count.
+@strong{@emph{Func} Over Demographics} - will apply @emph{Func} to values in records entering the summary interval. When @emph{Func}=Sum, the system will sum the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographics values should not change during simulation steps. This option can be used to represent the number of occurrences of a state in a population entering the summary interval. This is the default option for Booleans that are unaffected by the simulation i.e. non state indicators not in the affected list of the simulation project. When @emph{Func} = Average, the system will average the column values for the first year in the summary interval. Demographic characteristics are considered as the value defined in the first year in the interval. Demographic values should not change during simulation steps. This option can be used to represent the average of a variable in a population entering the summary interval. It is equivalent to dividing the sum over demographics by the total number of records entering the interval. This is the default option for non-Boolean parameters that are in the affected list of the simulation. When @emph{Func} = STD, sample standard deviation is calculated using the method of provisional means. When @emph{Func} = Min or when @emph{Func} = Max then the minimal/maximal value of demographics records entering the interval is reported. @emph{Func} = Valid Count will return the non NaN count.
 @item
 @strong{@emph{Func} Over Last Observations Carried Forward} - will apply @emph{Func} to the last record of each individual. The max time record, i.e. either the record in the year of termination, or the last year record, is considered. Note that every individual will have exactly one record for each repetition. @emph{Func} can be Sum, Average, STD, Min, Max, Valid Count.
 @item
@@ -1409,7 +1460,7 @@ When the script is invoked, it will ask for the following parameters in this ord
 @item
 @code{Repetitions}: This is an optional integer that defines the number of times to repeat the entire simulation. For each repetition, the system will create a new output database file with simulation results for the project requested. Each new file will have the same file name as the original data definitions @file{zip} file with an extension of a @code{_#} where @code{#} will be the number of the simulation. Each such file will be a copy of the original database with a single result set. If @code{Repetitions} are omitted the default is 100 repetitions.
 @item
-@code{StartIndex}: This is an optional integer that indicates the first suffix counter to be added to the file generated with the results. By default, this number will be 0, meaning that the results will be saved in a filename with the same name as the database name followed by an underscore and 0 for the first file and subsequent files generated will continue counting from this number. This number is useful if we want to add additional simulations after N simulations have already been generated by @file{MultiRunSimulation.py} and we want to run additional simulations where filenames start their index after N simulations. This way we can save time, by running the simulations on different machines in parallel.
+@code{StartIndex}: This is an optional integer that indicates the first suffix counter to be added to the file generated with the results. By default, this number will be 0, meaning that the results will be saved in a filename with the same name as the database name followed by an underscore and 0 for the first file and subsequent files generated will continue counting from this number. This number is useful if we want to add additional simulations after N simulations have already been generated by @file{MultiRunSimulation.py} and we want to run additional simulations where filenames start their index after N simulations. This way we can save time, by running the simulations on different machines in parallel. If a string is provided rather than a number the output will use this string as a suffix to the filename.
 @item
 @code{OverWriteFilesOrReconstructFromTraceback}: This is an optional letter, If y (default), then output files will overwrite old ones. If r then reconstruct simulation from TraceBack files in the Temp directory. The reproducibility option is useful for validation or reconstruction or simulation.
 @item
@@ -1672,6 +1723,8 @@ Note, however, that contrary to other scripts that receive input parameters when
 
 @itemize @bullet
 @item
+Phase 0: Generate all the populations that will be used in simulations.
+@item
 Phase 1: Run simulation repetitions in a parallel and extract a CSV report for each run.
 @itemize @bullet
 @item
@@ -1684,12 +1737,16 @@ Phase 2: Collect all CSV files using @file{MultiRunSimulationStatisticsAsCSV.py}
 @item
 Phase 3: Create summary report - this combines all simulations and possibly a reference file using @file{AssembleReportCSV.py} to create a CSV file for summary results and a CSV file for yearly results. These reports will be assembled from all simulations and include all scenario variations in a readable manner.
 @item
-Phase 4: Perform post processing operations on assembled report.
+Phase 4: Perform additional post processing operations.
 @itemize @bullet
 @item
 Phase 4A: Analyze the results - this requires a user specific program that is not provided with the MIST distribution.
 @item
-Phase 4B: Generate graphical plots using @file{CreatePlotsFromCSV.py} that show the results graphically. Multiple plots are generated in parallel - each a different job.
+Phase 4B: Analyze the populations - this requires a user specific program that is not provided with the MIST distribution.
+@item
+Phase 4C: Generate graphical plots using @file{CreatePlotsFromCSV.py} that show the results graphically. Multiple plots are generated in parallel - each a different job.
+@item
+Phase 4D: Final Cleanup - perform additional cleanup steps not carried initially
 @end itemize
 @end itemize
 
@@ -1704,9 +1761,9 @@ Using these phases, the system can run many simulations in parallel and receive 
 @item
 @code{MailFinalResultsTo}: The email address you want the results to be sent to.
 @item
-@code{Phase1Environemnt}, @code{Phase2Environemnt}, @code{Phase3Environemnt}, @code{Phase4Environemnt}: the SLURM environment parameters for the SLURM @code{sbatch} command you want the simulations to run with. This includes time, memory, machine allocation and many other parameters that should be determined together with the cluster administrator.
+@code{Phase0Environemnt}, @code{Phase1Environemnt}, @code{Phase2Environemnt}, @code{Phase3Environemnt}, @code{Phase4Environemnt}: the SLURM environment parameters for the SLURM @code{sbatch} command you want the simulations to run with. This includes time, memory, machine allocation and many other parameters that should be determined together with the cluster administrator.
 @item
-@code{RunPhase1A}, @code{RunPhase1B}, @code{RunPhase2}, @code{RunPhase3}, @code{RunPhase4A}, @code{RunPhase4B}: are Boolean parameters that allow the user to control what phases to run. These should normally be all set to @code{True}. However, in some cases, it is useful to have this control, especially in cases where recovery is needed.
+@code{RunPhase0},@code{RunPhase1A}, @code{RunPhase1B}, @code{RunPhase2}, @code{RunPhase3}, @code{RunPhase4A}, @code{RunPhase4B}: are Boolean parameters that allow the user to control what phases to run. These should normally be all set to @code{True}. However, in some cases, it is useful to have this control, especially in cases where recovery is needed.
 @item
 @code{DebugRun}: Defines level of debugging: If =0 - Normal run; If >=1 - commands are printed and not passed to the OS, Directories not created; If >=2 skipped report scenarios are printed - possibly very long list.
 @item
@@ -1730,7 +1787,7 @@ Yet for initial runs it is recommended to leave all files and use
 @item
 @code{RunOnlyTheseScenarioEnumRanges}: For reconstruction purposes in case of a bad run. If not an empty list rerun only specified scenario ranges, where each range is (Start, End). Only variations in between where Start<=VariationEnum<=End are executed. Note that all repetitions for the variation will be rerun and codes will remain the same so results can be remerged into a previous run. Note that generating plots for these partial runs may not make sense and phase 4 may generate a report that will need manual merging with a previous incomplete report. also note that the enumerated variation name appears on reports with a leading 1 and zeros and (Start,End) tuples will have this prefix as well.
 @item
-@code{DirInput}, @code{DirLog}, @code{DirErr}, @code{DirPhase1A}, @code{DirPhase1B}, @code{DirPhase2}, @code{DirPhase3}, @code{DirPhase4}, @code{DirTemp}, @code{Dirs}: Directory names to organize the files.
+@code{DirInput}, @code{DirLog}, @code{DirErr}, @code{DirPhase0}, @code{DirPhase1A}, @code{DirPhase1B}, @code{DirPhase2}, @code{DirPhase3}, @code{DirPhase4}, @code{DirTemp}, @code{Dirs}: Directory names to organize the files.
 @item
 @code{ReproduceResultsFromTraceback}: A Boolean that controls reproducibility. If False a new simulation is created. If True the simulation is reproduces from TraceBack files in the Temp directory. 
 @item
@@ -1870,29 +1927,29 @@ For our example we will use the command :
 In this example the name of the cluster we start is mycluster and it is composed of 5 nodes. This operation may take a while and you can later see the nodes through the Amazon EC2 web interface.
 
 @item
-Upload the MIST system and associated model files to the cluster @code{/home} directory. Typically we will organize all the files in the working directory so we can make all transfers with a single @code{put} command. 
+Upload the MIST system and associated model files to the cluster @code{/mnt/vol0} directory. Typically we will organize all the files in the working directory so we can make all transfers with a single @code{put} command. 
 
 In our example, use the command:
 
-@code{starcluster put mycluster Desktop\MIST /home}
+@code{starcluster put mycluster Desktop\MIST /mnt/vol0}
 
-Note that the @file{/home} directory must be the destination since it is shared between all cluster machines. Also note that @code{Desktop\MIST} is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
+Note that the @file{/mnt/vol0} directory must be the destination since it is shared between all cluster machines. Also note that @code{Desktop\MIST} is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
 
 @item
-Run the simulations. You will have to access the @file{/home} directory on the cloud and then run the python script and this should be done with one command line. 
+Run the simulations. You will have to access the @file{/mnt/vol0} directory on the cloud and then run the python script and this should be done with one command line. 
 
 To do this, you should run the following command exactly as it appears: 
 
-@code{starcluster sshmaster mycluster "cd /home/MIST && python ClusterRun.py"}
+@code{starcluster sshmaster mycluster "cd /mnt/vol0/MIST && python ClusterRun.py"}
 
 In this example about 200 processes will be launched on 5 machines. You should see printout of commands launched.
 
 @item
 While the system is running you can check upon the status of the simulation. 
 
-You can look at the result files accumulating in the @code{/home} directory by typing the command: 
+You can look at the result files accumulating in the @code{/mnt/vol0} directory by typing the command: 
 
-@code{starcluster sshmaster mycluster "ls /home/MIST/Phase1A"}
+@code{starcluster sshmaster mycluster "ls /mnt/vol0/MIST/Phase1A"}
 
 To see the remaining jobs the cluster needs to run use the command: 
 
@@ -1906,7 +1963,7 @@ When the simulation is done, you can now retrieve the results using the @code{ge
 
 In our example, we will retrieve only the result files to the user home directory by using the command: 
 
-@code{starcluster get mycluster /home/MIST/Phase*/Testing_Out* .}
+@code{starcluster get mycluster /mnt/vol0/MIST/Phase*/Testing_Out* .}
 
 In our example this should retrieve 3 files with results: @file{Testing_Out.csv}, @file{Testing_Out_Yearly.pdf}, @file{Testing_Out_Yearly.csv}. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
 

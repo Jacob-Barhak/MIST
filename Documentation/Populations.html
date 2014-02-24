@@ -9,7 +9,7 @@
 <link rel="next" href="Parameters.html#Parameters" title="Parameters">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 2013 Jacob Barhak
+Copyright (C) 2013-2014 Jacob Barhak
 
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 
@@ -98,7 +98,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 <li>Enter the name for the population set in the box (C). It is also recommended that you enter notes in (F) and a reference to the source of the information in (G) since this improves tractability and improves the modeling work. 
 <li>Click the 'Data' button (E) to define the population characteristics and associated data/distributions. The following form will appear. 
 <br><br><img src='Images/popdata.jpg'><br><br><li>To input a population as data: Add a characteristic by selecting a parameter from the table in the lower left (D) and Click the up arrow (C). To remove a row, highlight it in (A), then click the down arrow (B). After all the population characteristics have been added, press the Data Tab (G) and fill in data for the chosen parameters for each individual. The data can also be imported from a file using the Import button - to view or change the imported data, press the data tab (G). 
-<li>To specify a population by its distribution: Add a characteristic by selecting a parameter from the table in the lower left (D). Additionally, define the distribution expression in the text box (E), or select a predefined expression parameter from the table in the lower right (F) and it will appear in (E). Click the up arrow (B) to add a row that combines the distribution and the parameter. To remove a row from (A) highlight it, then click the down arrow (C).
+<li>To specify a population by its distribution: Add a characteristic by selecting a parameter from the table in the lower left (D). Additionally, define the distribution expression in the text box (E), or select a predefined expression parameter from the table in the lower right (F) and it will appear in (E). Click the up arrow (B) to add a row that combines the distribution and the parameter. To remove a row from (A) highlight it, then click the down arrow (C). 
+<li>To specify objectives for a distribution based population: press the Objectives tab (G) and the display will change to the image below. The Objectives will be listed as rows in the list (P). To Add an objective to the list fill in the Filter Expression (K) and Statistics Expression (L), select a Function to apply on the statistics expression (M), define the Target Value (N) and define the Weight of the objective (O), then click the up arrow (I) to add the new objective to the objective list (P). To remove an objective from the list, select it in the list (P) and then click the down arrow (J). 
+<br><br><img src='Images/popobjectives.jpg'><br><br>
      </ol>
 
 <h3 class="section">10.2 Removing an Entire Population</h3>
@@ -118,7 +120,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
    <p>Note that generation of a data based population from distributions is controlled by multiple system option parameters that are listed in <a href="Parameters.html#Parameters">Parameters</a>.
 
-   <p>Also note that during generation of a population from distributions it is possible to have interdependent parameters that influence each other. For example, Blood Pressure may be a function of Age and Weight can be a function of Age and Height. The system will resolve these interdependencies upon generation as long as there are no circular conflicts such as A depends of B that depends back on A. Also note that parameter bounds are enforced during population generation and may skew a distribution.
+   <p>Also note that during generation of a population from distributions it is possible to have interdependent parameters that influence each other. For example, Blood Pressure may be a function of Age and Weight can be a function of Age and Height. The system will resolve these interdependencies upon generation as long as there are no circular conflicts such as A depends of B that depends back on A. Also note that parameter bounds are enforced during population generation and may skew a distribution. Using Objectives may correct this phenomenon.
+
+   <p>Data populations generated from distributions with objectives will show fitness to objectives in the objectives tab just after creation. Yet this information will not be retained after modification.
 
    </body></html>
 

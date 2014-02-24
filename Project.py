@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -60,7 +60,7 @@ import copy
 
 import Wizard
 
-class MainFrame(wx.Frame):
+class MainFrame(cdml.CDMWindow, wx.Frame):
     """ Main frame for project form"""
 
     def __init__(self, mode=None, data=None, type=None, id_prj=0, *args, **kwds):
@@ -194,7 +194,7 @@ class MainFrame(wx.Frame):
 
         # combo boxes
         self.panel_combo = wx.Panel(self.panel_main, -1)
-        self.label_1 = wx.StaticText(self.panel_combo, -1, "Covariate")
+        self.label_1 = wx.StaticText(self.panel_combo, -1, "Parameter")
         self.label_2 = wx.StaticText(self.panel_combo, -1, "Occurrence Probability")
         self.label_3 = wx.StaticText(self.panel_combo, -1, "Function")
         self.label_4 = wx.StaticText(self.panel_combo, -1, "Notes")
@@ -255,7 +255,7 @@ class MainFrame(wx.Frame):
 
         self.SetTitle("PROJECT DEFINITION")
         self.SetSize((850, 730))
-        self.MakeModal(True)
+        self.MyMakeModal(True)
 
         f = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, "")
         self.st_title.SetFont(f)
@@ -660,7 +660,7 @@ class MainFrame(wx.Frame):
                 dlg_wizard.CenterOnScreen()
 
                 dlg_wizard.Show()
-                dlg_wizard.MakeModal()
+                dlg_wizard.MyMakeModal()
     
             except:
                 cdml.dlgErrorMsg(Parent = self)
@@ -669,7 +669,7 @@ class MainFrame(wx.Frame):
             TheText = cdml.dlgTextEntry(Message = 'Modify Text and Press OK, or Press Cancel to ignore changes', Caption = type, DefaultValue = DefaultText, Parent = self)
             TheTextControl.SetValue(str(TheText))
             # make sure focus returne properly to this form
-            self.MakeModal()  
+            self.MyMakeModal()  
             self.Raise()
             
         else:
@@ -1118,9 +1118,9 @@ class MainFrame(wx.Frame):
 
 
 if __name__ == "__main__":
-    DB.LoadAllData('Testing.zip')
-    app = wx.PySimpleApp(0)
-    wx.InitAllImageHandlers()
+    DB.LoadAllData('InData' + DB.os.sep + 'Testing.zip')
+    app = wx.App(0)
+    #wx.InitAllImageHandlers() Deprecated
     frame_1 = MainFrame(cdml.ID_MODE_SINGL, 1150, None, 0 ,None )
     app.SetTopWindow(frame_1)
     frame_1.Center()

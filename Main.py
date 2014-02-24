@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -60,7 +60,7 @@ import sys
 import copy
 
 
-class Main(wx.Frame, listmix.ColumnSorterMixin):
+class Main(cdml.CDMWindow, wx.Frame, listmix.ColumnSorterMixin):
     """ Main class for main form """
 
     def __init__(self, *args, **kwds):
@@ -489,7 +489,7 @@ class Main(wx.Frame, listmix.ColumnSorterMixin):
 
             elif ans == wx.ID_CANCEL: return
 
-        self.MakeModal(False)
+        self.MyMakeModal(False)
         self.Destroy()
 
 
@@ -520,12 +520,14 @@ class Main(wx.Frame, listmix.ColumnSorterMixin):
 
 
 if __name__ == "__main__":
-    # uncomment the next two lines for inspection and replace the app for 
+    # uncomment the next four lines for inspection and replace the app for 
     # inspection mode
     #from wx.lib.mixins.inspection import InspectableApp
     #app = InspectableApp()
-    app = wx.PySimpleApp(0)
-    wx.InitAllImageHandlers()
+    #import wx.lib.inspection
+    #wx.lib.inspection.InspectionTool().Show()
+    app = wx.App(0)
+    # wx.InitAllImageHandlers() - deprecated - no longer needed
 
    
     if len(sys.argv)>1 and str(sys.argv[1]).lower() in ['admin', 'administrator']:
@@ -543,7 +545,7 @@ if __name__ == "__main__":
 
     frame_1 = Main(None, -1, "")
     app.SetTopWindow(frame_1)
-    frame_1.MakeModal(True)
+    frame_1.MyMakeModal(True)
     frame_1.CenterOnScreen()
     frame_1.Show()
     app.MainLoop()

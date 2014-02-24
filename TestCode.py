@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -49,6 +49,7 @@
 ###############################################################################
 
 from __future__ import division
+import nose
 import DataDef as DB
 import math
 import sys
@@ -65,7 +66,6 @@ import MultiRunExportResultsAsCSV
 import ConvertDataToCode
 import CreatePlotsFromCSV
 import AssembleReportCSV
-import nose
 
 # Simulation constants
 GlobalAllowedDeviationInSTD = 3
@@ -157,7 +157,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 1000000, FromState = 10021, ToState = 1000002, Probability = DB.Expr('0.0717')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1010, Name='Population set for Simulation Example 1', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Alive',''), ('Dead','')] , Data = [[ 30, 1, 0 ]]*9 + [[30,0,1]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1010, Name='Population set for Simulation Example 1', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Alive',''), ('Dead','')] , Data = [[ 30, 1, 0 ]]*9 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -194,7 +194,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 2000000, FromState = 2200001, ToState = 2200092, Probability = DB.Expr('0.2')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1020, Name='Population set for Simulation Example 2', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1',''), ('State2Terminal','')] , Data = [[ 30, 1, 0,0 ]] + [[30, 0 ,1,0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1020, Name='Population set for Simulation Example 2', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1',''), ('State2Terminal','')] , Data = [[ 30, 1, 0,0 ]] + [[30, 0 ,1,0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -229,7 +229,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 3000000, FromState = 2200000, ToState = 2200092, Probability = DB.Expr('0.6')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1030, Name='Population set for Simulation Example 3', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1Terminal',''), ('State2Terminal','')] , Data = [[ 30, 1, 0,0 ]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1030, Name='Population set for Simulation Example 3', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1Terminal',''), ('State2Terminal','')] , Data = [[ 30, 1, 0,0 ]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -269,7 +269,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 4000000, FromState = 2200088, ToState = 2200000, Probability = DB.Expr('1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1040, Name='Population set for Simulation Example 4', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1',''), ('State2','')] , Data = [[ 30, 1, 0, 0 ], [ 40, 0, 1, 0 ] , [ 30, 0, 0, 1 ]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1040, Name='Population set for Simulation Example 4', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1',''), ('State2','')] , Data = [[ 30, 1, 0, 0 ], [ 40, 0, 1, 0 ] , [ 30, 0, 0, 1 ]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -305,7 +305,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 51000000, FromState = 2200001, ToState = 2200092, Probability = DB.Expr('Exp(-(0.4+0.5*Gender))')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1051, Name='Population set for Simulation Example 5a', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('State0',''), ('State1',''), ('State2Terminal','')] , Data = [[ 1, 1, 0,0 ]] + [[0, 1 ,0,0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1051, Name='Population set for Simulation Example 5a', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('State0',''), ('State1',''), ('State2Terminal','')] , Data = [[ 1, 1, 0,0 ]] + [[0, 1 ,0,0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -340,7 +340,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 52000000, FromState = 2200001, ToState = 2200092, Probability = DB.Expr('Exp(-(0.04+0.05*Age))')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1052, Name='Population set for Simulation Example 5b', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('Age','') ,('State0',''), ('State1',''), ('State2Terminal','')] , Data = [[ 1, 45, 1, 0, 0 ]] + [[0, 60, 1, 0, 0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1052, Name='Population set for Simulation Example 5b', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('Age','') ,('State0',''), ('State1',''), ('State2Terminal','')] , Data = [[ 1, 45, 1, 0, 0 ]] + [[0, 60, 1, 0, 0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -379,7 +379,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 6000000, FromState = 2200002, ToState = 2200093, Probability = DB.Expr('Exp(-(0.04+0.05*Age))')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1060, Name='Population set for Simulation Example 6', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('Age','') ,('State0',''), ('State1',''), ('State2',''), ('State3Terminal','')] , Data = [[ 1, 45, 1, 0, 0, 0 ]] + [[0, 60, 1, 0, 0, 0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1060, Name='Population set for Simulation Example 6', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('Age','') ,('State0',''), ('State1',''), ('State2',''), ('State3Terminal','')] , Data = [[ 1, 45, 1, 0, 0, 0 ]] + [[0, 60, 1, 0, 0, 0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -419,7 +419,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 7000000, FromState = 2200088, ToState = 2200000, Probability = DB.Expr('1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1070, Name='Population set for Simulation Example 7', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('Age','') ,('State0',''), ('State1',''), ('State2','')] , Data = [[ 1, 45, 1, 0, 0 ]] + [[0, 60, 1, 0, 0]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1070, Name='Population set for Simulation Example 7', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') ,('Age','') ,('State0',''), ('State1',''), ('State2','')] , Data = [[ 1, 45, 1, 0, 0 ]] + [[0, 60, 1, 0, 0]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -455,7 +455,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 8000000, FromState = 2200050, ToState = 2200091, Probability = DB.Expr('1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1080, Name='Population set for Simulation Example 8', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1Terminal','')] , Data = [[ 30, 1, 0 ]]*9 + [[30,0,1]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1080, Name='Population set for Simulation Example 8', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State1Terminal','')] , Data = [[ 30, 1, 0 ]]*9 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -496,7 +496,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 9000000, FromState = 2200002, ToState = 2200050, Probability = DB.Expr('0.1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1090, Name='Population set for Simulation Example 9', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State2',''), ('State3Terminal','')] , Data = [[ 40, 1, 0, 0 ]]*4 + [[ 50, 0, 1, 0 ]]*5 + [[60, 0, 0, 1]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1090, Name='Population set for Simulation Example 9', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('State0',''), ('State2',''), ('State3Terminal','')] , Data = [[ 40, 1, 0, 0 ]]*4 + [[ 50, 0, 1, 0 ]]*5 + [[60, 0, 0, 1]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -544,7 +544,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 10000000, FromState = 2200081, ToState = 2200093, Probability = DB.Expr('1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1100, Name='Population set for Simulation Example 10', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age',''), ('State0',''), ('State1',''), ('State2',''), ('State3Terminal','')] , Data = [[ 30, 1, 0, 0, 0 ]] + [[ 30, 0, 1, 1, 0 ]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1100, Name='Population set for Simulation Example 10', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age',''), ('State0',''), ('State1',''), ('State2',''), ('State3Terminal','')] , Data = [[ 30, 1, 0, 0, 0 ]] + [[ 30, 0, 1, 1, 0 ]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -594,7 +594,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 11000000, FromState = 2200081, ToState = 2200095, Probability = DB.Expr('1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1110, Name='Population set for Simulation Example 11', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age',''), ('State0',''), ('State2',''), ('State3',''), ('State5Terminal','')] , Data = [[ 30, 1, 0, 0, 0 ]] + [[ 30, 0, 1, 1, 0 ]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1110, Name='Population set for Simulation Example 11', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age',''), ('State0',''), ('State2',''), ('State3',''), ('State5Terminal','')] , Data = [[ 30, 1, 0, 0, 0 ]] + [[ 30, 0, 1, 1, 0 ]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -659,7 +659,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 12000000, FromState = 2200081, ToState = 2200096, Probability = DB.Expr('1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1120, Name='Population set for Simulation Example 12', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age',''), ('State0',''), ('State1',''), ('State2',''), ('State3',''), ('State4',''), ('State5',''), ('State6Terminal','')] , Data = [[ 30, 1, 0, 0, 0, 0, 0, 0 ]] + [[ 30, 0, 1, 0, 1, 1, 0, 0 ]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1120, Name='Population set for Simulation Example 12', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age',''), ('State0',''), ('State1',''), ('State2',''), ('State3',''), ('State4',''), ('State5',''), ('State6Terminal','')] , Data = [[ 30, 1, 0, 0, 0, 0, 0, 0 ]] + [[ 30, 0, 1, 0, 1, 1, 0, 0 ]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -720,7 +720,7 @@ def SetupFullDB():
     DB.Transitions.AddNew( DB.Transition(StudyModelID = 13000000, FromState = 2200002, ToState = 2200081, Probability = DB.Expr('.3'), Notes = ''), ProjectBypassID = 0)
     
     #Population Set
-    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1130, Name = 'Population set for Simulation Example 13', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age', ''), ('State0', ''), ('State1', ''), ('State3', ''), ('State4', '')], Data = [[30.0, 1.0, 0.0, 0.0, 0.0], [30.0, 0.0, 1.0, 1.0, 1.0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1130, Name = 'Population set for Simulation Example 13', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age', ''), ('State0', ''), ('State1', ''), ('State3', ''), ('State4', '')], Data = [[30.0, 1.0, 0.0, 0.0, 0.0], [30.0, 0.0, 1.0, 1.0, 1.0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -760,7 +760,7 @@ def SetupFullDB():
     DB.Transitions.AddNew( DB.Transition(StudyModelID = 14000000, FromState = 2200003, ToState = 14000002, Probability = DB.Expr('1'), Notes = ''), ProjectBypassID = 0)
     
     #Population Set
-    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1140, Name = 'Population set for Simulation Example 14', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', '')], Data = [[1.0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1140, Name = 'Population set for Simulation Example 14', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', '')], Data = [[1.0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -779,6 +779,7 @@ def SetupFullDB():
     # Simulation Project - Example 15
     
     # Define Parameters
+    DB.Params.AddNew(DB.Param(Name = 'AgeAtStart', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '[0,Inf]', Notes = 'Age at start of simulation'), ProjectBypassID = 0)
     # Define States
     #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
     #DB.States.AddNew(DB.State(ID = 2200091 , Name = 'State1Terminal' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = True , ChildStates = [] ), ProjectBypassID = 0)
@@ -796,10 +797,11 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 15000000, FromState = 2200000, ToState = 2200091, Probability = DB.Expr('Table( [[Gender,[NaN,0,1]], [Age,[-Inf,20,40,Inf]]], [[0.1,0.2,0.3],[0.4,0.5,0.6]] )')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1150, Name='Population set for Simulation Example 15', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Gender',''), ('State0',''), ('State1Terminal','')] , Data = [[5, 0, 1, 0 ]] + [[25, 0, 1, 0]] + [[45, 0, 1, 0]] + [[5, 1, 1, 0 ]] + [[25, 1, 1, 0]] + [[45, 1, 1, 0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1150, Name='Population set for Simulation Example 15', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Gender',''), ('State0',''), ('State1Terminal','')] , Data = [[5, 0, 1, 0 ]] + [[25, 0, 1, 0]] + [[45, 0, 1, 0]] + [[5, 1, 1, 0 ]] + [[25, 1, 1, 0]] + [[45, 1, 1, 0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
+    SimRuleList = SimRuleList + [ DB.SimulationRule(AffectedParam = 'AgeAtStart', SimulationPhase = 0 , OccurrenceProbability = '1' , AppliedFormula = 'Age', Notes = 'Copy Age')]
     SimRuleList = SimRuleList + [ DB.SimulationRule(AffectedParam = 'Age', SimulationPhase = 1 , OccurrenceProbability = '1' , AppliedFormula = 'Age +1', Notes = 'Age Increase')]
     
     # Define the project
@@ -815,7 +817,7 @@ def SetupFullDB():
     # Simulation Project - Example 16
     
     # Define Parameters
-    #DB.Params.AddNew(DB.Param(Name = 'BP', Formula = '' , ParameterType = 'Covariate' , ValidationRule = 'Number' , ValidationRuleParams = '[0,Inf]', Notes = 'Blood Pressure'), ProjectBypassID = 0)
+    #DB.Params.AddNew(DB.Param(Name = 'BP', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '[0,Inf]', Notes = 'Blood Pressure'), ProjectBypassID = 0)
     
     # Define States
     #DB.States.AddNew( DB.State(ID = 2200000, Name = 'State0', Notes = '', IsSplit = False, JoinerOfSplitter = 0, IsEvent = False, IsTerminal = False, ChildStates = []), ProjectBypassID = 0)
@@ -887,7 +889,7 @@ def SetupFullDB():
 
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 111111113, Name = 'Population set for Simulation Example 16', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('BP', '')], Data = [[1.0, 0]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 111111113, Name = 'Population set for Simulation Example 16', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('BP', '')], Data = [[1.0, 0]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -905,7 +907,7 @@ def SetupFullDB():
     # Simulation Project - Example 17
     
     # Define Parameters
-    #DB.Params.AddNew( DB.Param(Name = 'Age', Formula = '', ParameterType = 'Covariate', ValidationRule = 'Integer', ValidationRuleParams = '[0,130]', Notes = ''), ProjectBypassID = 0)
+    #DB.Params.AddNew( DB.Param(Name = 'Age', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '[0,130]', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex17TestCovariate', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex17TestCovariate2', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'State2_Diagnosed', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)
@@ -928,7 +930,7 @@ def SetupFullDB():
     DB.Transitions.AddNew( DB.Transition(StudyModelID = 17000000, FromState = 2200000, ToState = 2200001, Probability = DB.Expr('1'), Notes = ''), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1170, Name = 'Population set for Simulation Example 17', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('Age', ''), ('Ex17TestCovariate', ''), ('Ex17TestCovariate2', '')], Data = [[1.0, 30.0, 0.0, 0.0]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1170, Name = 'Population set for Simulation Example 17', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('Age', ''), ('Ex17TestCovariate', ''), ('Ex17TestCovariate2', '')], Data = [[1.0, 30.0, 0.0, 0.0]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -952,7 +954,7 @@ def SetupFullDB():
     
     
     # Define Parameters
-    #DB.Params.AddNew( DB.Param(Name = 'Age', Formula = '', ParameterType = 'Covariate', ValidationRule = 'Integer', ValidationRuleParams = '[0,130]', Notes = ''), ProjectBypassID = 0)
+    #DB.Params.AddNew( DB.Param(Name = 'Age', Formula = '', ParameterType = 'Integer', ValidationRuleParams = '[0,130]', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex18TestQoL', Formula = '', ParameterType = 'Number', ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)
     DB.Params.AddNew( DB.Param(Name = 'Ex18TestCost', Formula = '', ParameterType = 'Number', ValidationRuleParams = '[0,Inf]', Notes = ''), ProjectBypassID = 0)
     
@@ -974,7 +976,7 @@ def SetupFullDB():
     DB.Transitions.AddNew( DB.Transition(StudyModelID = 18000000, FromState = 2200002, ToState = 2200093, Probability = DB.Expr('.5'), Notes = ''), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1180, Name = 'Population set for Simulation Example 18', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('Age', ''), ('Ex18TestQoL', ''), ('Ex18TestCost', '')], Data = [[1.0, 30.0, 0.1, 10]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1180, Name = 'Population set for Simulation Example 18', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('Age', ''), ('Ex18TestQoL', ''), ('Ex18TestCost', '')], Data = [[1.0, 30.0, 0.1, 10]], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -1050,7 +1052,7 @@ def SetupFullDB():
     DB.Transitions.AddNew( DB.Transition(StudyModelID = 19000000, FromState = 2200081, ToState = 10003, Probability = DB.Expr('1')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1190, Name = 'Population set for Simulation Example 19', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('TestCov1', ''), ('TestCov2', ''), ('TestCov3', ''), ('TestCov4', ''), ('TestCov5', '')], Data = [[1.0, 0, 0, 0, 0, 0]] ), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1190, Name = 'Population set for Simulation Example 19', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('State0', ''), ('TestCov1', ''), ('TestCov2', ''), ('TestCov3', ''), ('TestCov4', ''), ('TestCov5', '')], Data = [[1.0, 0, 0, 0, 0, 0]], Objectives = [] ), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -1089,7 +1091,7 @@ def SetupFullDB():
     DB.Transitions.AddNew(DB.Transition(StudyModelID = 20000000, FromState = 10021, ToState = 1000002, Probability = DB.Expr('0.0717')), ProjectBypassID = 0)
     
     # Populate the table with population sets
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1200, Name='Population set for Simulation Example 20', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','Min(Max(20,Gaussian(30,5)),40)') ,('Alive','Bernoulli(0.9)'), ('Dead','1-Alive')] , Data = []), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1200, Name='Population set for Simulation Example 20', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','Min(Max(20,Gaussian(30,5)),40)') ,('Alive','Bernoulli(0.9)'), ('Dead','1-Alive')] , Data = [], Objectives = []), ProjectBypassID = 0)
     
     # Define simulation Rules
     SimRuleList = []
@@ -1099,6 +1101,65 @@ def SetupFullDB():
     DB.Projects.AddNew(DB.Project(ID = 1200, Name = 'Simulation Project - Test Example 20' , Notes = 'Simple Example with Initial Population Defined by Distributions' , PrimaryModelID = 20000000  , PrimaryPopulationSetID = 1200 , NumberOfSimulationSteps = 3  , NumberOfRepetitions = 1000  , SimulationRules = SimRuleList , DerivedFrom = 0   ) , ProjectBypassID = 0)
 
 
+    ###############################################################################
+    
+    # Simulation Project - Example 21
+    
+    # Define Parameters
+    #DB.Params.AddNew(DB.Param(Name = 'AgeAtStart', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '[0,Inf]', Notes = 'Age at start of simulation'), ProjectBypassID = 0)
+    # Define States
+    #DB.States.AddNew(DB.State(ID = 2200000 , Name = 'State0' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)
+    #DB.States.AddNew(DB.State(ID = 2200091 , Name = 'State1Terminal' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = True , ChildStates = [] ), ProjectBypassID = 0)
+    
+    # Add SubProcess
+    DB.States.AddNew(DB.State(ID = 21000000 , Name = 'Example 21 : Main Process' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [ 2200000, 2200091 ] ), ProjectBypassID = 0)
+    
+    # Create the model-study definitions
+    DB.StudyModels.AddNew(DB.StudyModel( ID = 21000000 , Name = 'Simulation Example 21: Initial Population Defined by Distributions and simple Objectives' , Notes = '' , DerivedFrom = 0 , MainProcess = 21000000  ), ProjectBypassID = 0)
+    
+    ### Create the model definitions
+    ### Model Transitions
+    # MainProcess
+
+    DB.Transitions.AddNew(DB.Transition(StudyModelID = 21000000, FromState = 2200000, ToState = 2200091, Probability = DB.Expr('Table( [[Gender,[NaN,0,1]], [Age,[-Inf,20,40,Inf]]], [[0.1,0.2,0.3],[0.4,0.5,0.6]] )')), ProjectBypassID = 0)
+    
+    
+    # Define Objectives (FilterExpr,StatExpr,StatFunction,TargetValue,Weight,CalcValue,CalcError)
+    Objectives = []
+    Objectives = Objectives + [('Le(Age,20)',                                'Age',              'MEAN',     5,  1, None,None)]
+    Objectives = Objectives + [('And(Gr(Age,20), Le(Age,40))',               'Age -25',          'MEAN',     0,  1, None,None)]
+    Objectives = Objectives + [('Gr(Age,40)',                                'Age',              'MEAN',     45, 1, None,None)]
+    Objectives = Objectives + [('1',                                         'Gender',           'MEAN',     0.5,1, None,None)]
+    Objectives = Objectives + [('1',                                         'Age*(Gender-0.5)', 'MEDIAN',   0,  1, None,None)]
+    Objectives = Objectives + [('Le(Age,20)',                                'Age',              'STD',      1,  0.1, None,None)]
+    Objectives = Objectives + [('And(Gr(Age,20), Le(Age,40))',               'Age',              'PERCENT25',24, 0.1, None,None)]
+    Objectives = Objectives + [('And(Gr(Age,20), Le(Age,40))',               'Age',              'PERCENT75',26, 0.1, None,None)]
+    Objectives = Objectives + [('Gr(Age,40)',                                'Age',              'MIN'      ,42 ,0.1, None,None)]
+    Objectives = Objectives + [('Gr(Age,40)',                                'Age',              'MAX'      ,48 ,0.1, None,None)]
+    Objectives = Objectives + [('And(Le(Age,20), Eq(Gender,0))',             '1',                'SUM'      ,100,0.02,None,None)]
+    Objectives = Objectives + [('And(Gr(Age,20), Le(Age,40) , Eq(Gender,0))','1',                'SUM'      ,100,0.02,None,None)]
+    Objectives = Objectives + [('And(Gr(Age,40), Eq(Gender,0))',             '1',                'SUM'      ,100,0.02,None,None)]
+    Objectives = Objectives + [('And(Le(Age,20), Eq(Gender,1))',             'Age**2',           'COUNT'    ,100,0.02,None,None)]
+    Objectives = Objectives + [('And(Gr(Age,20), Le(Age,40) , Eq(Gender,1))','Age**2',           'COUNT'    ,100,0.02,None,None)]
+    Objectives = Objectives + [('And(Gr(Age,40), Eq(Gender,1))',             'Age**2',           'COUNT'    ,100,0.02,None,None)]
+    
+    # Populate the table with population sets
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1210, Name='Population set for Simulation Example 21', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','Uniform(1,59)') ,('Gender','Bernoulli(0.6)'), ('State0','1'), ('State1Terminal','0')] , Data = [], Objectives = Objectives), ProjectBypassID = 0)
+    
+    # Define simulation Rules
+    SimRuleList = []
+    SimRuleList = SimRuleList + [ DB.SimulationRule(AffectedParam = 'AgeAtStart', SimulationPhase = 0 , OccurrenceProbability = '1' , AppliedFormula = 'Age', Notes = 'Copy Age')]
+    SimRuleList = SimRuleList + [ DB.SimulationRule(AffectedParam = 'Age', SimulationPhase = 1 , OccurrenceProbability = '1' , AppliedFormula = 'Age +1', Notes = 'Age Increase')]
+    
+    # Define the project
+    DB.Projects.AddNew(DB.Project(ID = 1210, Name = 'Simulation Project - Test Example 21' , Notes = 'Initial Population Defined by Distributions and simple Objectives',  PrimaryModelID = 21000000  , PrimaryPopulationSetID = 1210 , NumberOfSimulationSteps = 3  , NumberOfRepetitions = 600  , SimulationRules = SimRuleList , DerivedFrom = 0   ) , ProjectBypassID = 0)
+    
+    
+    ###############################################################################
+
+
+
+    
 
 class GenericSetupAndTearDown:
 
@@ -1133,7 +1194,7 @@ def AddProject1005AndRun(RandomSeedToUse):
     SetupFullDB()
     # Project 1010 is changed to project 1005 where Age of 1 person becomes NaN
     # Also replace Age with Age1 parameter which is not bounded
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1005, Name='Population set for Simulation Example 1 with NaN', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Alive',''), ('Dead','')] , Data = [[ DB.NaN, 1, 0 ]] + [[ 30, 1, 0 ]]*8 + [[30,0,1]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1005, Name='Population set for Simulation Example 1 with NaN', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Alive',''), ('Dead','')] , Data = [[ DB.NaN, 1, 0 ]] + [[ 30, 1, 0 ]]*8 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)
     # Define simulation Rules
     SimRuleList = []
     SimRuleList = SimRuleList + [ DB.SimulationRule(AffectedParam = 'Age', SimulationPhase = 1 , OccurrenceProbability = '1' , AppliedFormula = 'Age +1', Notes = 'Age Increase')]
@@ -1174,7 +1235,7 @@ def AddProject1006():
 
     DB.Params.AddNew(DB.Param(Name = 'AgeIncCoef', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
     # The simulation needs this population set
-    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1005, Name='Population set for Simulation Example 1 with NaN', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Alive',''), ('Dead','')] , Data = [[ DB.NaN, 1, 0 ]] + [[ 30, 1, 0 ]]*8 + [[30,0,1]]), ProjectBypassID = 0)
+    DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1005, Name='Population set for Simulation Example 1 with NaN', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Age','') ,('Alive',''), ('Dead','')] , Data = [[ DB.NaN, 1, 0 ]] + [[ 30, 1, 0 ]]*8 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)
     # Define simulation Rules
     SimRuleList = []
     SimRuleList = SimRuleList + [ DB.SimulationRule(AffectedParam = 'RandomSeed', SimulationPhase = 0 , OccurrenceProbability = '' , AppliedFormula = '10', Notes = '')]
@@ -1220,12 +1281,12 @@ class TestSimulationExamples(GenericSetupAndTearDown):
             for (Index, Column) in enumerate(ColumnsToExamine):
                 if ColumnsToMaskWith == None or Entry[ColumnsToMaskWith[Index]] != 0:
                     ActualOutcomes[Index] = ActualOutcomes[Index] + Entry[Column]               
-        if IsStateColumnVector != None:
+        OutcomesToSum = ActualOutcomes
+        ModifiedExpectedOutcomes =  ExpectedOutcomes
+        # if IsStateColumnVector is defined as a list, recalcualte 
+        if DB.IsList(IsStateColumnVector):
             OutcomesToSum = map(lambda a,b: a*b, ActualOutcomes,IsStateColumnVector)
             ModifiedExpectedOutcomes =  map(lambda a,b: a*b, ExpectedOutcomes,IsStateColumnVector)
-        else:
-            OutcomesToSum = ActualOutcomes
-            ModifiedExpectedOutcomes =  ExpectedOutcomes
         TotalNumberOfOutcomes = round(reduce(lambda a,b: a+b, ModifiedExpectedOutcomes))
         STDMargins = map (lambda Num: ((1.0 - float(Num) / float(TotalNumberOfOutcomes) )*float(Num) / float(TotalNumberOfOutcomes) * TotalNumberOfOutcomes)**0.5 , ExpectedOutcomes)
         AllowedMargins = map (lambda Num: Num * AllowedDeviationInSTD, STDMargins)
@@ -1234,7 +1295,7 @@ class TestSimulationExamples(GenericSetupAndTearDown):
         print 'Actual Distribution was: ' +  str(ActualOutcomes)
         print 'Expected outcome for each state: ' + str(ExpectedOutcomes)
         print 'Allowed Margins for each state: ' + str(AllowedMargins)
-        if reduce(lambda a,b: a+b, OutcomesToSum)  != TotalNumberOfOutcomes:
+        if (IsStateColumnVector == None or DB.IsList(IsStateColumnVector)) and reduce(lambda a,b: a+b, OutcomesToSum)  != TotalNumberOfOutcomes:
             print 'Test FAILURE: Total sum of individuals in states of interest at the simulation end does not sum to ' + str(TotalNumberOfOutcomes)
             BeepForError()
             CriticalTestSuccess = False        
@@ -2572,6 +2633,7 @@ class TestSimulationExamples(GenericSetupAndTearDown):
         self.GenReport(ResultsInfo.ID, DB.SessionTempDirecory + os.sep + 'SimulationReport' + ExampleString + '.txt')
     
         IndexOfAgeIndicator = ResultsInfo.DataColumns.index('Age')
+        IndexOfAgeAtStartIndicator = ResultsInfo.DataColumns.index('AgeAtStart')
         IndexOfGenderIndicator = ResultsInfo.DataColumns.index('Gender')
         IndexOfState0Indicator = ResultsInfo.DataColumns.index('State0')
         IndexOfState1TerminalIndicator = ResultsInfo.DataColumns.index('State1Terminal')
@@ -2584,9 +2646,9 @@ class TestSimulationExamples(GenericSetupAndTearDown):
         AliveRecords = filter(lambda Entry: Entry[IndexOfState1TerminalIndicator] != 1 , FinalData)
         IsAgeOfAliveOK = all(map ( lambda Entry: Entry[IndexOfAgeIndicator] in [8,28,48], AliveRecords))
         if IsAgeOfAliveOK:
-            print 'Simulation Script of Example 2 is OK - Age in all alive people is either 8,28, or 48'
+            print 'Simulation Script of Example 15 is OK - Age in all alive people is either 8,28, or 48'
         else:
-            print 'Test FAILURE - Simulation Script of Example 2 is invalid - Age in all alive people is not is not 8,28, or 48'
+            print 'Test FAILURE - Simulation Script of Example 15 is invalid - Age in all alive people is not is not 8,28, or 48'
             BeepForError()
             CriticalTestFailed = True
     
@@ -2599,12 +2661,12 @@ class TestSimulationExamples(GenericSetupAndTearDown):
         CriticalTestFailed = CriticalTestFailed or not CriticalTestSuccess
         self.RecordSimResults('Example015-GenderIs0', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0)
     
-        AgeGroup1Records = filter(lambda Entry: Entry[IndexOfAgeIndicator] <= 20 , FinalData)
+        AgeGroup1Records = filter(lambda Entry: Entry[IndexOfAgeAtStartIndicator] <= 20 , FinalData)
         (ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, CriticalTestSuccess) = self.CheckSimulationOutcomeDistribution( AgeGroup1Records, [IndexOfState0Indicator,IndexOfState1TerminalIndicator], [94.5000 , 105.5000] , GlobalAllowedDeviationInSTD)
         CriticalTestFailed = CriticalTestFailed or not CriticalTestSuccess
         self.RecordSimResults('Example015-AgeGroup1', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0)
     
-        AgeGroup2Records = filter(lambda Entry: 20< Entry[IndexOfAgeIndicator] <= 40 , FinalData)
+        AgeGroup2Records = filter(lambda Entry: 20< Entry[IndexOfAgeAtStartIndicator] <= 40 , FinalData)
         (ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, CriticalTestSuccess) = self.CheckSimulationOutcomeDistribution( AgeGroup2Records, [IndexOfState0Indicator,IndexOfState1TerminalIndicator], [63.7000 , 136.3000] , GlobalAllowedDeviationInSTD)
         CriticalTestFailed = CriticalTestFailed or not CriticalTestSuccess
         self.RecordSimResults('Example015-AgeGroup2', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0)
@@ -2929,10 +2991,122 @@ class TestSimulationExamples(GenericSetupAndTearDown):
         self.RecordSimResults('Example020', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0, IsAgeBewtween20And43)
         
         # Dump result summary in file
-    
 
         return CriticalTestFailed
     
+
+    def RunTestExample21(self):
+    
+        print '########################################################################'
+        print '########################################################################'
+        print '########              Testing Simulation Example 21               ######'
+        print '########################################################################'
+        print '########################################################################'
+
+        # Modify the default teminator stable count to finish test in reasonable time    
+        # DB.Params.Modify('GeneticAlgorithmMaxStableGenerationCountTerminator',DB.Param(Name = 'GeneticAlgorithmMaxStableGenerationCountTerminator', Formula = '5' , ParameterType = 'System Option' , ValidationRuleParams = '', Notes = 'Modified default to terminate test faster'), ProjectBypassID = 0)
+        # DB.Params.Modify('GeneticAlgorithmMaxEvalsTerminator',DB.Param(Name = 'GeneticAlgorithmMaxEvalsTerminator', Formula = '7500' , ParameterType = 'System Option' , ValidationRuleParams = '', Notes = 'Modified default to terminate test faster'), ProjectBypassID = 0)
+    
+        # Prepare the project for simulation:
+        ExampleNumber = 1210
+        ExampleString = str(ExampleNumber-100)
+        RandomStateFileName = 'SimRandStateEx' + ExampleString + 'Rep' + str(self.SimRepetition)+ '.txt'
+        # SimulationOptions = [ ('RandomSeed', RandomSeedToUse), ('ValidateDataInRuntime', True), ('RepairProblems', True), ('VerboseLevel', 5) ]
+        # in this example generate a population set
+        DistributionPopulationSet = DB.PopulationSets[DB.Projects[ExampleNumber].PrimaryPopulationSetID]
+        PopulationSizeToGenerate = DB.Projects[ExampleNumber].NumberOfRepetitions
+        GeneratedPopulationSet = DistributionPopulationSet.GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = PopulationSizeToGenerate)
+
+        SimulationScriptFullPath = DB.Projects[ExampleNumber].CompileSimulation('SimulationExample' + ExampleString, RandomStateFileNamePrefix = RandomStateFileName, SimulationOptions = None, SkipDumpingFilesIfError = True, OverrideRepetitionCount = 1, OverridePopulationSet = GeneratedPopulationSet)
+        OtherTestFailed = False
+        CriticalTestFailed = False
+        ResultsInfo = DB.Projects[ExampleNumber].RunSimulationAndCollectResults (SimulationScriptFullPath, FullResultsOutputFileName = 'SimulationResultsExample' + ExampleString + '.csv', FinalResultsOutputFileName = 'SimulationResultsExample' + ExampleString + 'FinalData.csv')
+        FinalData = ResultsInfo.ExtractFinalOutcome()
+        self.GenReport(ResultsInfo.ID, DB.SessionTempDirecory + os.sep + 'SimulationReport' + ExampleString + '.txt')
+    
+        #IndexOfAgeIndicator = ResultsInfo.DataColumns.index('Age')
+        IndexOfAgeAtStartIndicator = ResultsInfo.DataColumns.index('AgeAtStart')
+        IndexOfGenderIndicator = ResultsInfo.DataColumns.index('Gender')
+        IndexOfState0Indicator = ResultsInfo.DataColumns.index('State0')
+        IndexOfState1TerminalIndicator = ResultsInfo.DataColumns.index('State1Terminal')
+
+        #IndexOfState0EnteredIndicator = ResultsInfo.DataColumns.index('State0_Entered')
+        #IndexOfState1TerminalEnteredIndicator = ResultsInfo.DataColumns.index('State1Terminal_Entered')
+    
+        AgesAtStart0To20 = [ Entry[IndexOfAgeAtStartIndicator] for Entry in FinalData if 0 < Entry[IndexOfAgeAtStartIndicator] <= 20]
+        IsAverageAgeAtStart0To20Between3And7 = 3 < DB.numpy.mean(AgesAtStart0To20) < 7
+        if IsAverageAgeAtStart0To20Between3And7:
+            print 'Simulation Script of Example 21 is OK - Average Age At Start 0<=Age<20 is betwen 3 and 7'
+        else:
+            print 'Test FAILURE - Simulation Script of Example 21 is invalid - Average Age At Start 0<=Age<20 is not betwen 3 and 7'
+            BeepForError()
+
+
+        AgesAtStart20To40 = [ Entry[IndexOfAgeAtStartIndicator] for Entry in FinalData if 20 < Entry[IndexOfAgeAtStartIndicator] <= 40]
+        IsAverageAgeAtStart20To40Between23And27 = 23 < DB.numpy.mean(AgesAtStart20To40) < 27
+        if IsAverageAgeAtStart20To40Between23And27:
+            print 'Simulation Script of Example 21 is OK - Average Age At Start 20<=Age<40 is betwen 23 and 27'
+        else:
+            print 'Test FAILURE - Simulation Script of Example 21 is invalid - Average Age At Start 20<=Age<40 is not betwen 23 and 27'
+            BeepForError()
+
+
+        AgesAtStart40To60 = [ Entry[IndexOfAgeAtStartIndicator] for Entry in FinalData if 40 < Entry[IndexOfAgeAtStartIndicator] <= 60]
+        IsAverageAgeAtStart20To40Between43And47 = 43 < DB.numpy.mean(AgesAtStart40To60) < 47
+        if IsAverageAgeAtStart20To40Between43And47:
+            print 'Simulation Script of Example 21 is OK - Average Age At Start 40<=Age<60 is betwen 43 and 47'
+        else:
+            print 'Test FAILURE - Simulation Script of Example 21 is invalid - Average Age At Start 40<=Age<60 is not betwen 43 and 47'
+            BeepForError()
+            
+        (ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, CriticalTestSuccess) = self.CheckSimulationOutcomeDistribution( FinalData, [IndexOfState0Indicator,IndexOfState1TerminalIndicator], [ 198.9000 , 401.1000] , GlobalAllowedDeviationInSTD)
+        CriticalTestFailed = CriticalTestFailed or not CriticalTestSuccess
+        self.RecordSimResults('Example021', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0 )
+    
+        GenderIs0Records = filter(lambda Entry: Entry[IndexOfGenderIndicator] == 0 , FinalData)
+        (ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, CriticalTestSuccess) = self.CheckSimulationOutcomeDistribution( GenderIs0Records, [IndexOfState0Indicator,IndexOfState1TerminalIndicator], [158.4000 , 141.6000] , GlobalAllowedDeviationInSTD, None , False)
+        self.RecordSimResults('Example021-GenderIs0', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0)
+    
+        AgeGroup1Records = filter(lambda Entry: Entry[IndexOfAgeAtStartIndicator] <= 20 , FinalData)
+        (ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, CriticalTestSuccess) = self.CheckSimulationOutcomeDistribution( AgeGroup1Records, [IndexOfState0Indicator,IndexOfState1TerminalIndicator], [94.5000 , 105.5000] , GlobalAllowedDeviationInSTD, None , False)
+        # Report Age average as other statistical test in this age group
+        OtherTestFailed = not IsAverageAgeAtStart0To20Between3And7
+        self.RecordSimResults('Example021-AgeGroup1', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0)
+    
+        AgeGroup2Records = filter(lambda Entry: 20< Entry[IndexOfAgeAtStartIndicator] <= 40 , FinalData)
+        (ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, CriticalTestSuccess) = self.CheckSimulationOutcomeDistribution( AgeGroup2Records, [IndexOfState0Indicator,IndexOfState1TerminalIndicator], [63.7000 , 136.3000] , GlobalAllowedDeviationInSTD, None , False)
+        # Report Age average as other statistical test in this age group
+        OtherTestFailed = not IsAverageAgeAtStart20To40Between23And27
+        self.RecordSimResults('Example021-AgeGroup2', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0)
+
+        AgeGroup3Records = filter(lambda Entry: 40< Entry[IndexOfAgeAtStartIndicator] <= 60 , FinalData)
+        (ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, CriticalTestSuccess) = self.CheckSimulationOutcomeDistribution( AgeGroup3Records, [IndexOfState0Indicator,IndexOfState1TerminalIndicator], [40.7000 , 159.3000] , GlobalAllowedDeviationInSTD, None , False)
+        # Report Age average as other statistical test in this age group
+        OtherTestFailed = not IsAverageAgeAtStart20To40Between43And47
+        self.RecordSimResults('Example021-AgeGroup3', ActualOutcomes, ExpectedOutcomes, STDMargins, TestSuccess, OtherTestFailed, CriticalTestFailed, 0)
+
+        CriticalTestExpectedResults = [IsAverageAgeAtStart0To20Between3And7, IsAverageAgeAtStart20To40Between23And27, IsAverageAgeAtStart20To40Between43And47]
+        AllowedMargins = [ 2, 2, 2, 0.05, 1, 1, 1, 2, 2, 6, 10, 10, 10, 10, 10, 10]
+
+        for (ObjectiveEnum,Objective) in enumerate(GeneratedPopulationSet.Objectives):
+            ActualOutcome = Objective[5]
+            ExpectedOutcome = Objective[3]
+            ErrorMargin = AllowedMargins[ObjectiveEnum]
+            TestSuccess = abs(ActualOutcome-ExpectedOutcome)<ErrorMargin
+            OtherTestFailed = False
+            if ObjectiveEnum<3 and  CriticalTestExpectedResults[ObjectiveEnum] != CriticalTestExpectedResults[ObjectiveEnum]:
+                ThisCriticalTestFailed = True
+                BeepForError()                
+            else: 
+                ThisCriticalTestFailed = False
+            CriticalTestFailed = CriticalTestFailed or ThisCriticalTestFailed
+            self.RecordSimResults('Example021-Objective'+str(ObjectiveEnum), [ActualOutcome], [ExpectedOutcome], [ErrorMargin], [TestSuccess], OtherTestFailed, ThisCriticalTestFailed, 0)
+
+        return CriticalTestFailed
+
+
+
+
 
  
   
@@ -2947,9 +3121,8 @@ class TestSimulationExamples(GenericSetupAndTearDown):
         #######################################################################
         #######################################################################
 
-        print 'simulation'
-        print len(DB.Projects)
-        assert len(DB.Projects)==21
+        print 'simulation of ' +str(len(DB.Projects)) + ' projects'
+        assert len(DB.Projects)==22
   
         TestsWithCriticalErrors = 0
         for SimRepetition in range(MaxSimulationRepetitions):
@@ -2988,7 +3161,8 @@ class TestSimulationExamples(GenericSetupAndTearDown):
             TestsWithCriticalErrors += self.RunTestExample18()
             TestsWithCriticalErrors += self.RunTestExample19()
             TestsWithCriticalErrors += self.RunTestExample20()
-            
+            TestsWithCriticalErrors += self.RunTestExample21()
+           
             # Output the newer results created in this repetition
             TrackFile = open(DB.SessionTempDirecory + os.sep + 'OutcomeResults' + str(SimRepetition) + '.txt','w')
             pickle.dump(self.ResultsVec[ResultsVecPosBeforeSimulation:],TrackFile)
@@ -3033,12 +3207,12 @@ class TestPopulationImportExport(GenericSetupAndTearDown):
         # Make sure the directory for the file exists
         (PathOnly , FileNameOnly, FileNameFullPath) = DB.DetermineFileNameAndPath(DB.SessionTempDirecory + os.sep + 'TestPopulation.csv')
         # Create a large complex population set
-        DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1111111110, Name='Data Population Set Gender~FlipCoin, BP~Gaussian(120,10)', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') , ('BP','')] , Data = [[1,138.23],[1,102.59],[0,113.64],[1,122.77],[1,121.23],[0,103.11],[1,145.25],[1,135.75],[1,127.46],[1,109.58],[1,141.23],[1,118.29],[0,113.09],[1,124.97],[0,124.1],[0,136.43],[0,110.99],[1,120.31],[0,113],[1,127.67],[1,125.92],[0,126.72],[1,130.34],[1,108.38],[0,113.25],[0,123.66],[1,111.29],[1,114.12],[1,123.11],[0,110.82],[1,140.07],[1,102.86],[1,117.64],[1,103.31],[0,120.09],[0,120.92],[0,135.82],[1,122.04],[1,142.56],[0,118.31],[1,122.37],[0,119.28],[1,121.22],[0,110.96],[0,120.13],[0,117.89],[1,103.5],[0,124.51],[0,113.69],[1,126.54],[0,114.71],[0,120.33],[1,120.37],[0,115.82],[0,130.01],[1,121.88],[1,123.04],[0,118.73],[1,126.79],[1,112.19],[1,111.18],[0,122.11],[0,116.75],[0,109.75],[1,122.5],[1,122.86],[1,125.64],[1,121.44],[1,122.18],[1,122.52],[0,113.09],[1,114.01],[1,94.9],[1,123.41],[0,112.07],[0,109.81],[0,107.42],[0,97.35],[1,122.12],[1,135.06],[1,110.71],[0,128.76],[0,115.31],[1,115.99],[1,106.24],[0,113.11],[0,115.49],[1,119.66],[0,129.51],[1,129.07],[0,110.02],[0,98.78],[1,124.46],[0,125.39],[0,119.4],[0,112.66],[1,105.76],[1,124.9],[0,141.2],[0,125.7],[1,123.87],[1,120.66],[1,103.15],[0,120.26],[1,123.33],[0,113.16],[0,110.09],[0,132.41],[0,109.77],[0,125.95],[0,112.31],[0,96.1],[0,119.74],[0,121.57],[1,120.64],[1,131.47],[1,116.97],[1,119.12],[0,121.72],[0,113.57],[0,111.08],[0,118.86],[1,121.66],[1,107.73],[0,117.67],[1,122.84],[0,114.05],[0,130.31],[0,123.46],[0,108.88],[1,117.71],[1,123.92],[0,117.51],[0,111.52],[1,131.54],[0,113.36],[0,106.67],[1,140.38],[0,128.9],[1,124.6],[1,119.53],[0,126.03],[0,117.66],[0,131.96],[1,118.15],[1,111.8],[0,127.05],[0,102.24],[0,117.39],[1,138.28]]), ProjectBypassID = 0)
+        DB.PopulationSets.AddNew(DB.PopulationSet(ID = 1111111110, Name='Data Population Set Gender~FlipCoin, BP~Gaussian(120,10)', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') , ('BP','')] , Data = [[1,138.23],[1,102.59],[0,113.64],[1,122.77],[1,121.23],[0,103.11],[1,145.25],[1,135.75],[1,127.46],[1,109.58],[1,141.23],[1,118.29],[0,113.09],[1,124.97],[0,124.1],[0,136.43],[0,110.99],[1,120.31],[0,113],[1,127.67],[1,125.92],[0,126.72],[1,130.34],[1,108.38],[0,113.25],[0,123.66],[1,111.29],[1,114.12],[1,123.11],[0,110.82],[1,140.07],[1,102.86],[1,117.64],[1,103.31],[0,120.09],[0,120.92],[0,135.82],[1,122.04],[1,142.56],[0,118.31],[1,122.37],[0,119.28],[1,121.22],[0,110.96],[0,120.13],[0,117.89],[1,103.5],[0,124.51],[0,113.69],[1,126.54],[0,114.71],[0,120.33],[1,120.37],[0,115.82],[0,130.01],[1,121.88],[1,123.04],[0,118.73],[1,126.79],[1,112.19],[1,111.18],[0,122.11],[0,116.75],[0,109.75],[1,122.5],[1,122.86],[1,125.64],[1,121.44],[1,122.18],[1,122.52],[0,113.09],[1,114.01],[1,94.9],[1,123.41],[0,112.07],[0,109.81],[0,107.42],[0,97.35],[1,122.12],[1,135.06],[1,110.71],[0,128.76],[0,115.31],[1,115.99],[1,106.24],[0,113.11],[0,115.49],[1,119.66],[0,129.51],[1,129.07],[0,110.02],[0,98.78],[1,124.46],[0,125.39],[0,119.4],[0,112.66],[1,105.76],[1,124.9],[0,141.2],[0,125.7],[1,123.87],[1,120.66],[1,103.15],[0,120.26],[1,123.33],[0,113.16],[0,110.09],[0,132.41],[0,109.77],[0,125.95],[0,112.31],[0,96.1],[0,119.74],[0,121.57],[1,120.64],[1,131.47],[1,116.97],[1,119.12],[0,121.72],[0,113.57],[0,111.08],[0,118.86],[1,121.66],[1,107.73],[0,117.67],[1,122.84],[0,114.05],[0,130.31],[0,123.46],[0,108.88],[1,117.71],[1,123.92],[0,117.51],[0,111.52],[1,131.54],[0,113.36],[0,106.67],[1,140.38],[0,128.9],[1,124.6],[1,119.53],[0,126.03],[0,117.66],[0,131.96],[1,118.15],[1,111.8],[0,127.05],[0,102.24],[0,117.39],[1,138.28]], Objectives = []), ProjectBypassID = 0)
         DB.PopulationSets[1111111110].ExportDataToCSV(FileNameFullPath)
         # Check if loading this data works
         (PopDataColumns,PopData) = DB.ImportDataFromCSV(FileNameFullPath)
         # Try to create a new population set like this
-        RefPopulationSet = DB.PopulationSet(ID = 1111111120, Name='Loaded copy of Data Population Set Gender~FlipCoin, BP~Gaussian(120,10)', Source = 'Internal', Notes = 'Loaded from CSV file', DerivedFrom = 0, DataColumns = PopDataColumns, Data = PopData)
+        RefPopulationSet = DB.PopulationSet(ID = 1111111120, Name='Loaded copy of Data Population Set Gender~FlipCoin, BP~Gaussian(120,10)', Source = 'Internal', Notes = 'Loaded from CSV file', DerivedFrom = 0, DataColumns = PopDataColumns, Data = PopData, Objectives = [])
         assert DB.PopulationSets[1111111110].DataColumns == RefPopulationSet.DataColumns and DB.PopulationSets[1111111110].Data == RefPopulationSet.Data, 'Population CSV export test FAILURE - Loaded and saved data is not similar'
         return
 
@@ -4485,13 +4659,13 @@ class TestDistributionPopulations(GenericSetupAndTearDown):
             DB.Params.AddNew(DB.Param(Name = 'BadTestDistributionGaussian', Formula = 'Gaussian(100,10)' , ParameterType = 'Expression' , ValidationRuleParams = '[-Inf,-Inf]', Notes = 'Testing'), ProjectBypassID = 0)
         
             # Test a population set based on a distribution
-            DistributionPopulationSet = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []), ProjectBypassID = 0)
+            DistributionPopulationSet = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []), ProjectBypassID = 0)
             # Create a new parameter
-            DistributionPopulationSet2 = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','Bernoulli(0.25)') , ('TestCov2','Binomial(90,0.5)') ,  ('TestCov3','Geometric(0.5)'),  ('TestCov4','Uniform(1,2)') , ('TestCov5','Gaussian(100,10)')] , Data = []), ProjectBypassID = 0)
+            DistributionPopulationSet2 = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','Bernoulli(0.25)') , ('TestCov2','Binomial(90,0.5)') ,  ('TestCov3','Geometric(0.5)'),  ('TestCov4','Uniform(1,2)') , ('TestCov5','Gaussian(100,10)')] , Data = [], Objectives = []), ProjectBypassID = 0)
             # Create a population with dependencies (use expressions)
-            DistributionPopulationSet3 = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','Bernoulli(0.25)') , ('TestCov2','1-TestCov1') ,  ('TestCov3','1-TestCov4'),  ('TestCov4','Uniform(1,2)') , ('TestCov5','100+10*Gaussian(0,1)')] , Data = []), ProjectBypassID = 0)
+            DistributionPopulationSet3 = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','Bernoulli(0.25)') , ('TestCov2','1-TestCov1') ,  ('TestCov3','1-TestCov4'),  ('TestCov4','Uniform(1,2)') , ('TestCov5','100+10*Gaussian(0,1)')] , Data = [], Objectives = []), ProjectBypassID = 0)
             # Create a population with more complicated dependencies (use expressions)
-            DistributionPopulationSet4 = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionExpression') , ('TestCov2','-TestCov3') ,  ('TestCov3','1-TestCov4'),  ('TestCov4','TestCov5/2') , ('TestCov5','Uniform(1,2)')] , Data = []), ProjectBypassID = 0)
+            DistributionPopulationSet4 = DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionExpression') , ('TestCov2','-TestCov3') ,  ('TestCov3','1-TestCov4'),  ('TestCov4','TestCov5/2') , ('TestCov5','Uniform(1,2)')] , Data = [], Objectives = []), ProjectBypassID = 0)
         
             # Test Generation of a data population set based on distributions
             OriginalNumberOfErrorsConsideredAsWarningsForPopulationGeneration = DB.Params['NumberOfErrorsConsideredAsWarningsForPopulationGeneration'].Formula
@@ -4531,24 +4705,24 @@ class TestDistributionPopulations(GenericSetupAndTearDown):
         DB.Params.AddNew(DB.Param(Name = 'TestCovariateFuncToBeUsedLaterToTestFailure', Formula = '2*IntegerParamForTestDistribution' , ParameterType = 'Expression' , ValidationRuleParams = '', Notes = ''), ProjectBypassID = 0)
         
         Tests = []
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','BlankParamForTestDistribution') , ('TestCov5','TestDistributionGaussian')] , Data = [])""",'Population Dependency on an empty parameter'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','ReferencingBlankParamForTestDistribution') , ('TestCov5','TestDistributionGaussian')] , Data = [])""",'Population Dependency on an empty parameter'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('IntegerParamForTestDistribution','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'Run time integer check error'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('BoundedParamForTestDistribution','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2') , ('TestCov2','TestCov3') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5') , ('TestCov5','TestCov1')] , Data = [])""",'Detected a cyclic dependency'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2+1') , ('TestCov2','TestCov1-1') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5') , ('TestCov5','TestCov1')] , Data = [])""",'Detected a cyclic dependency'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2') , ('TestCov2','TestFormulaToCreateCyclicReferenceForTestDistribution') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5') , ('TestCov5','TestCov1')] , Data = [])""",'Detected a cyclic dependency'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2') , ('TestCov2','TestCov3') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5')] , Data = [])""",'Dependency on an empty parameter'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','BadTestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','BadTestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','BadTestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','BadTestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','BadTestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('BoundedParamForTestDistribution','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('BoundedParamForTestDistribution','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('BoundedParamForTestDistribution','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('BoundedParamForTestDistribution','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
-        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('BoundedParamForTestDistribution','TestDistributionGaussian')] , Data = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','BlankParamForTestDistribution') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = [])""",'Population Dependency on an empty parameter'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','ReferencingBlankParamForTestDistribution') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = [])""",'Population Dependency on an empty parameter'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('IntegerParamForTestDistribution','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'Run time integer check error'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('BoundedParamForTestDistribution','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2') , ('TestCov2','TestCov3') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5') , ('TestCov5','TestCov1')] , Data = [], Objectives = [])""",'Detected a cyclic dependency'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2+1') , ('TestCov2','TestCov1-1') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5') , ('TestCov5','TestCov1')] , Data = [], Objectives = [])""",'Detected a cyclic dependency'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2') , ('TestCov2','TestFormulaToCreateCyclicReferenceForTestDistribution') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5') , ('TestCov5','TestCov1')] , Data = [], Objectives = [])""",'Detected a cyclic dependency'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestCov2') , ('TestCov2','TestCov3') ,  ('TestCov3','TestCov4'),  ('TestCov4','TestCov5')] , Data = [], Objectives = [])""",'Dependency on an empty parameter'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','BadTestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','BadTestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','BadTestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','BadTestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','BadTestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('BoundedParamForTestDistribution','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('BoundedParamForTestDistribution','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('BoundedParamForTestDistribution','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('BoundedParamForTestDistribution','TestDistributionUniform') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
+        Tests.append(("""DB.PopulationSet(ID = 0, Name='Test Distribution Based Population', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCov1','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','TestDistributionUniform') , ('BoundedParamForTestDistribution','TestDistributionGaussian')] , Data = [], Objectives = []).GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = 1000)""",'does not fall within the specified validation bounds'))
         
 
         for (Num,(Test,ExceptionInString)) in enumerate(Tests):
@@ -4566,14 +4740,14 @@ class TestDistributionPopulations(GenericSetupAndTearDown):
         # Check population set validity checking
         
         Tests = []
-        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','NonExistingDistribution(0.5)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = []), ProjectBypassID = 0)""" ,'is not a valid name of a parameter nor a valid function name'))
-        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Gaussian(0.5)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = []), ProjectBypassID = 0)""" ,'This may happen if the wrong number of parameters was specified for a function'))
-        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Gaussian(0.5,0.1)') , ('Smoke','Bernoulli(0.25)') , ('NotExistingParam','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = []), ProjectBypassID = 0)""" ,'the parameter does not exist in the parameters that were defined'))
-        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','NotExistingParam + Bernoulli(0.25)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = []), ProjectBypassID = 0)""" ,'used in the expression is not a valid name of a parameter nor a valid function name'))
-        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Bernoulli(Age/100)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gander*10+Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = []), ProjectBypassID = 0)""" ,'used in the expression is not a valid name of a parameter nor a valid function name'))
-        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Bernoulli(0.5)') , ('Gender','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10,1)') , ('BP','Gaussian(12,10)')] , Data = []), ProjectBypassID = 0)""" ,'Duplicate column names detected'))
-        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') , ('Smoke','') , ('AF','') , ('Age','') , ('BP','')] , Data = [[11,1,1,60,12]]), ProjectBypassID = 0)""" ,'Parameter Validation Error: The value does not fall within the specified validation bounds provided'))
-        Tests.append(( """DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCovariateFuncToBeUsedLaterToTestFailure','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','BlankParamForTestDistribution') , ('TestCov5','TestDistributionGaussian')] , Data = [])""",'used in the population set, is of an invalid parameter type to be used in a population set'))
+        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','NonExistingDistribution(0.5)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = [], Objectives = []), ProjectBypassID = 0)""" ,'is not a valid name of a parameter nor a valid function name'))
+        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Gaussian(0.5)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = [], Objectives = []), ProjectBypassID = 0)""" ,'This may happen if the wrong number of parameters was specified for a function'))
+        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Gaussian(0.5,0.1)') , ('Smoke','Bernoulli(0.25)') , ('NotExistingParam','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = [], Objectives = []), ProjectBypassID = 0)""" ,'the parameter does not exist in the parameters that were defined'))
+        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','NotExistingParam + Bernoulli(0.25)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = [], Objectives = []), ProjectBypassID = 0)""" ,'used in the expression is not a valid name of a parameter nor a valid function name'))
+        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Bernoulli(Age/100)') , ('Smoke','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gander*10+Gaussian(60,10)') , ('BP','Gaussian(12,10)')] , Data = [], Objectives = []), ProjectBypassID = 0)""" ,'used in the expression is not a valid name of a parameter nor a valid function name'))
+        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','Bernoulli(0.5)') , ('Gender','Bernoulli(0.25)') , ('AF','Bernoulli(0.75)') , ('Age','Gaussian(60,10,1)') , ('BP','Gaussian(12,10)')] , Data = [], Objectives = []), ProjectBypassID = 0)""" ,'Duplicate column names detected'))
+        Tests.append(( """DB.PopulationSets.AddNew(DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Gender','') , ('Smoke','') , ('AF','') , ('Age','') , ('BP','')] , Data = [[11,1,1,60,12]], Objectives = []), ProjectBypassID = 0)""" ,'Parameter Validation Error: The value does not fall within the specified validation bounds provided'))
+        Tests.append(( """DB.PopulationSet(ID = 0, Name='Faulty Population set', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestCovariateFuncToBeUsedLaterToTestFailure','TestDistributionBernoulli') , ('TestCov2','TestDistributionBinomial') ,  ('TestCov3','TestDistributionGeometric'),  ('TestCov4','BlankParamForTestDistribution') , ('TestCov5','TestDistributionGaussian')] , Data = [], Objectives = [])""",'used in the population set, is of an invalid parameter type to be used in a population set'))
 
         for (Num,(Test,ExceptionInString)) in enumerate(Tests):
             try:
@@ -4810,7 +4984,7 @@ class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
         DB.Transitions.AddNew(DB.Transition(StudyModelID = 91000000, FromState = 910021, ToState = 91000002, Probability = DB.Expr('TestCoefficient')), ProjectBypassID = 0)
         
         # Populate the table with population sets
-        DB.PopulationSets.AddNew(DB.PopulationSet(ID = 9101, Name='Population set for testing', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*9 + [[30,0,1]]), ProjectBypassID = 0)
+        DB.PopulationSets.AddNew(DB.PopulationSet(ID = 9101, Name='Population set for testing', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*9 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)
        
         # Define simulation Rules
         SimRuleList = []
@@ -5004,7 +5178,7 @@ class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
         Tests.append(( """DB.States.Modify(910021, DB.State(ID = 0 , Name = 'TestState1ModifiedWillNotBeRetained' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ) , ProjectBypassID = 0)""", 'To allow modification, delete/modify all the following dependant population sets: Population set for testing' ))
         Tests.append(( """DB.StudyModels.Modify(91000000 , DB.StudyModel( ID = 0 , Name = 'Test Example Will not be retained' , Notes = '' , DerivedFrom = 0 , MainProcess = 91000000  ) , ProjectBypassID = 0)""", 'Locking projects are: Test Simulation Project' ))
         Tests.append(( """DB.Transitions.Modify( (91000000, 910021, 91000002) , DB.Transition(StudyModelID = 91000000, FromState = 910021, ToState = 91000002, Probability = DB.Expr('0.0717121212') ), ProjectBypassID = 0)""", 'Locking projects are: Test Simulation Project' ))
-        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Will not be retained', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','')] , Data = [[ 30 ]]*10), ProjectBypassID = 0)""", 'Locking projects are: Test Simulation Project' ))
+        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Will not be retained', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','')] , Data = [[ 30 ]]*10, Objectives = []), ProjectBypassID = 0)""", 'Locking projects are: Test Simulation Project' ))
         Tests.append(( """DB.Projects.Modify(9101, DB.Project( 0, Name = 'Test Project Modified will not be retained' , Notes = 'Testing', PrimaryModelID = 91000000 , PrimaryPopulationSetID = 9101 , NumberOfSimulationSteps = 3  , NumberOfRepetitions = 100  , SimulationRules = SimRuleList1 , DerivedFrom = 0   ) , ProjectBypassID = 0)""", 'Locking projects are: Test Simulation Project' ))
 
         for (Num,(Test,ExceptionInString)) in enumerate(Tests):
@@ -5037,7 +5211,7 @@ class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
         Tests.append(( """DB.States.Modify(910021, DB.State(ID = 0 , Name = 'TestState1ModifiedWillNotBeRetained' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ), ProjectBypassID = 0)""", 'To allow modification, delete/modify all the following dependant population sets: Population set for testing' ))
         Tests.append(( """DB.StudyModels.Modify(91000000 , DB.StudyModel( ID = 0 , Name = 'Test Example Will not be retained' , Notes = '' , DerivedFrom = 0 , MainProcess = 91000000  ), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
         Tests.append(( """DB.Transitions.Modify( (91000000, 910021, 91000002) , DB.Transition(StudyModelID = 91000000, FromState = 910021, ToState = 91000002, Probability = DB.Expr('0.0717121212') ), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
-        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Will not be retained', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]]), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
+        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Will not be retained', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
 
         for (Num,(Test,ExceptionInString)) in enumerate(Tests):
             try:
@@ -5059,8 +5233,8 @@ class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
         Tests.append(( """DB.Transitions.Modify((91000000, 910021, 91000002) , DB.Transition(StudyModelID = 91000000, FromState = 910021, ToState = 91000002, Probability = DB.Expr('0.0717121212') ), ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project 1' ))
         Tests.append(( """DB.Transitions.Delete((91000000, 910021, 91000002) , ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project 1' ))
         Tests.append(( """DB.StudyModels.Modify(91000000 , DB.StudyModel( ID = 91000000 , Name = 'Test Example' , Notes = '' , DerivedFrom = 0 , MainProcess = 91000000  ), ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project 1' ))
-        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Will not be retained', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]]), ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project 1' ))
-        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 9101, Name='Population set for testing', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]]), ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project 1' ))
+        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Will not be retained', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]], Objectives = []), ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project 1' ))
+        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 9101, Name='Population set for testing', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]], Objectives = []), ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project 1' ))
         Tests.append(( """DB.StudyModels.Delete(91000000 , ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
         Tests.append(( """DB.PopulationSets.Delete(9101, ProjectBypassID = 9101)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
 
@@ -5115,7 +5289,7 @@ class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
         # Modify data not according to proper order and without bypass
         Tests = []
         Tests.append(( """DB.StudyModels.Modify(91000000, DB.StudyModel( ID = 0 , Name = 'Test Example that will never appear in the collection' , Notes = '' , DerivedFrom = 0 , MainProcess = 91000000  ), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
-        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Test Example that will never appear in the collection', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]]), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
+        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Test Example that will never appear in the collection', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
         Tests.append(( """DB.Params.Modify('TestParam', DB.Param(Name = 'TestParamModified', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)""", 'To allow modification, delete/modify all the following dependant population sets: Population set for testing' ))
         Tests.append(( """DB.States.Modify(910021, DB.State(ID = 0 , Name = 'TestState1ModifiedWillNotBeRetained' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ) , ProjectBypassID = 0)""", 'To allow modification, delete/modify all the following dependant population sets: Population set for testing' ))
         Tests.append(( """DB.StudyModels.Delete(91000000, ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
@@ -5167,7 +5341,7 @@ class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
 
 
         Tests.append(( """DB.StudyModels.Modify(91000000, DB.StudyModel( ID = 0 , Name = 'Test Example that will never appear in the collection' , Notes = '' , DerivedFrom = 0 , MainProcess = 91000000  ), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
-        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Test Example that will never appear in the collection', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]]), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
+        Tests.append(( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Test Example that will never appear in the collection', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
         Tests.append(( """DB.Params.Modify('TestParam', DB.Param(Name = 'TestParamModified', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '[0,1]', Notes = ''), ProjectBypassID = 0)""", 'To allow modification, delete/modify all the following dependant population sets: Population set for testing' ))
         Tests.append(( """DB.States.Modify(910021, DB.State(ID = 0 , Name = 'TestState1ModifiedWillNotBeRetained' , Notes = '' , IsSplit = False , JoinerOfSplitter = 0 , IsEvent = False , IsTerminal = False , ChildStates = [] ) , ProjectBypassID = 0)""", 'To allow modification, delete/modify all the following dependant population sets: Population set for testing' ))
         Tests.append(( """DB.StudyModels.Delete(91000000, ProjectBypassID = 0)""", 'To allow modification, delete/modify all of the following projects: Test Simulation Project' ))
@@ -5189,7 +5363,7 @@ class TestCopyEqualityAndModifyDeleteRecords(GenericSetupAndTearDown):
         Tests.append( """DB.Transitions.AddNew(DB.Transition(StudyModelID = 91000000, FromState = 910021, ToState = 91000003, Probability = DB.Expr('0.0000717') ), ProjectBypassID =0)""")
         Tests.append( """DB.Transitions.Delete((91000000, 910021, 91000003), ProjectBypassID = 0)""")
         Tests.append( """DB.StudyModels.Modify(91000000, DB.StudyModel( ID = 0 , Name = 'Test Example that will never appear in the collection' , Notes = '' , DerivedFrom = 0 , MainProcess = 91000000  ), ProjectBypassID = 0)""")
-        Tests.append( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Test Example that will never appear in the collection', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]]), ProjectBypassID = 0)""")
+        Tests.append( """DB.PopulationSets.Modify(9101, DB.PopulationSet(ID = 0, Name='Test Example that will never appear in the collection', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('TestParam','') ,('TestState1',''), ('TestState2','')] , Data = [[ 30, 1, 0 ]]*10 + [[30,0,1]], Objectives = []), ProjectBypassID = 0)""")
         Tests.append( """DB.StudyModels.Delete(91000000, ProjectBypassID = 0)""")
         Tests.append( """DB.PopulationSets.Delete(9101, ProjectBypassID = 0)""")
         
@@ -5342,7 +5516,7 @@ class TestSimulationrunInRuntime(GenericSetupAndTearDown):
             StateIndex = StateIndex + 1
         
         # Populate the table with population sets
-        DB.PopulationSets.AddNew(DB.PopulationSet(ID = 9101, Name='Population set for testing functions', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Test','') ,('TestState1','')] , Data = [[ TestVal, 1 ]] ), ProjectBypassID = 0)
+        DB.PopulationSets.AddNew(DB.PopulationSet(ID = 9101, Name='Population set for testing functions', Source = 'Internal', Notes = '', DerivedFrom = 0, DataColumns = [('Test','') ,('TestState1','')] , Data = [[ TestVal, 1 ]], Objectives = [] ), ProjectBypassID = 0)
         
         # Define simulation Rules
         SimRuleList = []
@@ -5828,7 +6002,7 @@ class TestReportMath(GenericSetupAndTearDown):
         # Run the example again
         # Overrides are the population = 1005, Model = 1000000, RandomSeed = 1, AgeIncCoef =1
         # these should make the simulation equivalent to the second Run
-        MultiRunSimulation.RunMultipleSimulations(InputFileName = DB.SessionTempDirecory+os.sep+'Testing_MultiRunOverride.zip', ProjectIndex = [1006], NumberOfRepeats = 1, StartRunningIndex = 0, OverWriteFiles = True, ReconstructFromTraceback = False, NumberOfSimulationStepsOverride = 3, PopulationRepetitionsOverride = 100, ModelOverride = [1000000], PopulationSetOverride = [1005], InitializeCoefficientValues = [0,1])
+        MultiRunSimulation.RunMultipleSimulations(InputFileName = DB.SessionTempDirecory+os.sep+'Testing_MultiRunOverride.zip', ProjectIndex = [1006], NumberOfRepeats = 1, StartRunningIndexStr = 0, OverWriteFiles = True, ReconstructFromTraceback = False, NumberOfSimulationStepsOverride = 3, PopulationRepetitionsOverride = 100, ModelOverride = [1000000], PopulationSetOverride = [1005], InitializeCoefficientValues = [0,1])
             
         # Load the results file
         DB.LoadAllData(DB.SessionTempDirecory+os.sep+'Testing_MultiRunOverride_0.zip')
@@ -5866,7 +6040,6 @@ class TestReportMath(GenericSetupAndTearDown):
  
     
 class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
-    
     
     def setUp(self):
         " define default simulation environment"
@@ -5915,34 +6088,35 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
         return RetVal        
 
 
-    def test_Reproducibility(self):
-        # test Reproducibility of simulation
+    def test_Reproducibility_Combined(self):
+        # test Reproducibility of simulation when simualtion and population 
+        # generation are combined
         # First run mutiple simuations that uses popuation distributios
         # Before starting record the time  
         StartTime = datetime.datetime.now()
-        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing.zip 20 5 98000 Y None None None None')
+        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing.zip 21 2 98000 Y None None None None')
         if ReturnCode != 0:
-            assert False, ('Reproducibility test A-0 FAILURE. Script returned bad exit code')
+            assert False, ('Reproducibility Combined test A-0 FAILURE. Script returned bad exit code')
         else:
-            print ('Reproducibility test A-0 OK.')
+            print ('Reproducibility Combined test A-0 OK.')
         # test that the file Temp\\testing_98001.zip is recent
-        for Repetition in range(5):
+        for Repetition in range(2):
             if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + '.zip', StartTime):
-                assert False, ('Reproducibility test A-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+                assert False, ('Reproducibility Combined test A-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
             else:
-                print ('Reproducibility test A-'+ str(Repetition+1) +' OK.')
+                print ('Reproducibility Combined test A-'+ str(Repetition+1) +' OK.')
             
         TheOrinigalStoredResults = []
         # Record the simulation results
         (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunExportResultsAsCSV.py ' + '"'+DB.SessionTempDirecory + os.sep + 'Testing_9800?.zip" 1') 
         if ReturnCode != 0:
-            assert False, ('Reproducibility test B-0 FAILURE. Script returned bad exit code')
+            assert False, ('Reproducibility Combined test B-0 FAILURE. Script returned bad exit code')
         else:
-            print ('Reproducibility test B-0 OK.')
+            print ('Reproducibility Combined test B-0 OK.')
         # test that the file Temp\\Testing_98001.csv is recent
-        for Repetition in range(5):
+        for Repetition in range(2):
             if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + 'Results.csv', StartTime):
-                assert False, ('Reproducibility test B-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+                assert False, ('Reproducibility Combined test B-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
             else:
                 # Record the results for latr comparison
                 ResFile = open (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + 'Results.csv' , 'r')
@@ -5963,93 +6137,172 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
                     os.rename(Src, Dst)
                     # Now rename the results file to avoid conflict
                     if self.FileExistsAndIsRecent (Src, StartTime):
-                        assert False, ('Reproducibility test B-'+ str(Repetition+1) +' FAILURE. Could not rename original file with ending ' + FileEnding)
+                        assert False, ('Reproducibility Combined test B-'+ str(Repetition+1) +' FAILURE. Could not rename original file with ending ' + FileEnding)
                 #if you reached this point without error give an OK
-                print ('Reproducibility test B-'+ str(Repetition+1) +' OK.')
+                print ('Reproducibility Combined test B-'+ str(Repetition+1) +' OK.')
 
         # Before starting record the time  - just as a precaution
         StartTime = datetime.datetime.now()
         # Now repeat the last two phases - this time by reproducing the results        
 
 
-        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing.zip 20 5 98000 R None None None None')
+        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing.zip 21 2 98000 R None None None None')
         if ReturnCode != 0:
-            assert False, ('Reproducibility test C-0 FAILURE. Script returned bad exit code')
+            assert False, ('Reproducibility Combined test C-0 FAILURE. Script returned bad exit code')
         else:
-            print ('Reproducibility test C OK.')
+            print ('Reproducibility Combined test C OK.')
         # test that the file Temp\\testing_98001.zip is recent
-        for Repetition in range(5):
+        for Repetition in range(2):
             if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + '.zip', StartTime):
-                assert False, ('Reproducibility test C-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+                assert False, ('Reproducibility Combined test C-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
             else:
-                print ('Reproducibility test C-'+ str(Repetition+1) +' OK.')
+                print ('Reproducibility Combined test C-'+ str(Repetition+1) +' OK.')
             
         TheRecontructedStoredResults = []
         # Record the simulation results
         (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunExportResultsAsCSV.py ' + '"'+DB.SessionTempDirecory + os.sep + 'Testing_9800?.zip" 1') 
         if ReturnCode != 0:
-            assert False, ('Reproducibility test D-0 FAILURE. Script returned bad exit code')
+            assert False, ('Reproducibility Combined test D-0 FAILURE. Script returned bad exit code')
         else:
-            print ('Reproducibility test D-0 OK.')
+            print ('Reproducibility Combined test D-0 OK.')
         # test that the file Temp\\Testing_98001.csv is recent
-        for Repetition in range(5):
+        for Repetition in range(2):
             if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + 'Results.csv', StartTime):
-                assert False, ('Reproducibility test D-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+                assert False, ('Reproducibility Combined test D-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
             else:
                 # Record the results for latr comparison
                 ResFile = open (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + 'Results.csv' , 'r')
                 TheResults = ResFile.read()
                 ResFile.close()
                 TheRecontructedStoredResults.append(TheResults) 
-                print ('Reproducibility test D-'+ str(Repetition+1) +' OK.')
+                print ('Reproducibility Combined test D-'+ str(Repetition+1) +' OK.')
                 
         # Finally - make sure that resuts are the same
         if TheRecontructedStoredResults == TheOrinigalStoredResults:
-            print ('Reproducibility test E OK. Results Match between original simulation results and reproduced simulation results')
+            print ('Reproducibility Combined test E OK. Results Match between original simulation results and reproduced simulation results')
         else:
-            assert False, 'Reproducibility test E FAILURE. Results Mismatch between original simulation results and reproduced simulation results'
+            assert False, 'Reproducibility Combined test E FAILURE. Results Mismatch between original simulation results and reproduced simulation results'
 
-        # Now do it again, this time reproducing from reproduced results
-        # The recond reproduction should still work
 
-        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing.zip 20 5 98000 R None None None None')
+    def test_Reproducibility_Seperate(self):
+        # test Reproducibility of simulation when simualtion and population 
+        # generation are seperated 
+        # First run mutiple simuations that uses popuation distributios
+        # Before starting record the time  
+        StartTime = datetime.datetime.now()
+        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing.zip 21 2 Pop9800 Y 0 None None None')
         if ReturnCode != 0:
-            assert False, ('Reproducibility test F-0 FAILURE. Script returned bad exit code')
+            assert False, ('Reproducibility Seperate test A-0 FAILURE. Script returned bad exit code')
         else:
-            print ('Reproducibility test F OK.')
-        # test that the file Temp\\testing_98001.zip is recent
-        for Repetition in range(5):
-            if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + '.zip', StartTime):
-                assert False, ('Reproducibility test F-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+            print ('Reproducibility Seperate test A-0 OK.')
+        # test that the file Temp\\Testing_Pop98000_?.zip is recent
+        for Repetition in range(2):
+            if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + '.zip', StartTime):
+                assert False, ('Reproducibility Seperate test A-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
             else:
-                print ('Reproducibility test F-'+ str(Repetition+1) +' OK.')
-            
-        TheRecontructedStoredResults = []
+                print ('Reproducibility Seperate test A-'+ str(Repetition+1) +' OK.')
+
+        # Now Run the simulations manually starting from the generated 
+        # population. Note that -1 indicates last population and 1 indicated
+        # that the population will be used once - otherwise there may be
+        # square number of repetition due to population size generated.
+        for Repetition in range(2):
+            (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_'+str(Repetition)+'.zip 21 2 0 Y None 1 None -1')
+            if ReturnCode != 0:
+                assert False, ('Reproducibility Seperate test A-'+ str(Repetition+3) +' FAILURE. No recent Output file created')
+            else:
+                print ('Reproducibility Seperate test A-'+ str(Repetition+3) +' OK.')
+
+
+        TheOrinigalStoredResults = []
         # Record the simulation results
-        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunExportResultsAsCSV.py ' + '"'+DB.SessionTempDirecory + os.sep + 'Testing_9800?.zip" 1') 
+        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunExportResultsAsCSV.py ' + '"'+DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_?_0.zip" 1') 
         if ReturnCode != 0:
-            assert False, ('Reproducibility test G-0 FAILURE. Script returned bad exit code')
+            assert False, ('Reproducibility Seperate test B-0 FAILURE. Script returned bad exit code')
         else:
-            print ('Reproducibility test G-0 OK.')
+            print ('Reproducibility Seperate test B-0 OK.')
         # test that the file Temp\\Testing_98001.csv is recent
-        for Repetition in range(5):
-            if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + 'Results.csv', StartTime):
-                assert False, ('Reproducibility test G-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+        for Repetition in range(2):
+            if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + '_0Results.csv', StartTime):
+                assert False, ('Reproducibility Seperate test B-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
             else:
                 # Record the results for latr comparison
-                ResFile = open (DB.SessionTempDirecory + os.sep + 'Testing_9800' + str(Repetition) + 'Results.csv' , 'r')
+                ResFile = open (DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + '_0Results.csv' , 'r')
                 TheResults = ResFile.read()
                 ResFile.close()
-                TheRecontructedStoredResults.append(TheResults) 
-                print ('Reproducibility test G-'+ str(Repetition+1) +' OK.')
+                TheOrinigalStoredResults.append(TheResults) 
                 
-        # Finally - make sure that resuts are the same
-        if TheRecontructedStoredResults == TheOrinigalStoredResults:
-            print ('Reproducibility test H OK. Results Match between original simulation results and reproduced simulation results')
+                for FileEnding in ['_0.zip','_0Results.csv']:
+                    # Now rename the data file to avoid conflict
+                    Src = DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + FileEnding
+                    Dst = DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + 'OriginalBackup' + FileEnding
+                    try:
+                        # make sure no other file in DST from previous runs
+                        os.remove(Dst)
+                    except:
+                        # if error - ignore - this means its the first run
+                        pass
+                    os.rename(Src, Dst)
+                    # Now rename the results file to avoid conflict
+                    if self.FileExistsAndIsRecent (Src, StartTime):
+                        assert False, ('Reproducibility Seperate test B-'+ str(Repetition+1) +' FAILURE. Could not rename original file with ending ' + FileEnding)
+                #if you reached this point without error give an OK
+                print ('Reproducibility Seperate test B-'+ str(Repetition+1) +' OK.')
+
+        # Before starting record the time  - just as a precaution
+        StartTime = datetime.datetime.now()
+        # Now repeat the last two phases - this time by reproducing the results        
+
+        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing.zip 21 2 Pop9800 R 0 None None None')
+        if ReturnCode != 0:
+            assert False, ('Reproducibility Seperate test C-0 FAILURE. Script returned bad exit code')
         else:
-            assert False, 'Reproducibility test H FAILURE. Results Mismatch between original simulation results and reproduced simulation results'
+            print ('Reproducibility Seperate test C OK.')
+        # test that the file Temp\\Testing_Pop98000_?.zip is recent
+        for Repetition in range(2):
+            if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + '.zip', StartTime):
+                assert False, ('Reproducibility Seperate test C-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+            else:
+                print ('Reproducibility Seperate test C-'+ str(Repetition+1) +' OK.')
+
+        # Now Run the simulations manually starting from the generated 
+        # population. Note that -1 indicates last population and 1 indicated
+        # that the population will be used once - otherwise there may be
+        # square number of repetition due to population size generated.
+        for Repetition in range(2):
+            (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunSimulation.py ' + DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_'+str(Repetition)+'.zip 21 2 0 R None 1 None -1')
+            if ReturnCode != 0:
+                assert False, ('Reproducibility Seperate test C-'+ str(Repetition+3) +' FAILURE. No recent Output file created')
+            else:
+                print ('Reproducibility Seperate test C-'+ str(Repetition+3) +' OK.')
 
         
+        TheRecontructedStoredResults = []
+        # Record the simulation results
+        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('MultiRunExportResultsAsCSV.py ' + '"'+DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_?_0.zip" 1') 
+        if ReturnCode != 0:
+            assert False, ('Reproducibility Seperate test D-0 FAILURE. Script returned bad exit code')
+        else:
+            print ('Reproducibility Seperate test D-0 OK.')
+        # test that the file Temp\\Testing_98001.csv is recent
+        for Repetition in range(2):
+            if not self.FileExistsAndIsRecent (DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + '_0Results.csv', StartTime):
+                assert False, ('Reproducibility Seperate test D-'+ str(Repetition+1) +' FAILURE. No recent Output file created')
+            else:
+                # Record the results for latr comparison
+                ResFile = open (DB.SessionTempDirecory + os.sep + 'Testing_Pop9800_' + str(Repetition) + '_0Results.csv' , 'r')
+                TheResults = ResFile.read()
+                ResFile.close()
+                TheRecontructedStoredResults.append(TheResults) 
+                print ('Reproducibility Seperate test D-'+ str(Repetition+1) +' OK.')
+                
+        # Finally - make sure that resuts are the same
+        if TheRecontructedStoredResults == TheOrinigalStoredResults:
+            print ('Reproducibility Seperate test E OK. Results Match between original simulation results and reproduced simulation results')
+        else:
+            assert False, 'Reproducibility Seperate test E FAILURE. Results Mismatch between original simulation results and reproduced simulation results'
+
+       
 
     def test_SupportingScripts(self):
         
@@ -6293,11 +6546,14 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
         MockFile.close()
 
         MockFile = open(DB.SessionTempDirecory + os.sep + 'PopulationDistributionsOverride.csv','w')
-        MockFile.write('Study Name,,Testing Population set for Simulation Example 20,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,,Dummy Population,,\nStudy Length,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroups,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroup Sizes,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nLocation,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nPurpose,,Tests exmple 14,Another populatin to test exmple 14,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nEndpoints,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nInclusion/Exclusion Criteria,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nSimulation Length,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nSimulation Outcomes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nAdditional notes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nInternal Data,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nReference,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,,Multiple references,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroup Size,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroup Description,,DEFAULT ,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,,Dummy,,\nInternal Code,,1200,,,1010,,,1020,,,1030,,,1040,,,1051,,,1052,,,1060,,,1070,,,1080,,,1090,,,1100,,,1110,,,1120,,,1130,,,1140,,,1150,,,111111113,,,1170,,,1180,,,1190,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nParameter,,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes,Mean (SD),Actual coding ,Notes\nAge,Years,"30 (5) capped at 20,40","Min(Max(20,Gaussian(30,5)),40)",Copied from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code\nAlive,Proportion,0.9,Bernoulli(0.9),Copied from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code,0.9,Bernoulli(0.8),Changed from example code\nDead,Proportion,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive,0.1 = Not alive,1-Alive,Complamentary to Alive\n')
+        MockFile.write('Study Name,,Testing Population set for Simulation Example 20,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,,,,,Dummy Population,,\nStudy Length,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroups,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroup Sizes,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nLocation,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nPurpose,,Tests exmple 14,Another population to test exmple,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nEndpoints,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nInclusion/Exclusion Criteria,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nSimulation Length,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nSimulation Outcomes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nAdditional notes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nInternal Data,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nReference,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,,,,,Multiple references,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroup Size,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nGroup Description,,DEFAULT ,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,,,,,Dummy,,\nInternal Code,,1200,,,,,,1010,,,,,,1020,,,,,,1030,,,,,,1040,,,,,,1051,,,,,,1052,,,,,,1060,,,,,,1070,,,,,,1080,,,,,,1090,,,,,,1100,,,,,,1110,,,,,,1120,,,,,,1130,,,,,,1140,,,,,,1150,,,,,,111111113,,,,,,1170,,,,,,1180,,,,,,1190,,,,,,1210,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nParameter,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes,,,,Mean (SD),Actual coding ,Notes\nAge,Years,"30 (5) capped at 20,40","Min(Max(20,Gaussian(30,5)),40)",Copied from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code,,,,"35 (5) capped at 25,45","Min(Max(25,Gaussian(35,5)),45)",Changed from example code\nAlive,Proportion,0.9,Bernoulli(0.9),Copied from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code,,,,0.9,Bernoulli(0.8),Changed from example code\nDead,Proportion,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive,,,,0.1 = Not alive,1-Alive,Complamentary to Alive\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nObjective,,Filter Expression,Statistics Expression,Statistics Function,Target,Weight,Notes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nObjective1,,1,Age,MAX,35,1,Maximal Age target is 35,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nObjective2,,1,Age-25,MEAN,0,2,Average Age target is 25,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\nObjective3,,Alive,Age,MEAN,24,2,Average Age of alive individuals is 24,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n')
         MockFile.close()
 
+
+
+
     
-        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('CodeFromDocAndSpreadsheet.py ' + DB.SessionTempDirecory + os.sep + 'PopulationDistributionsOverride.csv ' + DB.SessionTempDirecory + os.sep + 'DocRulesOverride.txt ' + DB.SessionTempDirecory + os.sep + 'TestingForRulesAndPopOverride.zip')
+        (ReturnCode, StdOutData, StdErrData) = self.RunExternalScript('CodeFromDocAndSpreadsheet.py ' + DB.SessionTempDirecory + os.sep + 'PopulationDistributionsOverride.csv ' + DB.SessionTempDirecory + os.sep + 'DocRulesOverride.txt ' + DB.SessionTempDirecory + os.sep + 'TestingForRulesAndPopOverride.zip 20')
         if ReturnCode != 0:
             assert False, ('Supporting Script test I-0 FAILURE. Script returned bad exit code')
         else:
@@ -6324,7 +6580,7 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
         else:
             print ('Supporting Script test I-3 OK.')
 
-        StringToCheck = "try: DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1200, Name = 'DEFAULT ', Source = 'Multiple references', Notes = 'Study Name: Testing Population set for Simulation Example 20. Study Length:  . Groups:  . Group Sizes:  . Location:  . Purpose: Tests exmple 14. Endpoints: . Inclusion/Exclusion Criteria: . Simulation Length: . Simulation Outcomes: . Additional notes: . : . ', DerivedFrom = 0, DataColumns = [('Age', 'Min(Max(20,Gaussian(30,5)),40)'), ('Alive', 'Bernoulli(0.9)'), ('Dead', '1-Alive')], Data = []), ProjectBypassID = 0)\nexcept: AnalyzeVersionConversionError()"
+        StringToCheck = "try: DB.PopulationSets.AddNew( DB.PopulationSet(ID = 1200, Name = 'DEFAULT ', Source = 'Multiple references', Notes = 'Study Name: Testing Population set for Simulation Example 20. Study Length:  . Groups:  . Group Sizes:  . Location:  . Purpose: Tests exmple 14. Endpoints: . Inclusion/Exclusion Criteria: . Simulation Length: . Simulation Outcomes: . Additional notes: . : . ', DerivedFrom = 0, DataColumns = [('Age', 'Min(Max(20,Gaussian(30,5)),40)'), ('Alive', 'Bernoulli(0.9)'), ('Dead', '1-Alive')], Data = [], Objectives = [ ( DB.Expr('1') , DB.Expr('Age') , 'MAX', 35, 1, None, None ) , ( DB.Expr('1') , DB.Expr('Age-25') , 'MEAN', 0, 2, None, None ) , ( DB.Expr('Alive') , DB.Expr('Age') , 'MEAN', 24, 2, None, None ) ]), ProjectBypassID = 0)\nexcept: AnalyzeVersionConversionError()"
         ThePythonFile = open(DB.SessionTempDirecory + os.sep + 'TestingForRulesAndPopOverride.py')
         TheScript = ThePythonFile.read()
         ThePythonFile.close()
@@ -6334,7 +6590,6 @@ class TestSupportingScriptsAndReproducibilty(GenericSetupAndTearDown):
             print ('Supporting Script test I-4 OK.')
 
 
-# this code was generated 
 if __name__ == "__main__":
     Argv = sys.argv[:]
     Argv.insert(1,"-v")

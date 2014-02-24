@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -444,9 +444,9 @@ class MainFrame(cdml.CDMFrame):
 
 if __name__ == "__main__":
 
-    app = wx.PySimpleApp(0)
-    wx.InitAllImageHandlers()
-    DB.LoadAllData('Testing.zip')
+    app = wx.App(0)
+    #wx.InitAllImageHandlers() Deprecated
+    DB.LoadAllData('InData' + DB.os.sep + 'Testing.zip')
     frame_1 = MainFrame(mode=None, data=None, type=None, id_prj=0, parent = None)
     app.SetTopWindow(frame_1)
     frame_1.CenterOnScreen()

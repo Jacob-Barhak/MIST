@@ -8,7 +8,7 @@
 <link rel="prev" href="Utilities.html#Utilities" title="Utilities">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 2013 Jacob Barhak
+Copyright (C) 2013-2014 Jacob Barhak
 
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 
@@ -128,27 +128,27 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <p>In this example the name of the cluster we start is mycluster and it is composed of 5 nodes. This operation may take a while and you can later see the nodes through the Amazon EC2 web interface.
 
-     <li>Upload the MIST system and associated model files to the cluster <code>/home</code> directory. Typically we will organize all the files in the working directory so we can make all transfers with a single <code>put</code> command.
+     <li>Upload the MIST system and associated model files to the cluster <code>/mnt/vol0</code> directory. Typically we will organize all the files in the working directory so we can make all transfers with a single <code>put</code> command.
 
      <p>In our example, use the command:
 
-     <p><code>starcluster put mycluster Desktop\MIST /home</code>
+     <p><code>starcluster put mycluster Desktop\MIST /mnt/vol0</code>
 
-     <p>Note that the <span class="file">/home</span> directory must be the destination since it is shared between all cluster machines. Also note that <code>Desktop\MIST</code> is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
+     <p>Note that the <span class="file">/mnt/vol0</span> directory must be the destination since it is shared between all cluster machines. Also note that <code>Desktop\MIST</code> is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
 
-     <li>Run the simulations. You will have to access the <span class="file">/home</span> directory on the cloud and then run the python script and this should be done with one command line.
+     <li>Run the simulations. You will have to access the <span class="file">/mnt/vol0</span> directory on the cloud and then run the python script and this should be done with one command line.
 
      <p>To do this, you should run the following command exactly as it appears:
 
-     <p><code>starcluster sshmaster mycluster "cd /home/MIST &amp;&amp; python ClusterRun.py"</code>
+     <p><code>starcluster sshmaster mycluster "cd /mnt/vol0/MIST &amp;&amp; python ClusterRun.py"</code>
 
      <p>In this example about 200 processes will be launched on 5 machines. You should see printout of commands launched.
 
      <li>While the system is running you can check upon the status of the simulation.
 
-     <p>You can look at the result files accumulating in the <code>/home</code> directory by typing the command:
+     <p>You can look at the result files accumulating in the <code>/mnt/vol0</code> directory by typing the command:
 
-     <p><code>starcluster sshmaster mycluster "ls /home/MIST/Phase1A"</code>
+     <p><code>starcluster sshmaster mycluster "ls /mnt/vol0/MIST/Phase1A"</code>
 
      <p>To see the remaining jobs the cluster needs to run use the command:
 
@@ -160,7 +160,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <p>In our example, we will retrieve only the result files to the user home directory by using the command:
 
-     <p><code>starcluster get mycluster /home/MIST/Phase*/Testing_Out* .</code>
+     <p><code>starcluster get mycluster /mnt/vol0/MIST/Phase*/Testing_Out* .</code>
 
      <p>In our example this should retrieve 3 files with results: <span class="file">Testing_Out.csv</span>, <span class="file">Testing_Out_Yearly.pdf</span>, <span class="file">Testing_Out_Yearly.csv</span>. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
 

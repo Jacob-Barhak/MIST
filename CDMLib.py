@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -54,7 +54,7 @@
 import wxversion
 # This line ensures that all wx imports will have a proper version
 # therefore it is important that this file is always imported before wx
-wxversion.ensureMinimal("2.8")
+wxversion.ensureMinimal("3.0")
 import wx
 import wx.combo
 import wx.lib.buttons
@@ -72,8 +72,8 @@ import HelpInterface
 import copy
 
 # Define the GUI version
-Version = (0,89,0,0,'MIST')
-CompatibleWithDataDefVersion = (0,89,0,0,'MIST')
+Version = (0,90,0,0,'MIST')
+CompatibleWithDataDefVersion = (0,90,0,0,'MIST')
 
 # Check that the Data Version and the GUI version are compatible
 # Currently the Last text identifier in the version is ignored in
@@ -219,12 +219,14 @@ def OpenPopupMenu(self, event=None):
     menu.Destroy()                                  # remove from memory to show just once when right button is clicked
 
 
+
+
 def CloseForm(self, refresh=True, collection=None, key=None):
     """ Common function to close new form """
 
     # check if current form has parent form
     parent = self.GetParent()
-    self.MakeModal(False)
+    self.MyMakeModal(False)
     self.Destroy()
 
     # If entered data is ok, throw event to refresh to parent row panel
@@ -243,7 +245,7 @@ def CloseForm(self, refresh=True, collection=None, key=None):
     if not parent.IsTopLevel(): parent = parent.GetTopLevelParent()
 
     # if current form has parent form, raise it to the top of the screen
-    parent.MakeModal()  # MakeModal(False) command makes all forms as Non-modal forms
+    parent.MyMakeModal()  # MakeModal(False) command makes all forms as Non-modal forms
                         # Thus, before raising the parent, MakeModal method should be called once more
     parent.Raise()
 
@@ -263,7 +265,7 @@ def OpenForm(name_module, parent, mode=None, key=None, type=None, id_prj=0):
     module = __import__(name_module)                # import form module
     form = module.MainFrame(mode, key, type, id_prj, parent)# create an instance of the form
 
-    form.MakeModal()                                # Make this frame as modal window
+    form.MyMakeModal()                                # Make this frame as modal window
 
     # Adjust the position of new form according to the screen size
     # If the size of form is smaller than screen size, open new form on the center of screen
@@ -349,7 +351,7 @@ def OpenAbout(self):
     info = wx.AboutDialogInfo()
     info.Name = "MIcro Simulation Tool (MIST)\n"
     info.Version = 'Data Definitions Version: ' + str(DB.Version) + '\n GUI Version: '+ str(Version) 
-    info.Copyright = " Copyright (C) 2013 Jacob Barhak\n Copyright (C) 2009-2012 The Regents of the University of Michigan (IEST)"
+    info.Copyright = " Copyright (C) 2013-2014 Jacob Barhak\n Copyright (C) 2009-2012 The Regents of the University of Michigan (IEST)"
     info.Description = wordwrap(
         "The Micro-simulation tools is a Monte-Carlo simulation compiler" 
         "It has been initially designed to help model Chronic Diseases."
@@ -440,13 +442,20 @@ class CDMWindow(wx.Window):
     evtID = xproperty( '_evtID', SetEvtID )
     userData = xproperty( '_user_data', SetUserData )
 
+    def MyMakeModal(self, modal=True):
+         if self.IsTopLevel():
+             for w in wx.GetTopLevelWindows():
+                 if w is not self and 'Inspection' not in str(w):
+                     w.Enable(not modal)
+
 
 #-----------------------------------------------------------------------#
 #   Base class for a frame.                                             #
 #   Common properties and methods are defined                           #
 #-----------------------------------------------------------------------#
 
-class CDMFrame(CDMWindow, wx.Frame):
+class CDMFrame(CDMWindow, wx.Dialog, wx.Frame):
+#class CDMFrame(CDMWindow, wx.Frame):
     """
         Base Frame class for CDM project. It is derived from CDMWindow and wx.Frame class
         Common properties, methods and event handler are defined in this class
@@ -1096,7 +1105,7 @@ class CDMFrame(CDMWindow, wx.Frame):
         # Create progress dialog, if panel no. is greater than 20 <-- set by manual test
         dlg = None
         if no_panel > 20:
-            dlg = wx.ProgressDialog("Loading Data",
+            dlg = wx.GenericProgressDialog("Loading Data",
                                     "Please wait......",
                                     maximum = no_panel,
                                     parent=self,
@@ -1310,10 +1319,10 @@ class CDMPanel(CDMWindow, wx.Panel):
             if type(ctrl) not in [Combo, Text, Checkbox]: continue
             type_ctrl = type(ctrl)
             if type_ctrl == Combo :
-                value = ctrl.GetTextCtrl().GetString(0,-1)
+                value = ctrl.GetTextCtrl().GetRange(0,-1)
 
             elif type_ctrl == Text :
-                value = ctrl.GetString(0,-1)
+                value = ctrl.GetRange(0,-1)
 
             elif type_ctrl == Checkbox:
                 value = ctrl.GetValue()
@@ -1687,7 +1696,7 @@ class Combo(CDMControl, wx.combo.ComboCtrl):
             return
 
         found = False
-        currentText = event.GetString()
+        currentText = event.GetRange()
         list = self.GetListCtrl()
         index = list.FindItem(-1, currentText, True)
         if index != wx.NOT_FOUND:
@@ -1715,10 +1724,8 @@ class Combo(CDMControl, wx.combo.ComboCtrl):
                 if value != '':
                     dlgSimpleMsg('ERROR', 'Input name is not in the list', wx.OK, wx.ICON_ERROR, Parent = self)
                     self.GetTextCtrl().SetFocus()
-
-
         self.SetInsertionPoint(0)
-
+        event.Skip()
 
     def OnButtonClick(self):
         """ Block default behavior (open popup) of ComboCtrl """
@@ -1778,7 +1785,7 @@ class Combo(CDMControl, wx.combo.ComboCtrl):
 
     def GetValueString(self):
         """ Retrieve string from the TextCtrl in Combo control"""
-        return str(self.GetTextCtrl().GetString(0,-1))
+        return str(self.GetTextCtrl().GetRange(0,-1))
 
 
     def SetInput(self, allow_input):
@@ -1977,7 +1984,7 @@ class ListCtrlComboPopup(wx.ListCtrl, wx.combo.ComboPopup):
         no_item = self.GetItemCount()+1     # for header reserve single line
         if no_item == 1 : no_item += 1  # if there is no item add blank line
 
-#        no_column = self.GetColumnCount()
+
 
         # add one more row to display horizontal scroll bar if needed
         no_item += 1
@@ -2091,7 +2098,7 @@ class Text(CDMControl, wx.TextCtrl):
     def GetValueString(self):
         """ Retrieve value as a string """
         try:
-            RawString = self.GetString(0,-1)
+            RawString = self.GetRange(0,-1)
             TheText = str(RawString)
         except UnicodeEncodeError:
             # Deal with an error that can be created by unicode/text conversion
@@ -3011,7 +3018,7 @@ class ProgressDialogTimeElapsed(wx.ProgressDialog):
             StyleToUse = wx.PD_ELAPSED_TIME | wx.PD_APP_MODAL
             if AllowCancel:
                 StyleToUse = StyleToUse | wx.PD_CAN_ABORT
-            wx.ProgressDialog.__init__(self, title = Title, message = Message, maximum = Maximum, parent = Parent, style = StyleToUse ) 
+            wx.GenericProgressDialog.__init__(self, title = Title, message = Message, maximum = Maximum, parent = Parent, style = StyleToUse ) 
             # Timer is initiated and bound
             if StartTimerUponCreation:
                 self.StartTimer(UpdateTimeStepInMiliSeconds)
@@ -3050,7 +3057,7 @@ class ProgressDialogTimeElapsed(wx.ProgressDialog):
             self.TimerObject.Stop()
             self.Unbind(wx.EVT_TIMER)
             self.TimerObject = None
-            RetVal = wx.ProgressDialog.Destroy(self)
+            RetVal = wx.GenericProgressDialog.Destroy(self)
             if self.Parent != None:
                 self.Parent.Raise()
         return RetVal            

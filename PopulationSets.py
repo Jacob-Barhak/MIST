@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -52,6 +52,9 @@
 # This file contains a form to define PopulationSet                            #
 ################################################################################
 
+
+
+
 import DataDef as DB
 import CDMLib as cdml
 import wx, wx.grid
@@ -75,6 +78,7 @@ class RowPanel(cdml.CDMPanel):
         # Create temporary variable to keep input for DataColumns and Data
         self.DataColumns = []
         self.Data = []
+        self.Objectives = []
         
         # Add Button and StaticText for deletion and status display
         self.btn_del = cdml.Button(self, wx.ID_DELETE, "x", style=wx.BU_EXACTFIT)
@@ -192,6 +196,7 @@ class RowPanel(cdml.CDMPanel):
 
         record.DataColumns = copy.copy(self.DataColumns)
         record.Data = copy.copy(self.Data)
+        record.Objectives = copy.copy(self.Objectives)
 
         return record
 
@@ -223,6 +228,8 @@ class RowPanel(cdml.CDMPanel):
         
         self.DataColumns = record.DataColumns
         self.Data = record.Data
+        self.Objectives = record.Objectives
+        
 
 
     def SaveRecord(self, record):
@@ -239,7 +246,8 @@ class RowPanel(cdml.CDMPanel):
                                     Source = str(record.Source),
                                     DerivedFrom = record.DerivedFrom,
                                     DataColumns = record.DataColumns,
-                                    Data = record.Data )
+                                    Data = record.Data,
+                                    Objectives = record.Objectives)
 
 
         frame = self.GetTopLevelParent()
@@ -553,10 +561,10 @@ class MainFrame(cdml.CDMFrame):
 
 if __name__ == "__main__":
 
-    app = wx.PySimpleApp(0)
-    wx.InitAllImageHandlers()
+    app = wx.App(0)
+    #wx.InitAllImageHandlers() Deprecated
 
-    DB.LoadAllData('Testing.zip')
+    DB.LoadAllData('InData' + DB.os.sep + 'Testing.zip')
     frame_1 = MainFrame(mode=None, data=None, type=None, id_prj=0, parent=None)
 
     app.SetTopWindow(frame_1)

@@ -9,7 +9,7 @@
 <link rel="next" href="Expressions.html#Expressions" title="Expressions">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 2013 Jacob Barhak
+Copyright (C) 2013-2014 Jacob Barhak
 
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 
@@ -100,38 +100,27 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 <li><strong>System Options</strong> - These names are set by the system by default; their values can be modified by the user to change functionality of the system. Here is a short description of these parameters by categories of influence:
 
           <ul>
+	<li>	<code>ValidateDataInRuntime</code>: A number that defines the level of validity checking of expressions during simulation and population generation from distributions.  The following levels are supported:
 	
                <ul>
-		<li>		ValidateDataInRuntime: A number that defines the level of validity checking of expressions during simulation and population generation from distributions.  The following levels are supported:
-		
-                    <ul>
-			<li>			0: No validity checking. 
-			<li>			1 or greater: Check that probabilities are within 0 and 1 and check that these sum to 1 when leaving event states and joiner states, and check that a value assigned to a parameter fits the validation rules defined for it. 
-			<li>			2 or greater: Check that function parameter validity rules are honored during calculation of expressions - this is the default option. 
-			<li>			3 or greater: Impose extra redundant validation checks on all phases of calculation. 
-		</ul>
-               	</ul>
-
-          <p>	<li>	NumberOfErrorsConsideredAsWarningsForSimulation: The number of times the system will accept parameter validity violation errors during simulation as warnings and will not stop simulation. When this number of errors is reached, the system will raise a fatal error to the user and stop simulation. The error messages can be seen on the console window.
-
-          <p>	<li>	NumberOfTriesToRecalculateSimulationStep: The number of times that the system will force recalculation of the same time step if an error was raised during this time step. If unsuccessful after this number of recalculations then force recalculation of the entire individual from the first time step.
-
-          <p>	<li>	NumberOfTriesToRecalculateSimulationOfIndividualFromStart: The number of times an individual will be recalculated from start in case errors appeared during simulation that forced restarting calculations. If this number of tries is reached, a fatal error is raised that stops simulation.
-
-          <p>	<li>	SystemPrecisionForProbabilityBoundCheck: This is a very small tolerance number that defines how accurate will be fatal error checks for probabilities if ValidateDataInRuntime&gt;=1. This number allows overlooking machine precision issues.
-
-          <p>	<li>	RepairPopulation: This integer defines the level the system will try to correct a population set to fit a model before simulation. The following levels are supported:
-
-          <p>	
+		<li>		0: No validity checking. 
+		<li>		1 or greater: Check that probabilities are within 0 and 1 and check that these sum to 1 when leaving event states and joiner states, and check that a value assigned to a parameter fits the validation rules defined for it. 
+		<li>		2 or greater: Check that function parameter validity rules are honored during calculation of expressions - this is the default option. 
+		<li>		3 or greater: Impose extra redundant validation checks on all phases of calculation. 
+	</ul>
+          	<li>	<code>NumberOfErrorsConsideredAsWarningsForSimulation</code>: The number of times the system will accept parameter validity violation errors during simulation as warnings and will not stop simulation. When this number of errors is reached, the system will raise a fatal error to the user and stop simulation. The error messages can be seen on the console window. 
+	<li>	<code>NumberOfTriesToRecalculateSimulationStep</code>: The number of times that the system will force recalculation of the same time step if an error was raised during this time step. If unsuccessful after this number of recalculations then force recalculation of the entire individual from the first time step. 
+	<li>	<code>NumberOfTriesToRecalculateSimulationOfIndividualFromStart</code>: The number of times an individual will be recalculated from start in case errors appeared during simulation that forced restarting calculations. If this number of tries is reached, a fatal error is raised that stops simulation. 
+	<li>	<code>SystemPrecisionForProbabilityBoundCheck</code>: This is a very small tolerance number that defines how accurate will be fatal error checks for probabilities if ValidateDataInRuntime&gt;=1. This number allows overlooking machine precision issues. 
+	<li>	<code>RepairPopulation</code>: This integer defines the level the system will try to correct a population set to fit a model before simulation. The following levels are supported:
+	
                <ul>
 		<li>		0: No repairs are made and errors are generated. This forces the user to match population set parameters and model parameters very carefully, including process names. 
 		<li>		1 or Greater: The system will attempt to figure out values for process state indicators and other states in the process according to the model structure and according to state indicator values defined in the population set. 
 		<li>		10 or Greater: The system will remove individuals with empty values in the population data before simulation, and therefore avoid generating an error that will stop the simulation process. 
 	</ul>
-
-          <p>	<li>	VerboseLevel: Defines how much information to output during simulation.
-
-          <p>	
+          	<li>	<code>VerboseLevel</code>: Defines how much information to output during simulation. 
+	
                <ul>
 		<li>		Here are supported levels for output from population generation from distributions:
 		
@@ -141,17 +130,14 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 		<li>		10 or greater: Print an announcement each time a new individual starts generation. Also print a generation summary at the end of of population generation from distributions. 
 		</ul>
                	</ul>
-
-          <p>	<li>	Here are supported levels for output from bridging population set and model definitions before simulation:
-
-          <p>	
+          	<li>	Here are supported levels for output from bridging population set and model definitions before simulation:
+	
                <ul>
 		<li>		1 or greater: Print summary of the bridge process. 
 		<li>		5 or greater: Print a message if deleting a record due to a missing value. 
 		<li>		10 or greater: Show each process set by the system due to a child state. 
 	</ul>
-
-          <p>	<li>		Here are supported levels for output from simulation:
+          	<li>		Here are supported levels for output from simulation:
 		
                <ul>
 			<li>			3 or greater: Record random seed number on file that will be created at the start of simulation. 
@@ -161,14 +147,19 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 			<li>			30 or greater: Print an announcement each time step during simulation. Also print a message if recalculation of a time step was forced due to error. 
 			<li>			40 or greater: Print an announcement for each state in the State Processing Queue (SPQ). This is highly advanced and requires deep understanding of the system. 
 		</ul>
-
-          <p>	<li>	RandomSeed: Defines a random seed to start both population generation and simulation. NaN is used to indicate that system time will be used as a random seed - essentially making numbers different each simulation.
-
-          <p>	<li>	NumberOfErrorsConsideredAsWarningsForPopulationGeneration: The number of times the system will accept boundary violation errors as warnings and will not stop during population generation from distributions. When this number or errors is reached, the system will raise a fatal error to the user. Error messages can be found on the console window.
-
-          <p>	<li>	NumberOfTriesToRecalculateIndividualDuringPopulationGeneration: The number of time the system will try to recalculate the same individual if a non fatal error is encountered during calculation of that individual. Once this number is reached a fatal error will be raised and generation of data from distributions will stop.
-
-     </ul>
+          	<li>	<code>RandomSeed</code>: Defines a random seed to start both population generation and simulation. NaN is used to indicate that system time will be used as a random seed - essentially making numbers different each simulation. 
+	<li>	<code>NumberOfErrorsConsideredAsWarningsForPopulationGeneration</code>: The number of times the system will accept boundary violation errors as warnings and will not stop during population generation from distributions. When this number or errors is reached, the system will raise a fatal error to the user. Error messages can be found on the console window. 
+	<li>	<code>NumberOfTriesToRecalculateIndividualDuringPopulationGeneration</code>: The number of time the system will try to recalculate the same individual if a non fatal error is encountered during calculation of that individual. Once this number is reached a fatal error will be raised and generation of data from distributions will stop. 
+	<li>	<code>GeneticAlgorithmCandidatesPerSelectedIndividual</code>: Defines the number of candidates to generate for each individual if objectives are defined. If this number is X and an a population of size 100 is requested then the initial pool of candidates will be 100*X from which the genetic algorithm will select the 100 best individuals that fit the objectives. 
+	<li>	<code>GeneticAlgorithmSolutionPopulationSize</code>: The number of candidate solutions in each generation. A solution is a selection of individuals from the candidate pool group. 
+	<li>	<code>GeneticAlgorithmMutationRate</code>: The probability of an individual to change to another candidate in any given solution. 
+	<li>	<code>GeneticAlgorithmMaxEvalsTerminator</code>: A stop criteria for the genetic algorithm defined by the maximal number of evaluations of candidate solutions. This stop criteria is similar to limiting the overall number of objective computations. 
+	<li>	<code>GeneticAlgorithmMaxStableGenerationCountTerminator</code>: A stop criteria for the genetic algorithm defining the number of consecutive generations that the best solution does not change before stopping. Using a higher number here and in <code>GeneticAlgorithmMaxEvalsTerminator</code> improves the probability of reaching an optimal solution - yet this will take much more time. Note that stop criteria compete. 
+	<li>	<code>GeneticAlgorithmTournamentSize</code>: The number of tournaments used to define the population of the next generation. For additional information see:
+		<a href='http://inspyred.github.io/reference.html#selectors-parent-selection-methods' target="_blank"> http://inspyred.github.io/reference.html#selectors-parent-selection-methods</a>
+		<li>	<code>GeneticAlgorithmNumberOfElitesToSurviveIfBetterThanWorstOffspring</code>: The number of solutions from previous generation to be kept in the next generation if better than offspring. If this number is at least 1 then it is guaranteed that the best solution in each generation is at least as good as the previous generation. For additional information see:
+		<a href='http://inspyred.github.io/reference.html#replacers-survivor-replacement-methods' target="_blank"> http://inspyred.github.io/reference.html#replacers-survivor-replacement-methods</a>
+	</ul>
 
      <li><strong>State Indicator</strong> - These cannot be changed by the user, but can be used in expressions and other system functions. For each state created in the system, there will be two State Indicator parameters associated with it - the actual state and the entered state indicator - see <a href="States.html#States">States</a>.  The validation rule for this type of parameter is Integer [0,1]. 
 </ul>

@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -61,7 +61,7 @@ import os
 import datetime
 import sys
 
-class MainFrame(wx.Frame):
+class MainFrame(cdml.CDMWindow, wx.Frame):
     
     def __init__(self, mode=None, data=None, type=None, id_prj=0, *args, **kwds):
         """ Constructor of the MainFrame class """
@@ -151,7 +151,7 @@ class MainFrame(wx.Frame):
 
         self.SetTitle("Report Viewer")
         self.SetSize((900, 700))
-        self.MakeModal(True)
+        self.MyMakeModal(True)
 
         self.st_DetailLevel.SetMinSize((-1, -1))
         self.st_ShowDependency.SetMinSize((-1, -1))
@@ -739,9 +739,9 @@ class MainFrame(wx.Frame):
 
 
 if __name__ == "__main__":
-    app = wx.PySimpleApp(0)
-    wx.InitAllImageHandlers()
-    DB.LoadAllData('Testing.zip')
+    app = wx.App(0)
+    #wx.InitAllImageHandlers() Deprecated
+    DB.LoadAllData('InData' + DB.os.sep + 'Testing.zip')
     ScriptFileNameFullPath = DB.Projects[1010].CompileSimulation()
     ResultInfo = DB.Projects[1010].RunSimulationAndCollectResults(ScriptFileNameFullPath)
     frame_1 = MainFrame(mode=None, data=(ResultInfo, None), type=None, id_prj=0, parent=None )

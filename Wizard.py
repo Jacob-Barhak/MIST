@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013 Jacob Barhak
+# Copyright (C) 2013-2014 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -269,10 +269,10 @@ class WizardDialog(wx.Frame):
 
 
 if __name__ == "__main__":
-    app = wx.PySimpleApp(0)
-    wx.InitAllImageHandlers()
+    app = wx.App(0)
+    #wx.InitAllImageHandlers() Deprecated
 
-    DB.LoadAllData('Testing.zip')
+    DB.LoadAllData('InData' + DB.os.sep + 'Testing.zip')
 
     # Add a few parameters
     DB.Params.AddNew(DB.Param(Name = 'TestCovariate1', Formula = '' , ParameterType = 'Number' , ValidationRuleParams = '', Notes = 'Testing'))
