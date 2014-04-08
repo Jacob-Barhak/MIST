@@ -167,7 +167,9 @@ J0100: WXPYTHON ISSUES ON UBUNTU 12.4
 At the time of MIST 0.90.0.0 release WxPython does not work on Ubuntu 12.4 since there is a dependency GLIBC_2.15 that is not installed. 
 This may prohibit users from using MIST GUI on the stable release of Ubuntu. 
 Fortunately this is not critical since other Linux versions may work and the user can use the GUI on windows and only run HPC computations on Ubuntu. 
-There is a partial solution of an alternative installation of WxPython, yet it brings warnings and funny behavior of WxPython and not been fully tested.
+There is a partial solution of an alternative installation of WxPython using the command 
+conda install wxpython -c asmeurer 
+Yet it brings warnings and funny behavior of WxPython and not been fully tested.
 
 
 
@@ -214,7 +216,13 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 6. VERSION HISTORY:
 
-MIST Verion (0,90,0,0,'MIST-Dev') - 24-Feb-2014:
+
+MIST Verion (0,91,0,0,'MIST') - 08-Apr-2014:
+	- Better recovery of cluster runs by rerunning and skipping completed jobs
+	- Fix population generation with bound check warnings dropping individuals and evolutionary optimization
+
+
+MIST Verion (0,90,0,0,'MIST') - 24-Feb-2014:
 	- Improved population generation with genetic algorithm optimization towards objectives 
 	- Improved instructions for cloud deployment
 	- Upgrade to higher versions of supporting packages

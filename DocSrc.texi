@@ -1,6 +1,6 @@
 \input texinfo @c -*-texinfo-*-
 @c %**start of header
-@c ver 52.0 20-Feb-2014  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
+@c ver 53.0 08-Apr-2014  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
 @setfilename Documentation.info
 @settitle MIcroSimulation Tool (MIST)
 @c @setcontentfsaftertitlepage
@@ -1942,7 +1942,7 @@ To do this, you should run the following command exactly as it appears:
 
 @code{starcluster sshmaster mycluster "cd /mnt/vol0/MIST && python ClusterRun.py"}
 
-In this example about 200 processes will be launched on 5 machines. You should see printout of commands launched.
+In this example about 400 processes will be launched on 5 machines. You should see printout of commands launched.
 
 @item
 While the system is running you can check upon the status of the simulation. 

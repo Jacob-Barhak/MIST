@@ -94,7 +94,7 @@ LoadedModuleNames = dir()
 # different revisions of a similar data structure than may or may not be
 # compatible with each other. It is the responsibility of the code to
 # check what code versions and revisions are compatible with it.
-Version = (0,90,0,0,'MIST')
+Version = (0,91,0,0,'MIST')
 
 # DEBUG variables
 # DebugPrints options are ['Table','TBD','Matrix', 'ExprParse','ExprConstruct', 'PrepareSimulation', 'Load' , 'MultiProcess', 'CSV', 'TempDir']
@@ -4810,6 +4810,11 @@ class PopulationSet:
         # Handle the case where the program should raise a fatal error due to
         # too many tries to process the same person
         WriteGenLine (Tab + Tab + '_WarningErrorHandler(_InputErrorString = "The generation was halted since the number of tries to recalculate the same person has been exceeded. If this problem consistently repeats itself, check the formulas to see if these cause too many out of bounds numbers to be generated. Alternatively, try raising the system option NumberOfTriesToRecalculateIndividualDuringPopulationGeneration which is now defined as ' + SmartStr(NumberOfTriesToRecalculateIndividualDuringPopulationGeneration) + '  .  ", _FatalError = True)')
+        WriteGenLine (Tab + 'else:')
+        # Handle the case where the error was not fatal, yet we do not want to
+        # proceed to calculate objectives - we want to go on to calculate the
+        # next person in the loop instead
+        WriteGenLine (Tab + Tab + 'continue')
         WriteGenLine ('')
 
         if self.Objectives!=[]:

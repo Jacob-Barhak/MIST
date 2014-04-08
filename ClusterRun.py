@@ -62,7 +62,6 @@ import shlex
 import subprocess
 
 StartTimeStr = DB.datetime.datetime.now().isoformat('T').replace(':','_')
-ErrorCount = 0
 
 ###########################################################
 #################### Define Scenario  #####################
@@ -73,7 +72,6 @@ Scenario = 'TEST'
 
 # Name the file name to run - without the zip extension
 FileNamePrefix='Testing'
-
 
 # This will be the name for the job - this line can be changed by the user
 JobName = Scenario +'_'+ FileNamePrefix +'_'+ StartTimeStr
@@ -108,7 +106,7 @@ RunPhase4D = True
 # if DebugRun is at least:
 #    1 - commands are printed and not passed to the OS, Directories not created
 #    2 - skipped report scenarios are printed - possiblly very long list
-DebugRun = (DB.sys.platform == 'win32')*1
+DebugRun = 0
 
 # define disk usage - this may also speed up computations on a cluster
 # Empty List = Leave all files
@@ -116,8 +114,9 @@ DebugRun = (DB.sys.platform == 'win32')*1
 # 'LessCSV' = remove csv files after csv created at Phase2 - Lower NFS IO 
 # 'NoErr' = do not create log files - can reduce disk space yet not recommended
 # 'NoLog' = Do not create Err files - can reduce disk space yet not recommended
+# 'NoCmd' = Do not write cmd files to Pemd/Done directories
 # A run that minimizes disk use would be:
-# DiskUsage = ['NoZip', 'LessCSV', 'NoErr', 'NoLog']
+# DiskUsage = ['NoZip', 'LessCSV', 'NoErr', 'NoLog', 'NoCmd']
 # Yet for initial runs it is recommended to leave all files and use 
 # DiskUsage = []
 DiskUsage = []
@@ -150,8 +149,11 @@ DirPhase2 = 'Phase2' + DB.os.sep
 DirPhase3 = 'Phase3' + DB.os.sep 
 DirPhase4 = 'Phase4' + DB.os.sep 
 DirTemp = DB.DefaultTempPathName + DB.os.sep
+DirPend = 'Pend' + DB.os.sep
+DirDone = 'Done' + DB.os.sep
 
-Dirs = (DirInput, DirLog, DirErr, DirPhase0, DirPhase1A, DirPhase1B, DirPhase2, DirPhase3, DirPhase4, DirTemp) 
+Dirs = [DirInput, DirLog, DirErr, DirTemp, DirDone, DirPend]
+PhaseDirs = [DirPhase0, DirPhase1A, DirPhase1B, DirPhase2, DirPhase3, DirPhase4]
 
 
 
@@ -175,11 +177,11 @@ if Scenario in ['TEST']:
 OptionsSeperation3 = []
 if Scenario in ['TEST']:
     OptionsSeperation3.append(('  ','NoSeperation3'))
-    
+
 OptionsSeperation4 = []
 if Scenario in ['TEST']:
     OptionsSeperation4.append(('  ','NoSeperation4'))
-    
+
 OptionsSeperation5 = []
 if Scenario in ['TEST']:
     OptionsSeperation5.append(('  ','NoSeperation5'))
@@ -273,9 +275,15 @@ ReportFilterFileName = DirTemp + 'ReportFilter.opt'
 
 # Make sure all directories exist:
 if DebugRun < 1:
-    for Dir in Dirs:
+    for Dir in Dirs+PhaseDirs:
         if not DB.os.path.exists(Dir):
             DB.os.mkdir(Dir)
+    for Dir in PhaseDirs:
+        if not DB.os.path.exists(DirPend+Dir):
+            DB.os.mkdir(DirPend+Dir)
+        if not DB.os.path.exists(DirDone+Dir):
+            DB.os.mkdir(DirDone+Dir)
+    
 
 
 # Now write the report filter to file
@@ -355,7 +363,45 @@ CodeDigitsForRepetitions = int(DB.math.log10(Repetitions))+2
 ################### Run the simulations ###################
 ###########################################################
 
-JobCount=[0]*5
+ErrorCount = [0]*5
+JobCount = [0]*5
+SkipCount = [0]*5
+
+def LaunchJob(CommandFileName, JobEnv,ScriptToRun,DebugRun,PhaseNumber,DirPend,DirDone):
+    "This function launches the job and takes care of book keeping"
+    # first add the command to copy from Pend to Done
+    if 'NoCmd' not in DiskUsage:
+        ScriptToRun = ScriptToRun + 'mv ' + DirPend + CommandFileName + ' ' + DirDone + CommandFileName + '\n'
+    else:
+        ScriptToRun = ScriptToRun + 'echo  "Skipping Pend to Done move by user request"\n'
+    # if command file already exists from a previous run - do not run again
+    if DB.os.path.exists(DirDone+CommandFileName):
+        print 'Skipped: ' + CommandFileName
+        (CommandStdOut, CommandStdErr) = ('Command file already executed in previous run','')
+        SkipCount[PhaseNumber] += 1
+    else:
+        if 'NoCmd' not in DiskUsage:
+            CommandFile = open(DirPend+CommandFileName,'w')
+            CommandFile.write('Running the following job command:\n')
+            CommandFile.write(JobEnv + '\n')
+            CommandFile.write('With the script:\n')
+            CommandFile.write(ScriptToRun + '\n')
+            CommandFile.close()
+        print 'Launching: ' + CommandFileName
+        # Actual script To Run
+        if DebugRun:
+            (CommandStdOut, CommandStdErr) = ('Debug Mode','')
+        else:
+            (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
+            if CommandStdErr!='':
+                print '!'*10 + 'ERROR DETECTED' + '!'*10
+                print CommandStdErr
+                ErrorCount[PhaseNumber] = ErrorCount[PhaseNumber] + 1
+        JobCount[PhaseNumber] += 1
+    print CommandStdOut
+    
+    
+    
 PrefixFileNameFormat = 'P%s_%s_%0.'+str(int(DB.Log10(Repetitions)))+'i'
 PopulationDict = dict(PopulationsToUse)
 
@@ -384,29 +430,12 @@ for (Variation, VariationEnum) in sorted(SimulationVariationCodes.iteritems(), k
                 else:
                     OverWriteFilesOrReconstructFromTraceback = 'Y'
                 ScriptToRun = ScriptToRun + 'python MultiRunSimulation.py ' + DirInput + FileNamePrefix + '.zip ' + ProjectIDToUse + ' 1 ' + PopulationPrefix + ' ' + OverWriteFilesOrReconstructFromTraceback + ' 0 ' + PopulationRepetitionsOverride + ' None ' + PopulationIDToUse + '\n'
-                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_' + PopulationPrefix + '.zip' + ' ' + DirPhase0 + '\n'
-                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_' + PopulationPrefix + '_TraceBack.txt' + ' ' + DirPhase0 + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_' + PopulationPrefix + '.zip' + ' ' + DirPhase0 + ' &&\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirInput + FileNamePrefix + '_' + PopulationPrefix + '_TraceBack.txt' + ' ' + DirPhase0 + ' &&\n'
             else:
-                ScriptToRun = ScriptToRun + 'echo "Phase0 disabled by request"\n'
-            print '#'*70
-            print 'Running the following job command:'
-            print JobEnv
-            print 'With the script:'
-            print ScriptToRun
-            # Actual script To Run
-            if DebugRun:
-                (CommandStdOut, CommandStdErr) = ('Debug Mode','')
-            else:
-                (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
-                if CommandStdErr!='':
-                    print '!'*10 + 'ERROR DETECTED' + '!'*10
-                    print CommandStdErr
-                    ErrorCount = ErrorCount + 1
-            JobCount[0] += 1
-            print 'Out:'
-            print CommandStdOut
-
-
+                ScriptToRun = ScriptToRun + 'echo "Phase0 disabled by request" &&\n'
+            CommandFileName = DirPhase0 + 'CMD0_'+PopulationPrefix +'_'+str(RepeatEnum) +'.cmd'
+            LaunchJob(CommandFileName, JobEnv,ScriptToRun,DebugRun,0,DirPend,DirDone)
 
 
 
@@ -437,32 +466,17 @@ if RunPhase1A or RunPhase1B:
                     OverWriteFilesOrReconstructFromTraceback = 'Y'
                 # Use the previously created population in stage 0
                 ScriptToRun = ScriptToRun + 'python MultiRunSimulation.py ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix +'.zip ' + ProjectIDToUse + ' 1 ' + str(RunningIndex) + ' ' + OverWriteFilesOrReconstructFromTraceback + ' ' + SimulationTimeOverride  + ' 1 ' + ModelIDToUse + ' -1 ' + ValueSeperation1 + ' ' + ValueSeperation2 + ' ' + ValueSeperation3 + ' ' + ValueSeperation4 + ' ' +  ValueSeperation5 + ' ' + ValueSeperation6 + '\n'
-                ScriptToRun = ScriptToRun + 'mv ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '.zip' + ' ' + DirPhase1A + '\n'
-                ScriptToRun = ScriptToRun + 'mv ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '_TraceBack.txt' + ' ' + DirPhase1A + '\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '_TraceBack.txt' + ' ' + DirPhase1A + ' &&\n'
+                ScriptToRun = ScriptToRun + 'mv ' + DirPhase0 + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '.zip' + ' ' + DirPhase1A + ' &&\n'
             else:
-                ScriptToRun = ScriptToRun + 'echo "Phase1A disabled by request"\n'
+                ScriptToRun = ScriptToRun + 'echo "Phase1A disabled by request" &&\n'
             # Write the command that converts the zip file to results csv report
             if RunPhase1B:
-                ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py ' + DirPhase1A + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '.zip 1 ' + ReportFilterFileName + ' ' + DirPhase1B + FileNamePrefix + '_'+ str(RunningIndex) + (' y' * ('NoZip' in DiskUsage)) + '\n'
+                ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py ' + DirPhase1A + FileNamePrefix + '_'+ PopulationPrefix + '_'+ str(RunningIndex) + '.zip 1 ' + ReportFilterFileName + ' ' + DirPhase1B + FileNamePrefix + '_'+ str(RunningIndex) + (' y' * ('NoZip' in DiskUsage)) + ' &&\n'
             else:
-                ScriptToRun = ScriptToRun + 'echo "Phase1B disabled by request"\n'
-            print '#'*70
-            print 'Running the following job command:'
-            print JobEnv
-            print 'With the script:'
-            print ScriptToRun
-            # Actual script To Run
-            if DebugRun:
-                (CommandStdOut, CommandStdErr) = ('Debug Mode','')
-            else:
-                (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
-                if CommandStdErr!='':
-                    print '!'*10 + 'ERROR DETECTED' + '!'*10
-                    print CommandStdErr
-                    ErrorCount = ErrorCount + 1
-            JobCount[1] += 1
-            print 'Out:'
-            print CommandStdOut
+                ScriptToRun = ScriptToRun + 'echo "Phase1B disabled by request" &&\n'
+            CommandFileName = DirPhase1A + 'CMD1_'+str(RunningIndex)+'_'+str(RepeatEnum) +'.cmd'
+            LaunchJob(CommandFileName, JobEnv,ScriptToRun,DebugRun,1,DirPend,DirDone)
 
             
 
@@ -484,32 +498,12 @@ if RunPhase2:
         JobEnv = JobEnv + ' -N ' + JobName + 'V' + str(VariationEnum) + 'Collect'
         JobEnv = JobEnv + ' -hold_jid "' + JobName + 'V' + str(VariationEnum) + 'R*"'
         ScriptToRun = '#!/bin/bash\n'
-        ScriptToRun = ScriptToRun + 'echo "Collecting Variation ' + str(VariationEnum) + '"\n'
-        ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py "' + DirPhase1B + FileNamePrefix + '_' + str(RunningIndex) + '[0-9]'*(CodeDigitsForRepetitions)+'.csv"' + ' None None ' + DirPhase2 + FileNamePrefix + '_' + str(RunningIndex) + (' y' * ('LessCSV' in DiskUsage)) + '\n'
-        print '#'*70
-        print 'Running the following job command:'
-        print JobEnv
-        print 'With the script:'
-        print ScriptToRun
-        # Actual script To Run
-        # For each such project collect all the csv reports previously
-        # calculated into csv statistics
-        if DebugRun:
-            (CommandStdOut, CommandStdErr) = ('Debug Mode','')
-        else:
-            (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
-            if CommandStdErr!='':
-                print '!'*10 + 'ERROR DETECTED' + '!'*10
-                print CommandStdErr
-                ErrorCount = ErrorCount + 1
-            else:
-                if CommandStdOut[0:9] != 'Your job ':
-                    # Normal response is "Your job # ("Name") was submitted"
-                    print '!'*10 + 'POSSIBLE ERROR - NO SUBMITTED JOB DETECTED' + '!'*10
-                    ErrorCount = ErrorCount + 1
-        JobCount[2] += 1
-        print 'Out:'
-        print CommandStdOut
+        ScriptToRun = ScriptToRun + 'echo "Collecting Variation ' + str(VariationEnum) + '" \n'
+        ScriptToRun = ScriptToRun + 'python MultiRunSimulationStatisticsAsCSV.py "' + DirPhase1B + FileNamePrefix + '_' + str(RunningIndex) + '[0-9]'*(CodeDigitsForRepetitions)+'.csv"' + ' None None ' + DirPhase2 + FileNamePrefix + '_' + str(RunningIndex) + (' y' * ('LessCSV' in DiskUsage)) + ' &&\n'
+        CommandFileName = DirPhase2 + 'CMD2_'+ str(RunningIndex) +'.cmd'
+        LaunchJob(CommandFileName, JobEnv,ScriptToRun,DebugRun,2,DirPend,DirDone)
+
+
 
 ##### Calculate report and plots #####
 
@@ -641,7 +635,7 @@ if Scenario in [Scenario]:
     TempFile = open(TempFilePrefix+'_Temp_Yearly.plt','w')
     TempFile.write(str(PlotInstructions))
     TempFile.close()
-    PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly.pdf " + TempFilePrefix + "_Temp_Yearly.plt\n")
+    PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly.pdf " + TempFilePrefix + "_Temp_Yearly.plt &&\n")
     
     if len(Stratifications) >1:
         # Create the stratified plots
@@ -649,7 +643,7 @@ if Scenario in [Scenario]:
         TempFile = open(TempFilePrefix+'_Temp_Yearly_Strat.plt','w')
         TempFile.write(str(PlotInstructions))
         TempFile.close()
-        PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_Strat.pdf " + TempFilePrefix + "_Temp_Yearly_Strat.plt\n")
+        PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_Strat.pdf " + TempFilePrefix + "_Temp_Yearly_Strat.plt &&\n")
     
     
     # To Allow viewing also create graph for each population if there are a few of these
@@ -662,7 +656,7 @@ if Scenario in [Scenario]:
             TempFile = open(TempFilePrefix+'_Temp_Yearly_'+PopulationTitleToUse+'.plt','w')
             TempFile.write(str(PlotInstructions))
             TempFile.close()
-            PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_"+PopulationTitleToUse+".plt\n")
+            PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_"+PopulationTitleToUse+".plt &&\n")
     
             if len(Stratifications) >1:
                 # Isolate population Titles to show from the list by title
@@ -672,9 +666,7 @@ if Scenario in [Scenario]:
                 TempFile = open(TempFilePrefix+'_Temp_Yearly_Strat_'+PopulationTitleToUse+'.plt','w')
                 TempFile.write(str(PlotInstructions))
                 TempFile.close()
-                PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_Strat_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_Strat_"+PopulationTitleToUse+".plt\n")
-
-
+                PlotStrList.append("python CreatePlotsFromCSV.py " + DirPhase3 + FileNamePrefix + "_Out_Yearly.csv " + DirPhase4 + FileNamePrefix + "_Out_Yearly_Strat_"+PopulationTitleToUse+".pdf " + TempFilePrefix + "_Temp_Yearly_Strat_"+PopulationTitleToUse+".plt &&\n")
 
 
 # Process Phase 3
@@ -691,26 +683,10 @@ if RunPhase3:
     ScriptToRun = '#!/bin/bash\n'
     ScriptToRun = ScriptToRun + 'echo "Final Report Collection"\n'
     ScriptToRun = ScriptToRun + ReportStr
-    
-    print '#'*70
-    print 'Running the following job command:'
-    print JobEnv
-    print 'With the script:'
-    print ScriptToRun
-    # Actual script To Run
-    # For each such project collect all the csv reports previously
-    # calculated into csv statistics
-    if DebugRun:
-        (CommandStdOut, CommandStdErr) = ('Debug Mode','')
-    else:
-        (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
-        if CommandStdErr!='':
-            print '!'*10 + 'ERROR DETECTED' + '!'*10
-            print CommandStdErr
-            ErrorCount = ErrorCount + 1
-    JobCount[3] += 1
-    print 'Out:'
-    print CommandStdOut
+
+    CommandFileName = DirPhase3 + 'CMD3_SingleJob'+'.cmd'
+    LaunchJob(CommandFileName, JobEnv,ScriptToRun,DebugRun,3,DirPend,DirDone)
+
 
 
 # Process Phase 4
@@ -724,7 +700,7 @@ if RunPhase4A:
         # your own processing mechanism.
         ScriptToRun = '#!/bin/bash\n'
         ScriptToRun = ScriptToRun + 'echo "Post Processing Final Report"\n'
-        ScriptToRun = ScriptToRun + 'python AnalyzeSimulationResults.py ' + DirPhase3 + FileNamePrefix + '_Out.csv ' + ValidationQueryFile + ' ' + DirPhase4 + 'QueryOut_' + FileNamePrefix + '_' + ValidationQueryFile + '\n'
+        ScriptToRun = ScriptToRun + 'python AnalyzeSimulationResults.py ' + DirPhase3 + FileNamePrefix + '_Out.csv ' + ValidationQueryFile + ' ' + DirPhase4 + 'QueryOut_' + FileNamePrefix + '_' + ValidationQueryFile + ' &&\n'
         ScriptList.append(ScriptToRun)
 if RunPhase4B:
         # AnalyzePopulationGeneration.py is not part of the core MIST 
@@ -738,7 +714,7 @@ if RunPhase4B:
                 PopulationPrefix = (PrefixFileNameFormat%(ProjectIDToUse.strip(),PopulationIDToUse.strip(),RepeatEnum)).replace('[','_').replace(']','_')
                 InputLogFileName = DirLog + 'Out'+ PopulationPrefix +'_'+str(RepeatEnum) +'.log'
                 ScriptToRun = ScriptToRun + ' ' + InputLogFileName
-        ScriptToRun = ScriptToRun + '\n'
+        ScriptToRun = ScriptToRun + ' &&\n'
         ScriptList.append(ScriptToRun)    
 if RunPhase4C:
     for PlotStr in PlotStrList:
@@ -755,7 +731,7 @@ if RunPhase4D:
                 for RepeatEnum in range(Repetitions):
                     PopulationPrefix = (PrefixFileNameFormat%(ProjectIDToUse.strip(),PopulationIDToUse.strip(),RepeatEnum)).replace('[','_').replace(']','_')
                     ZipFileName = DirPhase0 + FileNamePrefix + '_' + PopulationPrefix + '.zip'
-                    ScriptToRun = ScriptToRun + 'rm -f ' + ZipFileName + '\n'
+                    ScriptToRun = ScriptToRun + 'rm -f ' + ZipFileName + ' &&\n'
         ScriptToRun = ScriptToRun + '\n'
         ScriptList.append(ScriptToRun)    
 
@@ -772,41 +748,27 @@ for (ScriptEnum,ScriptToRun) in enumerate(ScriptList):
     # Also wait for the popualtion jobs to finish
     JobEnv = JobEnv + ' -hold_jid "' + JobName + 'P*"'
 
-    print '#'*70
-    print 'Running the following job command:'
-    print JobEnv
-    print 'With the script:'
-    print ScriptToRun
-    # Actual script To Run
-    # For each such project collect all the csv reports previously
-    # calculated into csv statistics
-    if DebugRun:
-        (CommandStdOut, CommandStdErr) = ('Debug Mode','')
-    else:
-        (CommandStdOut, CommandStdErr) = subprocess.Popen(shlex.split(JobEnv), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate(ScriptToRun)
-        if CommandStdErr!='':
-            print '!'*10 + 'ERROR DETECTED' + '!'*10
-            print CommandStdErr
-            ErrorCount = ErrorCount + 1
-    JobCount[4] += 1
-    print 'Out:'
-    print CommandStdOut
+    CommandFileName = DirPhase4 + 'CMD4_'+ str(ScriptEnum) +'.cmd'
+
+    LaunchJob(CommandFileName, JobEnv,ScriptToRun,DebugRun,4,DirPend,DirDone)
 
 
-
-
+TotalNumberOfJobs = map(DB.SumOp,JobCount,SkipCount)
 print '#'*70
 print 'Scenario is: ' + Scenario
 print 'Total Number of Variations is %i' % len(SimulationVariationCodes)
 print 'Total Number of Repetitions is %i' % Repetitions
-print 'Total Number of Jobs is %i = %i + %i + %i + %i + %i for phases 0-4' %( (sum(JobCount),) + tuple(JobCount) )
+print 'Number of Skipped jobs is %i = %i + %i + %i + %i + %i for phases 0-4' %( (sum(SkipCount),) + tuple(SkipCount) )
+print 'Number of Launched Jobs is %i = %i + %i + %i + %i + %i for phases 0-4' %( (sum(JobCount),) + tuple(JobCount) )
+print 'Total Number of Jobs is %i = %i + %i + %i + %i + %i for phases 0-4' %( (sum(TotalNumberOfJobs),) + tuple(TotalNumberOfJobs) )
 print '#'*70
 
-if ErrorCount > 0:
+
+if sum(ErrorCount) > 0:
     print '!'*70
     print '!'*70
     print '!'*70
-    print ' '*20 + str(ErrorCount) + ' ERRORS DETECTED IN SCRIPT' 
+    print 'NUMBER OF ERRORS DETECTED is %i = %i + %i + %i + %i + %i for phases 0-4' %( (sum(ErrorCount),) + tuple(ErrorCount) )
     print '!'*70
     print '!'*70
     print '!'*70
