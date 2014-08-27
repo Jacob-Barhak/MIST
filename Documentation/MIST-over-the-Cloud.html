@@ -6,6 +6,7 @@
 <meta name="generator" content="makeinfo 4.7">
 <link title="Top" rel="start" href="index.html#Top">
 <link rel="prev" href="Utilities.html#Utilities" title="Utilities">
+<link rel="next" href="Contact-Information-and-Support.html#Contact-Information-and-Support" title="Contact Information and Support">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
 Copyright (C) 2013-2014 Jacob Barhak
@@ -79,7 +80,8 @@ Indirect Estimation and Simulation Tool (IEST).-->
 <body>
 <div class="node">
 <p>
-<a name="MIST-over-the-Cloud"></a>Previous:&nbsp;<a rel="previous" accesskey="p" href="Utilities.html#Utilities">Utilities</a>,
+<a name="MIST-over-the-Cloud"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Contact-Information-and-Support.html#Contact-Information-and-Support">Contact Information and Support</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Utilities.html#Utilities">Utilities</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 <hr><br>
 </div>
@@ -88,17 +90,17 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
 <p>MIST can run over the cloud. MIST uses the
 <a href="http://aws.amazon.com/ec2/" target="_blank"> Amazon Elastic Compute Cloud (EC2)</a> and
-<a href= "http://star.mit.edu/cluster/" target="_blank"> Star Cluster </a>to run simulations in parallel in High Performance Computing (HPC) environment to reduce simulation time and Monte-Carlo uncertainty and allow exploring many more variations in simulation.
+<a href= "http://star.mit.edu/cluster/" target="_blank"> StarCluster </a>to run simulations in parallel in High Performance Computing (HPC) environment to reduce simulation time and Monte-Carlo uncertainty and allow exploring many more variations in simulation.
 
    <p>Running MIST over the cloud requires special preparation. Here is a list of things you should have before starting:
 
      <ul>
-<li>MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a working directory Desktop\MIST on a windows operating system under your user account. 
-<li>You should have a MIST model zip file prepared with that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file <span class="file">Testing.zip</span> and use the projects of Example5a and Example5b in this tutorial. 
-<li>You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized set up for MIST over the cloud in <a href="Setup.html#Setup">Setup</a> you will get to the
+<li>MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a windows operating system and then copied the MIST directory under the anaconda directory to your desktop. So that you have a copy of MIST in the Desktop\MIST directory under your user account. 
+<li>You should have a MIST model zip file prepared that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file <span class="file">Testing.zip</span> and use the projects of Example5a and Example5b in this tutorial. 
+<li>You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized setup for MIST over the cloud in <a href="Setup.html#Setup">Setup</a> you will get to the
 <a href="http://aws.amazon.com/ " target="_blank"> Amazon EC2 login page </a>where you should create an account. Note that running simulations in Amazon EC2 will cost money - make sure you can pay for the mount of computation you are planning before running any simulations. 
-<li>You should have Star Cluster installed. See <a href="Setup.html#Setup">Setup</a> for specialized set up for the cloud
-<li>You should have configured your Star Cluster configuration files to work with your cloud account. You can find instructions for specialized set up for MIST over the cloud in <a href="Setup.html#Setup">Setup</a>. 
+<li>You should have StarCluster installed. See <a href="Setup.html#Setup">Setup</a> for specialized set up for the cloud
+<li>You should have configured your StarCluster configuration files to work with your cloud account. You can find instructions for specialized set up for MIST over the cloud in <a href="Setup.html#Setup">Setup</a>. 
 </ul>
 
    <p>Once you have setup the system, you should follow several steps to launch a simulation on the cloud. We will show these steps with an example.
@@ -112,7 +114,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
      <p>In our example, you can leave the file unchanged. 
 <li>Cleanup the working directory on your PC from temporary and irrelevant data.
 
-     <p>In our case, delete the <code>Temp</code> directory if it exists and delete the files ending with <span class="file">.pyc</span> if they exist.
+     <p>In our example case, delete the <code>Temp</code> directory if it exists and delete the files ending with <span class="file">.pyc</span> if they exist in the Desktop\MIST directory.
 
      <li>Open a terminal/command line prompt. The command line prompt will start at your user home directory.
 
@@ -122,7 +124,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <li>Start StartCuster with the number of nodes you want and specify its name.
 
-     <p>For our example we will use the command :
+     <p>For our example we will use the command:
 
      <p><code>starcluster start -s 5 mycluster</code>
 
@@ -176,18 +178,15 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
    <p>Note that there are many extensions/variations to these that you can run on the cloud. You can find additional information in the following links:
 
-   <p><a href="http://star.mit.edu/cluster/docs/0.93.3/quickstart.html" target="_blank"> Star Cluster Quick Start </a>
+   <p><a href="http://star.mit.edu/cluster/docs/0.93.3/quickstart.html" target="_blank"> StarCluster Quick Start </a>
 
-   <p><a href="http://star.mit.edu/cluster/docs/0.93.3/manual/putget.html" target="_blank"> Star Cluster Copying Data Instructions </a>
+   <p><a href="http://star.mit.edu/cluster/docs/0.93.3/manual/putget.html" target="_blank"> StarCluster Copying Data Instructions </a>
 
    <p>The instructions above will successfully run the test example over the cloud. However, for larger simulations you will need to consider additional issues such as storage space, memory issues, and costs. For this, you may need to select a different Amazon Machine Image (AMI) and may need to make some reconfiguration of the cluster to access additional disk space to provide sufficient resources. Some of these issues require deeper understanding of StarCluster and expert advice. Good resources to find solutions for these issues are the StarCluster mailing list and the GitHub repository:
 
    <p><a href="http://star.mit.edu/cluster/mlarchives/index.html" target="_blank"> StarCluster - Mailing List Archive </a>
 
-   <p><a href="https://github.com/jtriley/StarCluster" target="_blank"> Star Cluster GitHub repository</a>
+   <p><a href="https://github.com/jtriley/StarCluster" target="_blank"> StarCluster GitHub repository</a>
 
-<!-- @node General Index -->
-<!-- @unnumbered Index -->
-<!-- @printindex cp -->
-</body></html>
+   </body></html>
 

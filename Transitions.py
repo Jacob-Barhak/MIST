@@ -401,7 +401,7 @@ class MainFrame(cdml.CDMFrame):
         # some reason this forces repainting of the screen. Yet since it works
         # on both Linux and Windows, this solution was a compromise
         # self.cc_study_model.Bind(wx.EVT_COMMAND_LEFT_CLICK, self.FrameEventHandler)
-        self.cc_study_model.Bind(wx.EVT_LIST_ITEM_SELECTED, self.FrameEventHandler)
+        self.cc_study_model.Bind(wx.EVT_LIST_ITEM_SELECTED, self.InitTransitions)
 
         self.InitTransitions() # display existing data
 

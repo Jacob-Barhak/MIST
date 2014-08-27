@@ -51,6 +51,13 @@
 # This file contains all common constants, classes and functions for GUI       #
 ################################################################################
 
+
+import os
+# There is an issue with overlay scroll bars on Ubuntu Linux that breaks 
+# combo controls. This line disables these scroll bars in favor of old style
+# scroll bars that are more comppatible. 
+os.environ['LIBOVERLAY_SCROLLBAR']='0'
+
 import wxversion
 # This line ensures that all wx imports will have a proper version
 # therefore it is important that this file is always imported before wx
@@ -72,8 +79,8 @@ import HelpInterface
 import copy
 
 # Define the GUI version
-Version = (0,91,0,0,'MIST')
-CompatibleWithDataDefVersion = (0,91,0,0,'MIST')
+Version = (0,92,1,0,'MIST')
+CompatibleWithDataDefVersion = (0,92,0,0,'MIST')
 
 # Check that the Data Version and the GUI version are compatible
 # Currently the Last text identifier in the version is ignored in
@@ -526,16 +533,21 @@ class CDMFrame(CDMWindow, wx.Dialog, wx.Frame):
 
             self.pn_view.GetSizer().Add(new_panel, 0, wx.ALL, 1)
 
-            adjustScrollBar(self, self.pn_view) # Resize the length of scroll bar according to the number of RowPanel instances
-            scrollPanel(self.pn_view, new_panel) # Display new RowPanel instance
-
             # Assign default event handler to controls in new RowPanel
             self.BindDefaultEvent(new_panel)
+            # Find first editable control - Textbox, combobox or checkbox
+            # Then set focus in that control
+            new_ctrl = new_panel.GetDefaultFocus()
+            new_ctrl.SetFocus()
 
-        # Find first editable control - Textbox, combobox or checkbox
-        # Then set focus in that control
-        new_ctrl = new_panel.GetDefaultFocus()
-        new_ctrl.SetFocus()
+            wx.CallAfter(adjustScrollBar, self, self.pn_view)  # Resize the length of scroll bar according to the number of RowPanel instances
+            wx.CallAfter(scrollPanel, self.pn_view, new_panel) # Display new RowPanel instance
+
+        else:
+            # Find first editable control - Textbox, combobox or checkbox
+            # Then set focus in that control
+            new_ctrl = new_panel.GetDefaultFocus()
+            new_ctrl.SetFocus()
 
 
         # If current RowPanel intance include Combo Control(s), it should have 'SetComboItem' method
@@ -888,7 +900,7 @@ class CDMFrame(CDMWindow, wx.Dialog, wx.Frame):
             
         sizer = this_panel.GetContainingSizer()     # get sizer that contains this panel
         sizer.Detach(this_panel)                    # detach this panel from containing sizer
-        this_panel.Destroy()                        # remove panel
+        wx.CallAfter(this_panel.Destroy)            # remove panel
         self.Layout()                               # re-arrange panels
 
         # set the status of the previous panel as NONE --> delete arrow mark
@@ -1319,10 +1331,12 @@ class CDMPanel(CDMWindow, wx.Panel):
             if type(ctrl) not in [Combo, Text, Checkbox]: continue
             type_ctrl = type(ctrl)
             if type_ctrl == Combo :
-                value = ctrl.GetTextCtrl().GetRange(0,-1)
+                last = ctrl.GetTextCtrl().GetLastPosition()
+                value = ctrl.GetTextCtrl().GetRange(0,last)
 
             elif type_ctrl == Text :
-                value = ctrl.GetRange(0,-1)
+                last = ctrl.GetLastPosition()
+                value = ctrl.GetRange(0,last)
 
             elif type_ctrl == Checkbox:
                 value = ctrl.GetValue()
@@ -1684,33 +1698,6 @@ class Combo(CDMControl, wx.combo.ComboCtrl):
             Usually used for Initialize method of CDMFrame"""
         self.GetTextCtrl().SetValue(str(string))
 
-
-
-    def OnInText(self, event):
-        """ Method for automatic completion. Not used in current version.
-            Need to be modified and tested in future
-        """
-
-        if self.ignoreEvtText:
-            self.ignoreEvtText = False
-            return
-
-        found = False
-        currentText = event.GetRange()
-        list = self.GetListCtrl()
-        index = list.FindItem(-1, currentText, True)
-        if index != wx.NOT_FOUND:
-            choice = str(list.GetItem(index,0))
-            self.ignoreEvtText = True
-            self.SetValue(choice)
-            self.SetInsertionPoint(len(currentText))
-            self.SetMark(len(currentText), len(choice))
-            found = True
-
-        if not found:
-            event.Skip()
-
-
     def OnExit(self, event):
         """ Self Checking Method. Activated when the focus moved out """
 
@@ -1785,7 +1772,9 @@ class Combo(CDMControl, wx.combo.ComboCtrl):
 
     def GetValueString(self):
         """ Retrieve string from the TextCtrl in Combo control"""
-        return str(self.GetTextCtrl().GetRange(0,-1))
+        last = self.GetTextCtrl().GetLastPosition()
+        value = str(self.GetTextCtrl().GetRange(0,last))
+        return value
 
 
     def SetInput(self, allow_input):
@@ -2098,7 +2087,8 @@ class Text(CDMControl, wx.TextCtrl):
     def GetValueString(self):
         """ Retrieve value as a string """
         try:
-            RawString = self.GetRange(0,-1)
+            Last = self.GetLastPosition()
+            RawString = self.GetRange(0,Last)
             TheText = str(RawString)
         except UnicodeEncodeError:
             # Deal with an error that can be created by unicode/text conversion
@@ -2267,22 +2257,10 @@ class KeyValidator(wx.PyValidator):
 def adjustScrollBar(frame, swin):
     """ Adjust the size of ScrollBar according to the number of RowPanel """
 
-    xunit, yunit = swin.GetScrollPixelsPerUnit()
+    sizer = swin.GetSizer()
+    w,h = sizer.GetMinSize()
+    swin.SetVirtualSize((w,h))
 
-    # this is dummy line to correct actual position/size of last panel
-    swin.SetScrollbars(xunit, yunit, 1, 1)
-
-    child_panels = list(swin.GetChildren())
-    # loop through all panels and find the panel with the highest y value
-    last_panel = child_panels[0]
-    select_x, select_y, select_width, select_height = last_panel.GetRect()
-    for panel in child_panels[1:]:
-        x, y, width, height = panel.GetRect()
-        # choose the the panel by the lowest y number
-        if y > select_y:
-            select_x, select_y, select_width, select_height = x, y, width, height
-
-    swin.SetScrollbars(xunit, yunit, select_width/xunit, (select_y+select_height+1)/yunit)
 
 
 

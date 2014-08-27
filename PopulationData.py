@@ -601,7 +601,8 @@ class MainFrame(cdml.CDMWindow, wx.Frame):
         # remove from list control display
         self.lc_column.DeleteItem(idx)
 
-        self.lc_column.Select(idx, True)
+        if len(self.DataColumns)>idx:
+            self.lc_column.Select(idx, True)
 
         oldidx = self.lc_parm.GetFirstSelected()
         self.lc_parm.Select(oldidx, False)
@@ -690,7 +691,8 @@ class MainFrame(cdml.CDMWindow, wx.Frame):
         # remove from list control display
         self.lc_objectives.DeleteItem(idx)
 
-        self.lc_objectives.Select(idx, True)
+        if len(self.Objectives)>idx:
+            self.lc_objectives.Select(idx, True)
 
         # update the text boxes with the deleted values
         self.tc_obj_filter_expr.SetValue(obj_filter_expr)

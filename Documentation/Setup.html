@@ -91,33 +91,33 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 <h3 class="section">4.1 Environment</h3>
 
      <ul>
-<li>Microsoft Windows 7 or Linux. Note that other environments may work, yet were not fully tested. Linux installation is for experts. Windows environment is recommended for novice users. 
-<li>The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in
-<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a><li>The system requires the library Inspyred: Bio-inspired Algorithms in Python version 1.0:
-<a href='http://inspyred.github.io/' target="_blank"> http://inspyred.github.io/ </a><li>The system can also run simulations in High Performance Computing (HPC) environment using Sun Grid Engine or the Amazon Elastic Compute Cloud. This is highly specialized and requires experts for the setup. 
+<li>Microsoft Windows 7 or Linux - Ubuntu 12.04LTS recommended. Note that other environments may work, yet were not fully tested. Linux installation is for experts. Windows environment is recommended for novice users. 
+<li>The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. It is recommended to use Anaconda:
+<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a><li>The system requires the library Inspyred: Bio-inspired Algorithms in Python version 1.0:
+<a href='https://pythonhosted.org/inspyred/overview.html' target="_blank"> https://pythonhosted.org/inspyred/overview.html </a><li>The system requires the WxPython library to use a Graphic User Interface:
+<a href='http://www.wxpython.org/index.php' target="_blank"> http://www.wxpython.org/index.php </a><li>The system can also run simulations in High Performance Computing (HPC) environment using Sun Grid Engine or the Amazon Elastic Compute Cloud. This is highly specialized and requires experts for the setup. 
 </ul>
 
 <h3 class="section">4.2 Software Installation</h3>
 
 <p>The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) for advanced and expert users. 
-For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was tested there. For HPC features you will need to use a Linux installation.
+For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was developed there. For HPC features you will need to use a Linux installation.
 
-<h4 class="subheading">Installation Instructions:</h4>
+<h4 class="subheading">Simple Installation Instructions:</h4>
 
      <ol type=1 start=1>
 <li>Download and Install Anaconda from
-<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a><li>Install the Inspyred library by typing the following text in a command terminal: <code>pip install inspyred</code> . For additional details see:
-<a href='http://inspyred.github.io/overview.html#installation' target="_blank"> http://inspyred.github.io/overview.html#installation </a><li>Install WxPython library by typing the following text in a command terminal:  <code>conda install wxpython</code>
-<a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a><li>Download the file MIST-master.zip from github by typing the following URL in a web browser:
-<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a><li>Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory.
+<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a><li>Install MIST into your anaconda directory by typing the following text in a command terminal: <code>conda install mist -c jacob-barhak</code>
      </ol>
+
+   <p>This installation should work on Windows and on Ubuntu 12.04LTS Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
 
 <h4 class="subheading">Alternative Expert Installation Instructions:</h4>
 
      <ol type=1 start=1>
-<li>Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, pip, and nose. You can choose from a list of those in
-<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a> . You can also Install Python, numpy, matplotlib, pip and nose separately. <li>Install the Inspyred library by typing the following text in a command terminal: <code>pip install inspyred</code> . For additional details see:
-<a href='http://inspyred.github.io/overview.html#installation' target="_blank"> http://inspyred.github.io/overview.html#installation </a><li>Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at
+<li>Download and Install Anaconda from
+<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a><li>Install the Inspyred library by typing the following text in a command terminal: <code>pip install inspyred</code> . For additional details see:
+<a href='https://pythonhosted.org/inspyred/overview.html#installation' target="_blank"> https://pythonhosted.org/inspyred/overview.html#installation </a><li>Install WxPython library by typing the following text in a command terminal:  <code>conda install wxpython</code> . This library is needed for GUI only. For additional details and other ways to install WxPython see:
 <a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a><li>Download the file MIST-master.zip from github by typing the following URL in a web browser:
 <a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a><li>Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory.
      </ol>
@@ -125,18 +125,20 @@ For novice users it is recommended that you use Windows since it is the simplest
 <h4 class="subheading">To Test the Above Installations:</h4>
 
      <ol type=1 start=1>
+<li>Open a command line prompt/terminal and change the directory to your working directory using the command <code>cd &lt;working directory&gt;</code> - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example <span class="file">c:\Anaconda\MIST</span> on windows, yet this can be changed by the user, so be attentive. 
 <li>From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly. 
-<li>Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-&gt;load the file <span class="file">Testing.zip</span> in the <span class="file">InData</span> sub directory to see the examples.
+<li>Run MISTGUI.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-&gt;load the file <span class="file">Testing.zip</span> in the <span class="file">InData</span> sub directory to see the examples.
      </ol>
 
-   <p>If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance.
+   <p>If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use
+<a href="Contact-Information-and-Support.html#Contact-Information-and-Support">Contact Information and Support</a>.
 
 <h4 class="subheading">To run MIST Over the Cloud a More Complicated Setup is Needed:</h4>
 
      <ol type=1 start=1>
 <li>Install StarCluster
 <a href='http://star.mit.edu/cluster/docs/latest/installation.html' target="_blank"> http://star.mit.edu/cluster/docs/latest/installation.html </a><li>Follow the instructions on
-<a href='http://continuum.io/blog/starcluster-anaconda' target="_blank"> http://continuum.io/blog/starcluster-anaconda </a><li>If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine
+<a href='http://continuum.io/blog/starcluster-anaconda' target="_blank"> http://continuum.io/blog/starcluster-anaconda </a><li>If you have not done so already follow the Simple Installation Instructions from above on your machine
 <li>Install the nfsshare.py plugin by copying the file
 <a href='https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975' target="_blank"> https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975</a> to the StarCluster plugins directory. 
 <li>Change the config file to include all plugins of interest and add plugin parameters. At the end of setup the "Configuring StarCluster Plugins" section in the config file should have the following lines: <br>
@@ -171,12 +173,14 @@ For novice users it is recommended that you use Windows since it is the simplest
 <li>Follow the instructions on
 <a href='http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/' target="_blank"> http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/ </a>
 
-     <li>Follow the Quick Installation for Linux/OSX from above
+     <li>Follow the Quick Installation for Linux from above
      </ol>
 
 <h3 class="section">4.3 Running the Software - Simple Start</h3>
 
-<p>Open a command terminal and navigate to your working directory using the <code>cd &lt;working directory&gt;</code> command then type <code>python Main.py</code>. The main form of the system, titled 'MIcroSimulation Tool', will open. This is further described in the next section, <a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>.
+<p>Open a command terminal and navigate to your working directory using the <code>cd &lt;working directory&gt;</code> - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example <span class="file">c:\Anaconda\MIST</span> on windows, yet this can be changed by the user, so be attentive. Then type <code>python MISTGUI.py</code>. The main form of the system, titled 'MIcroSimulation Tool', will open. This is further described in the next section, <a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>.
+
+   <p>In some systems you can alternatively open the folder created during installation in a window and double-click <span class="file">MISTGUI.py</span>.
 
    <p>After you get familiar with the system and use it for a while you may expand to expert use where you can run <a href="MIST-over-the-Cloud.html#MIST-over-the-Cloud">MIST over the Cloud</a>.
 

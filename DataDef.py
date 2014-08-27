@@ -94,7 +94,7 @@ LoadedModuleNames = dir()
 # different revisions of a similar data structure than may or may not be
 # compatible with each other. It is the responsibility of the code to
 # check what code versions and revisions are compatible with it.
-Version = (0,91,0,0,'MIST')
+Version = (0,92,0,0,'MIST')
 
 # DEBUG variables
 # DebugPrints options are ['Table','TBD','Matrix', 'ExprParse','ExprConstruct', 'PrepareSimulation', 'Load' , 'MultiProcess', 'CSV', 'TempDir']
@@ -4855,7 +4855,17 @@ class PopulationSet:
             WriteGenLine ('def _CandidateGroupEvaluate(_CandidateGroup):')
             WriteGenLine (Tab + '"Define candidate fitness score calculator"')
             WriteGenLine (Tab + '_CandidateGroupInformation = [_IndividualObjectives[_IndividualIndex] for _IndividualIndex in _CandidateGroup]')
-            WriteGenLine (Tab + '_CandidateGroupInformationTransposed = map(None,*_CandidateGroupInformation)')
+            # Transpose the results to handle them properly
+            if GeneratedPopulationSize == 1:
+                # Handle the extreme end case where we ask for only a single 
+                # individual. This case is not handled well by the transpose 
+                # command and a dimetion is lost - therefore it is 
+                # handeled here seperatly. Note, however, that 
+                WriteGenLine (Tab + '_CandidateGroupInformationTransposed = [[_Entry] for _Entry in _CandidateGroupInformation[0]]')
+            else:
+                # when there are multiple individuals use regular transpose
+                WriteGenLine (Tab + '_CandidateGroupInformationTransposed = map(None,*_CandidateGroupInformation)')
+                
             WriteGenLine (Tab + '_StatisticsVector = []')
             WriteGenLine (Tab + '_ErrortVector = []')
             WriteGenLine (Tab + '_ErrorSum = 0')
@@ -4990,6 +5000,9 @@ class PopulationSet:
                 (FilterExpr, StatExpr, StatFunction, TargetValue, Weight, CalcValue, CalcError) = Objective
                 WriteGenLine (VerboseComment + 'print ( DataDef.SmartStr(_StatisticsVector['+ str(ObjectiveEnum) +']) + " $ ' + SmartStr(TargetValue) + ' $ " + DataDef.SmartStr(_ErrortVector['+ str(ObjectiveEnum) +']) + " $ ' + SmartStr(Weight) + '  $ ' + repr(StatExpr) + ' $ ' + repr(StatFunction) + ' $ ' + repr(FilterExpr)+ '" ) ')
             WriteGenLine (VerboseComment + 'print "Final Weighted Error Sum Was:" + DataDef.SmartStr(_ErrorSum)')
+            # Provide a warning for a single individual with objectives
+            if GeneratedPopulationSize == 1:
+                WriteGenLine (VerboseComment + 'print "WARNING: Note that you are generating a population of size 1 with objectives - typically objectives are defined for multiple individuals"')
 
             WriteGenLine ('# update the objectives vector for output')
             WriteGenLine ('for (_ObjectiveEnum,_Objective) in enumerate(_PopulationSetInfo.Objectives):')
@@ -6148,7 +6161,6 @@ class Project:
         WriteSimLine (Tab + Tab + Tab + Tab + Iif(VerboseLevel >= 40,'','#') + 'print "      " + str(_StateToBeProcessed)')
         WriteSimLine (Tab + Tab + Tab + '##### Phase 3 - Post State Transition #####')
         WriteRules(3,3,SystemPrecisionForProbabilityBoundCheck)
-        WriteSimLine (Tab + Tab + Tab + Tab + 'pass')
 
         WriteSimLine (Tab + Tab + Tab + '##### End of Rule Processing #####')
         WriteSimLine (Tab + Tab + Tab + '##### Error Handlers #####')

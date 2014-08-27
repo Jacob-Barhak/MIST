@@ -1,6 +1,6 @@
 \input texinfo @c -*-texinfo-*-
 @c %**start of header
-@c ver 53.0 08-Apr-2014  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
+@c ver 55.0 26-Aug-2014  Jacob Barhak - Previously University of Michichan: Aidan Feldman, Jacob Barhak, Morton Brown, Michael Kylman
 @setfilename Documentation.info
 @settitle MIcroSimulation Tool (MIST)
 @c @setcontentfsaftertitlepage
@@ -51,10 +51,16 @@ The Indirect Estimation and Simulation Tool (IEST) is distributed in the hope th
 @node Top
 @top About this Document
 
-The MIcroSimulation Tool (MIST). Additional and updated information regarding the software and the project can be found online at the following web site:
+The MIcroSimulation Tool (MIST). Additional and updated information regarding the software and the project can be found online at the following web sites:
+
 @html
 <a href='https://github.com/Jacob-Barhak/MIST' target="_blank"> https://github.com/Jacob-Barhak/MIST</a>
 @end html
+
+@html
+<a href="https://simtk.org/home/mist" target="_blank"> https://simtk.org/home/mist</a> 
+@end html
+
 
 First is a short menu of links associated with the system. Below it you will find the table of contents.
 
@@ -74,6 +80,7 @@ First is a short menu of links associated with the system. Below it you will fin
 * Reports:: Reports provided by the system. 
 * Utilities:: A set of useful utility programs.
 * MIST over the Cloud:: running MIST in High Performance Computing environment and specifically over the Amazon Compute Cloud.
+* Contact Information and Support:: Links for contact information and additional support.
 @end menu
 
 @contents
@@ -127,10 +134,10 @@ Additional and updated information regarding the software and the project can be
 <a href='https://github.com/Jacob-Barhak/MIST' target="_blank"> https://github.com/Jacob-Barhak/MIST </a>
 @end html
 
-For a video introduction and additional information, please visit the following links:
+For a video introductions and examples of use, please visit the following links:
 @html
 <a href='http://www.youtube.com/watch?v=AD896WakR94' target="_blank"> http://www.youtube.com/watch?v=AD896WakR94 </a>
-<a href='https://github.com/scipy/scipy2013_talks/tree/master/talks/jacob_barhak' target="_blank"> https://github.com/scipy/scipy2013_talks/tree/master/talks/jacob_barhak </a>
+<a href='https://www.youtube.com/watch?v=vyvxiljc5vA' target="_blank"> https://www.youtube.com/watch?v=vyvxiljc5vA </a>
 @end html
 
 
@@ -144,16 +151,17 @@ For a video introduction and additional information, please visit the following 
 
 @section New in This Version
 
-The main focus of this version was on speeding large simulations. Here are further details on changes:
+The main focus of this version was on compatibility and eazy deployment. Here are further details on changes:
 
 @itemize @bullet
 @item
-Redefinition of Table function to improve speed and remove previous issues
+Installation simplified
 @item
-Documentation adjusted with additions to running MIST over the cloud
+SimTK repository and mailing list
 @item
-GUI Bug fix
+Linux compatibility improved
 @end itemize
+
 
 @section Notable Components from Previous Versions
 
@@ -165,11 +173,13 @@ MIST only deals with Monte-Carlo Micro-Simulation and does not offer Markov Esti
 @item
 Improved population generation with genetic algorithm optimization towards objectives
 @item
-MIST runs over the cloud and on sun Grid Engine clusters
+MIST runs over the cloud and on Sun Grid Engine clusters
 @item
 Reproducibility and traceability were improved and tested
 @item
 Simplification/improvement of Parameters / Models / Simulation Rules
+@item
+Redefinition of Table function to improve speed and remove previous issues
 @end itemize
 
 See the README.txt file supplied with the software for further information on changes and capabilities.
@@ -181,16 +191,21 @@ See the README.txt file supplied with the software for further information on ch
 @section Environment
 @itemize @bullet
 @item
-Microsoft Windows 7 or Linux. Note that other environments may work, yet were not fully tested. Linux installation is for experts. Windows environment is recommended for novice users.
+Microsoft Windows 7 or Linux - Ubuntu 12.04LTS recommended. Note that other environments may work, yet were not fully tested. Linux installation is for experts. Windows environment is recommended for novice users.
 @item
-The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. You can choose from a list of those in 
+The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. It is recommended to use Anaconda:
 @html
-<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a>
+<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a>
 @end html
 @item
 The system requires the library Inspyred: Bio-inspired Algorithms in Python version 1.0:
 @html
-<a href='http://inspyred.github.io/' target="_blank"> http://inspyred.github.io/ </a>
+<a href='https://pythonhosted.org/inspyred/overview.html' target="_blank"> https://pythonhosted.org/inspyred/overview.html </a>
+@end html
+@item
+The system requires the WxPython library to use a Graphic User Interface:
+@html
+<a href='http://www.wxpython.org/index.php' target="_blank"> http://www.wxpython.org/index.php </a>  
 @end html
 @item
 The system can also run simulations in High Performance Computing (HPC) environment using Sun Grid Engine or the Amazon Elastic Compute Cloud. This is highly specialized and requires experts for the setup.
@@ -201,9 +216,25 @@ The system can also run simulations in High Performance Computing (HPC) environm
 @section Software Installation
 
 The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) for advanced and expert users. 
-For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was tested there. For HPC features you will need to use a Linux installation.
+For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was developed there. For HPC features you will need to use a Linux installation.
 
-@subheading Installation Instructions:
+
+@subheading Simple Installation Instructions:
+@enumerate
+@item
+Download and Install Anaconda from 
+@html
+<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a>
+@end html
+@item
+Install MIST into your anaconda directory by typing the following text in a command terminal: @code{conda install mist -c jacob-barhak} 
+@end enumerate
+
+This installation should work on Windows and on Ubuntu 12.04LTS Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
+
+
+
+@subheading Alternative Expert Installation Instructions:
 @enumerate
 @item
 Download and Install Anaconda from 
@@ -213,10 +244,10 @@ Download and Install Anaconda from
 @item
 Install the Inspyred library by typing the following text in a command terminal: @code{pip install inspyred} . For additional details see:
 @html
-<a href='http://inspyred.github.io/overview.html#installation' target="_blank"> http://inspyred.github.io/overview.html#installation </a>
+<a href='https://pythonhosted.org/inspyred/overview.html#installation' target="_blank"> https://pythonhosted.org/inspyred/overview.html#installation </a>
 @end html
 @item
-Install WxPython library by typing the following text in a command terminal:  @code{conda install wxpython}
+Install WxPython library by typing the following text in a command terminal:  @code{conda install wxpython} . This library is needed for GUI only. For additional details and other ways to install WxPython see:
 @html
 <a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a>  
 @end html
@@ -229,43 +260,21 @@ Download the file MIST-master.zip from github by typing the following URL in a w
 Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
 @end enumerate
 
-@subheading Alternative Expert Installation Instructions:
-@enumerate
-@item
-Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, pip, and nose. You can choose from a list of those in 
-@html
-<a href='http://python-for-researchers.readthedocs.org/en/latest/distros.html' target="_blank"> http://python-for-researchers.readthedocs.org/en/latest/distros.html </a> . You can also Install Python, numpy, matplotlib, pip and nose separately. 
-@end html
-@item
-Install the Inspyred library by typing the following text in a command terminal: @code{pip install inspyred} . For additional details see:
-@html
-<a href='http://inspyred.github.io/overview.html#installation' target="_blank"> http://inspyred.github.io/overview.html#installation </a>
-@end html
-@item
-Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at 
-@html
-<a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a> 
-@end html
-@item
-Download the file MIST-master.zip from github by typing the following URL in a web browser: 
-@html
-<a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a>
-@end html
-@item
-Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
-@end enumerate
 
 @subheading To Test the Above Installations:
 @enumerate
 @item
+Open a command line prompt/terminal and change the directory to your working directory using the command @code{cd <working directory>} - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example @file{c:\Anaconda\MIST} on windows, yet this can be changed by the user, so be attentive.
+@item
 From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly.
 @item
-Run Main.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file->load the file @file{Testing.zip} in the @file{InData} sub directory to see the examples.
+Run MISTGUI.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file->load the file @file{Testing.zip} in the @file{InData} sub directory to see the examples.
 @end enumerate
 
 
 
-If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance.
+If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use  
+@ref{Contact Information and Support}.
 
 @subheading To run MIST Over the Cloud a More Complicated Setup is Needed:
 @enumerate
@@ -280,7 +289,7 @@ Follow the instructions on
 <a href='http://continuum.io/blog/starcluster-anaconda' target="_blank"> http://continuum.io/blog/starcluster-anaconda </a>
 @end html
 @item
-If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine
+If you have not done so already follow the Simple Installation Instructions from above on your machine
 @item
 Install the nfsshare.py plugin by copying the file 
 @html
@@ -332,13 +341,15 @@ Follow the instructions on
 @end html
 
 @item
-Follow the Quick Installation for Linux/OSX from above
+Follow the Quick Installation for Linux from above
 @end enumerate
 
 
 @section Running the Software - Simple Start
 
-Open a command terminal and navigate to your working directory using the @code{cd <working directory>} command then type @code{python Main.py}. The main form of the system, titled 'MIcroSimulation Tool', will open. This is further described in the next section, @ref{Getting Started with MIST}. 
+Open a command terminal and navigate to your working directory using the @code{cd <working directory>} - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example @file{c:\Anaconda\MIST} on windows, yet this can be changed by the user, so be attentive. Then type @code{python MISTGUI.py}. The main form of the system, titled 'MIcroSimulation Tool', will open. This is further described in the next section, @ref{Getting Started with MIST}. 
+
+In some systems you can alternatively open the folder created during installation in a window and double-click @file{MISTGUI.py}. 
 
 After you get familiar with the system and use it for a while you may expand to expert use where you can run @ref{MIST over the Cloud}.
 
@@ -347,7 +358,7 @@ After you get familiar with the system and use it for a while you may expand to 
 @chapter Getting Started with MIST
 
 @section Running the Software
-Open the folder created during installation and double-click @file{Main.py}. The form, 'MIcroSimulation Tool (MIST)', will open.
+Open a command terminal and navigate to your working directory using the @code{cd <working directory>} command then type @code{python MISTGUI.py}. The main form of the system, titled 'MIcroSimulation Tool', will open. 
 
 @html
 <br><img src='Images/mainform.jpg'><br>
@@ -1870,7 +1881,7 @@ MIST can run over the cloud. MIST uses the
 @end html
  and 
 @html
-<a href= "http://star.mit.edu/cluster/" target="_blank"> Star Cluster </a> 
+<a href= "http://star.mit.edu/cluster/" target="_blank"> StarCluster </a> 
 @end html
 to run simulations in parallel in High Performance Computing (HPC) environment to reduce simulation time and Monte-Carlo uncertainty and allow exploring many more variations in simulation.
 
@@ -1878,19 +1889,19 @@ Running MIST over the cloud requires special preparation. Here is a list of thin
 
 @itemize @bullet
 @item
-MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a working directory Desktop\MIST on a windows operating system under your user account.
+MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a windows operating system and then copied the MIST directory under the anaconda directory to your desktop. So that you have a copy of MIST in the Desktop\MIST directory under your user account.
 @item
-You should have a MIST model zip file prepared with that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file @file{Testing.zip} and use the projects of Example5a and Example5b in this tutorial.
+You should have a MIST model zip file prepared that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file @file{Testing.zip} and use the projects of Example5a and Example5b in this tutorial.
 @item
-You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized set up for MIST over the cloud in @ref{Setup} you will get to the
+You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized setup for MIST over the cloud in @ref{Setup} you will get to the
 @html
 <a href="http://aws.amazon.com/ " target="_blank"> Amazon EC2 login page </a> 
 @end html
 where you should create an account. Note that running simulations in Amazon EC2 will cost money - make sure you can pay for the mount of computation you are planning before running any simulations.
 @item
-You should have Star Cluster installed. See @ref{Setup} for specialized set up for the cloud
+You should have StarCluster installed. See @ref{Setup} for specialized set up for the cloud
 @item
-You should have configured your Star Cluster configuration files to work with your cloud account. You can find instructions for specialized set up for MIST over the cloud in @ref{Setup}.
+You should have configured your StarCluster configuration files to work with your cloud account. You can find instructions for specialized set up for MIST over the cloud in @ref{Setup}.
 @end itemize
 
 Once you have setup the system, you should follow several steps to launch a simulation on the cloud. We will show these steps with an example.
@@ -1908,7 +1919,7 @@ In our example, you can leave the file unchanged.
 @item
 Cleanup the working directory on your PC from temporary and irrelevant data. 
 
-In our case, delete the @code{Temp} directory if it exists and delete the files ending with @file{.pyc} if they exist.
+In our example case, delete the @code{Temp} directory if it exists and delete the files ending with @file{.pyc} if they exist in the Desktop\MIST directory.
 
 @item
 Open a terminal/command line prompt. The command line prompt will start at your user home directory. 
@@ -1920,7 +1931,7 @@ The commands will be typed in this new command line prompt from now on.
 @item
 Start StartCuster with the number of nodes you want and specify its name. 
 
-For our example we will use the command :  
+For our example we will use the command:  
 
 @code{starcluster start -s 5 mycluster}
 
@@ -1984,11 +1995,11 @@ Note that there are many extensions/variations to these that you can run on the 
 
 
 @html
-<a href="http://star.mit.edu/cluster/docs/0.93.3/quickstart.html" target="_blank"> Star Cluster Quick Start </a> 
+<a href="http://star.mit.edu/cluster/docs/0.93.3/quickstart.html" target="_blank"> StarCluster Quick Start </a> 
 @end html
 
 @html
-<a href="http://star.mit.edu/cluster/docs/0.93.3/manual/putget.html" target="_blank"> Star Cluster Copying Data Instructions </a> 
+<a href="http://star.mit.edu/cluster/docs/0.93.3/manual/putget.html" target="_blank"> StarCluster Copying Data Instructions </a> 
 @end html
 
 
@@ -1999,9 +2010,41 @@ The instructions above will successfully run the test example over the cloud. Ho
 @end html
 
 @html
-<a href="https://github.com/jtriley/StarCluster" target="_blank"> Star Cluster GitHub repository</a> 
+<a href="https://github.com/jtriley/StarCluster" target="_blank"> StarCluster GitHub repository</a> 
 @end html
 
+
+
+@node Contact Information and Support
+@chapter Contact Information and Support
+
+@section Support Mailing List:
+
+Email address: mist-support@@simtk.org
+
+Archives:
+@html
+<a href="https://simtk.org/pipermail/mist-support/" target="_blank"> https://simtk.org/pipermail/mist-support/</a> 
+@end html
+
+@section GitHub Project site:
+@html
+<a href="https://github.com/Jacob-Barhak/MIST" target="_blank"> https://github.com/Jacob-Barhak/MIST</a> 
+@end html
+
+@section SimTK Project site::
+@html
+<a href="https://simtk.org/home/mist" target="_blank"> https://simtk.org/home/mist</a> 
+@end html
+
+@section Developer Contact Info:
+Jacob Barhak Ph.D.
+
+Email: jacob.barhak@@gmail.com
+
+@html
+<a href="http://sites.google.com/site/jacobbarhak/" target="_blank"> http://sites.google.com/site/jacobbarhak/</a> 
+@end html
 
 
 @c @node General Index

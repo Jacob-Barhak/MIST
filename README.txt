@@ -9,7 +9,7 @@ CONTENTS:
 4. FILES
 5. KNOWN BUGS AND FEATURES
 6. VERSION HISTORY
-7. CONTACT INFORMATION
+7. CONTACT INFORMATION AND SUPPORT
 8. ACKNOWLEDGEMENTS
 9. LICENSE
 
@@ -18,12 +18,17 @@ CONTENTS:
 
 This software supports modeling and Monte-Carlo micro-simulation of parallel state transition processes. It is initially intended to allow modeling of chronic diseases, yet the software is general and may accommodate other models.
 
-The project web site is:
+The GitHub project web site is:
 https://github.com/Jacob-Barhak/MIST
+
+The SimTk project web site is:
+https://simtk.org/home/mist
 
 For a video introduction and additional information, please visit the following links:
 http://www.youtube.com/watch?v=AD896WakR94
-https://github.com/scipy/scipy2013_talks/tree/master/talks/jacob_barhak
+
+For additional information and an example of use, see:
+https://www.youtube.com/watch?v=vyvxiljc5vA
 
 
 2. INSTALLATION:
@@ -31,23 +36,22 @@ https://github.com/scipy/scipy2013_talks/tree/master/talks/jacob_barhak
 The system can be installed in several fashions in different platforms. There are even expert installations for High Performance Computing (HPC) for advanced and expert users. 
 For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was tested there. For HPC features you will need to use a Linux installation.
 
-Installation Instructions:
+Simple Installation Instructions:
 1. Download and Install Anaconda from  https://store.continuum.io/cshop/anaconda/
-2. Install the Inspyred library by typing the following text in a command terminal: pip install inspyred . For additional details see:  http://inspyred.github.io/overview.html#installation 
-3. Install WxPython library by typing the following text in a command terminal: conda install wxpython . This library is needed for GUI only. For additional details see: http://www.wxpython.org/download.php#stable 
-4. Download the file MIST-master.zip from github by typing the following URL in a web browser:  https://github.com/Jacob-Barhak/MIST/archive/master.zip 
-5. Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
+2. Install MIST into your anaconda directory by typing the following text in a command terminal: conda install mist -c jacob-barhak 
+This installation should work on Windows and on Ubuntu 12.04LTS Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
 
-Alternative Expert Installation Instructions:
-1. Install a scientific Python distribution which supports Python 2.7 and includes numpy, matplotlib, pip, and nose. You can choose from a list of those in  http://python-for-researchers.readthedocs.org/en/latest/distros.html  . You can also Install Python, numpy, matplotlib, pip and nose separately. 
-2. Install the Inspyred library by typing the following text in a command terminal: pip install inspyred . For additional details see:  http://inspyred.github.io/overview.html#installation 
-3. Install WxPython if you intend to use the Graphic User Interface and it was not installed by the scientific Python distribution. WxPython installation may require expert assistance and can be found at  http://www.wxpython.org/download.php#stable 
+Alternative Longer Expert Installation Instructions:
+1. Download and Install Anaconda from  https://store.continuum.io/cshop/anaconda/
+2. Install the Inspyred library by typing the following text in a command terminal: pip install inspyred . For additional details see:  https://pythonhosted.org/inspyred/overview.html#installation
+3. Install WxPython library by typing the following text in a command terminal: conda install wxpython . This library is needed for GUI only. For additional details and other ways to install WxPython see: http://www.wxpython.org/download.php#stable 
 4. Download the file MIST-master.zip from github by typing the following URL in a web browser:  https://github.com/Jacob-Barhak/MIST/archive/master.zip 
 5. Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory. 
 
 To Test the Above Installations:
-1. From the command line in your working directory write the following text: python TestCode.py . It will test the data definitions and algorithms and should take a good portion of an hour - about half an hour on a descent machine. If you got an all caps "OK" at the end, then you installed the python environment correctly. 
-2. From the command line in your working directory write the following text: python Main.py . You should see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file->load the file Testing.zip in the InData sub directory to see the examples. 
+1. Open a command line prompt/terminal and change the directory to your working directory using the command cd <working directory> - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example c:\Anaconda\MIST on windows, yet this can be changed by the user, so be attentive. 
+2. From the command line in your working directory write the following text: python TestCode.py . It will test the data definitions and algorithms and should take a good portion of an hour - about half an hour on a descent machine. If you got an all caps "OK" at the end, then you installed the python environment correctly. 
+3. From the command line in your working directory write the following text: python MISTGUI.py . You should see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file->load the file Testing.zip in the InData sub directory to see the examples. 
 
 If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use the contact information below for assistance. 
 
@@ -55,7 +59,7 @@ To run MIST Over the Cloud a More Complicated Setup is Needed:
 1. Install StarCluster 
  http://star.mit.edu/cluster/docs/latest/installation.html 
 2. Follow the instructions on  http://continuum.io/blog/starcluster-anaconda 
-3. If you have not done so already follow the Quick Installation for Linux/OSX from above on your machine 
+3. If you have not done so already follow the Simple Installation Instructions from above on your machine 
 4. Install the nfsshare.py plugin by copying the file  https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975 to the StarCluster plugins directory. 
 5. Change the config file to include all plugins of interest and add plugin parameters. At the end of setup the "Configuring StarCluster Plugins" section in the config file should have the following lines: 
 
@@ -84,13 +88,13 @@ For additional information see the following links:
 
 It is also possible to run MIST simulations in Multi-core environment using Sun Grid Engine. If you wish to install Sun-Grid-Engine on a single machine for testing purposes:
 1. Follow the instructions on  http://scidom.wordpress.com/2012/01/18/sge-on-single-pc/  
-2. Follow the Quick Installation for Linux/OSX from above 
+2. Follow the Quick Installation for Linux from above 
 
 
 
 3. HOW TO USE THE SOFTWARE:
 
-Open the chosen directory created during installation and double-click Main.py. The main form titled as 'MIcroSimulation Tool (MIST)' will open.
+Open a command window and cd to the working directory created during installation then write python MISTGUI.py. The main form titled as 'MIcroSimulation Tool (MIST)' will open. In some systems it is enough to double-click MISTGUI.py to launch the system.
 
 The system includes a help system and an example file to aid in learning how to use it. To get started, select help menu in the main form and then select the help sub-option. This will bring up the getting started help page.
 
@@ -117,7 +121,7 @@ CreatePlotsFromCSV.py : A utility that constructs plots in a PDF file. The plot 
 
 ~~~~~~~~~~~~~~ Graphic User Interface ~~~~~~~~~~~~~~
 CDMLib.py : The main library defining the system GUI
-Main.py : The main file that starts the application GUI with the main form
+MISTGUI.py : The main file that starts the application GUI with the main form
 Parameters.py : The parameters form in the GUI
 PopulationSets.py : The population set form in the GUI
 PopulationData.py : The population data form in the GUI used by population set
@@ -141,6 +145,10 @@ CopyImages.bat : A batch file to copy documentation images to their proper locat
 Temp : A directory containing temporary data generated while the system is running - the system recreates it if deleted.
 InData : A directory for input data files - initially holding example file Testing.zip
 InData/Testing.zip : A data file generated by TestCode.py and contains simulation examples. The examples correspond to those described in SimulationExamples.pdf.
+InstConda : A directory containing conda build files
+InstConda/bld.bat : Windows build file for conda
+InstConda/build.sh : Bash build file for conda
+InstConda/meta.yaml: Build information meta file for conda
 SimulationExamples.pdf : A document describing the examples in Testing.zip that are used to test the simulation system. It also contains calculations of the expected outcomes and provide a description of tests carried out in TestCode.py.
 SimulationExamples.doc : The original word version from which SimulationExamples.pdf was created.
 TestingResults.mdb : A Microsoft Access Database used to test the report mathematics performing the same calculations as the system and outputs files that can be loaded into TestCode.txt. The file contains visual basic code that generates csv files from InputExample.py results. These csv files can then be converted back to code that is merged into InputExample.py as testing code.
@@ -159,22 +167,20 @@ Running the TestCode.py script will test that the simulation system is working p
 
 In addition to the above test script, below is a list of known bugs and issues uncovered during testing that were not yet addressed at the time of this release:
 
-The GUI was tested on Windows environment. Computations were tested on both Windows and Linux environments through the TestCode.py script. Cloud computations were also tested.
+The GUI was tested on Windows environment and on Linux Ubuntu 12.04. Computations were tested on both Windows and Linux environments through the TestCode.py script. Cloud computations were also tested.
 
 Known Bugs:
 
 J0100: WXPYTHON ISSUES ON UBUNTU 12.4 
+This issue exists only if trying to build WxPython from source code and not a MIST issue, yet reported here anyway. Fortunately, with conda, there is no need to do this any longer. This issue is resolved on Ubuntu 12.04, Ubuntu 14.04, Fedora 21 Linux distributions. 
 At the time of MIST 0.90.0.0 release WxPython does not work on Ubuntu 12.4 since there is a dependency GLIBC_2.15 that is not installed. 
 This may prohibit users from using MIST GUI on the stable release of Ubuntu. 
-Fortunately this is not critical since other Linux versions may work and the user can use the GUI on windows and only run HPC computations on Ubuntu. 
-There is a partial solution of an alternative installation of WxPython using the command 
+The following command installs WxPython on those systems without need to build:
 conda install wxpython -c asmeurer 
-Yet it brings warnings and funny behavior of WxPython and not been fully tested.
-
+Note that other Linux systems have not been tested therefore this issue is not removed from the list. Otherwise the issue has been resolved, especially if using the simple conda installation for MIST.
 
 
 Comments/Suggestions & Feature Requests:
-
 
 R0021: LIST OF COEFFICIENTS FOR COST WIZARD
 When using the Cost/QoL wizard, the drop down list for coefficients lists states that do not belong to the project. Selecting these states is allowed, but when you try to run the simulation, you get an error that the state could not be found. The error should come while using/closing the Cost Wizard, or the non-included states should not be listed at all. 
@@ -216,6 +222,10 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 6. VERSION HISTORY:
 
+MIST Verion (0,92,0,0,'MIST') - 27-Aug-2014:
+	- Fix project and rule related issues including undo, occurrence probability and single individual simulation
+	- Installation with dependencies through binstar.org
+	- Fix compatibility issues on Linux - mainly GUI
 
 MIST Verion (0,91,0,0,'MIST') - 08-Apr-2014:
 	- Better recovery of cluster runs by rerunning and skipping completed jobs
@@ -321,13 +331,22 @@ IEST Version 0.60 - 15-Feb-2009:
 
 	
 
-7. CONTACT INFORMATION:
+7. CONTACT INFORMATION AND SUPPORT:
 
+SUPPORT MAILING LIST:
+Email address: mist-support@simtk.org
+Archives: https://simtk.org/pipermail/mist-support/
 
+GitHub Project site:
+https://github.com/Jacob-Barhak/MIST
+
+SimTK Project site:
+https://simtk.org/home/mist
+
+DEVELOPER CONTACT INFO:
 Jacob Barhak Ph.D.
-email: jacob.barhak@gmail.com
+Email: jacob.barhak@gmail.com
 http://sites.google.com/site/jacobbarhak/
-
 
 
 
@@ -364,6 +383,9 @@ Bruce Fields
 Nick Coghlan
 Lyn Gerner
 @scrappythekangaroo at github
+Anna Petrášová
+Nathan McCorkle
+Werner F. Bruhin
 
 MIST was developed independently without financial support.
 

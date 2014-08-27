@@ -213,7 +213,7 @@ class Main(cdml.CDMWindow, wx.Frame, listmix.ColumnSorterMixin):
 
         # Create columns and assign column titles
         # Symtax : tuple of tuples ((Column Name, width), (Column Name, width). ... )
-        self.lc_project.CreateColumns((('#', 0 ),
+        self.lc_project.CreateColumns((('#', 30 ),
                                        ('Project Name', 250 ),
                                         ('Notes', 350 )))
 

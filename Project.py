@@ -795,7 +795,8 @@ class MainFrame(cdml.CDMWindow, wx.Frame):
 
                 list_rules.pop(index)
                 lc.DeleteItem(index)
-                lc.Select(index, True)
+                if len(list_rules) > index:
+                    lc.Select(index, True)
         except:
             cdml.dlgErrorMsg(Parent = self)
 
@@ -821,7 +822,7 @@ class MainFrame(cdml.CDMWindow, wx.Frame):
         # Reset Rules list and StudyModel list with initial values
         self.SimRule = [[], [], [], []]
         for rule in self.record.SimulationRules:
-            getattr(self, 'SimRule')[self.curPage].append(rule)
+            getattr(self, 'SimRule')[rule.SimulationPhase].append(rule)
 
 
     def CheckData(self):

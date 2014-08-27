@@ -127,10 +127,10 @@ class RowPanel(cdml.CDMPanel):
         columns = (('Name', 150), ('Notes', 332))
         self.cc_joiner_split.SetColumns(columns)
 
-        self.cb_isSplit.SetMinSize((66,-1))
-        self.cb_isEvent.SetMinSize((66,-1))
-        self.cb_isTerminal.SetMinSize((66,-1))
-        self.tc_notes.SetMinSize((200,-1))
+        self.cb_isSplit.SetMinSize((80,-1))
+        self.cb_isEvent.SetMinSize((80,-1))
+        self.cb_isTerminal.SetMinSize((80,-1))
+        self.tc_notes.SetMinSize((240,-1))
 
         self.lc_states.SetMinSize((300,90))
         self.lc_states.CreateColumns((('Included States', 250 ),))
@@ -304,7 +304,8 @@ class RowPanel(cdml.CDMPanel):
         self.cc_states.SetValue(state)
 
         self.lc_states.DeleteItem(index)
-        self.lc_states.Select(index, True)
+        if self.lc_states.GetItemCount()>index:
+            self.lc_states.Select(index, True)
 
 
     def OnLeftDblClick(self, event):
@@ -382,8 +383,8 @@ class MainFrame(cdml.CDMFrame):
         # For the sort function, the labels need to be same with the variable name in database object
         self.st_title = wx.StaticText(self.pn_title, -1, "State Definition")
         self.st_name = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON1, None, "Name  ")
-        self.st_isSplit = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON2, None, "Is Split")
-        self.st_isEvent = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON3, None, "Is Event")
+        self.st_isSplit = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON2, None, "Is Split   ")
+        self.st_isEvent = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON3, None, "Is Event   ")
         self.st_isTerminal = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON4, None, "Is Terminal")
         self.st_joins_split = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON5, None, "Joiner Of Splitter")
         self.st_notes = cdml.BitmapButton(self.pn_title, cdml.IDF_BUTTON6, None, "Notes")
@@ -437,15 +438,15 @@ class MainFrame(cdml.CDMFrame):
 
         self.st_isSplit.sortId = 1
         self.st_isSplit.evtID = cdml.ID_EVT_SORT
-        self.st_isSplit.SetMinSize((66,-1))
+        self.st_isSplit.SetMinSize((80,-1))
 
         self.st_isEvent.sortId = 2
         self.st_isEvent.evtID = cdml.ID_EVT_SORT
-        self.st_isEvent.SetMinSize((66,-1))
+        self.st_isEvent.SetMinSize((80,-1))
 
         self.st_isTerminal.sortId = 3
         self.st_isTerminal.evtID = cdml.ID_EVT_SORT
-        self.st_isTerminal.SetMinSize((66,-1))
+        self.st_isTerminal.SetMinSize((80,-1))
 
         self.st_joins_split.sortId = 4
         self.st_joins_split.evtID = cdml.ID_EVT_SORT
@@ -453,7 +454,7 @@ class MainFrame(cdml.CDMFrame):
         
         self.st_notes.sortId = 5
         self.st_notes.evtID = cdml.ID_EVT_SORT
-        self.st_notes.SetMinSize((200,-1))
+        self.st_notes.SetMinSize((240,-1))
 
         self.st_child_state.SetMinSize((300,-1))
         
