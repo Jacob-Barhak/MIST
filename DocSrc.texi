@@ -9,7 +9,7 @@
 
 @copying
 
-Copyright @copyright{} 2013-2014 Jacob Barhak
+Copyright @copyright{} 2013-2018 Jacob Barhak
 
 Copyright @copyright{} 2009-2012 The Regents of the University of Michigan
 
@@ -195,7 +195,7 @@ Microsoft Windows 7 or Linux - Ubuntu 12.04LTS recommended. Note that other envi
 @item
 The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. It is recommended to use Anaconda:
 @html
-<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a>
+<a href='https://www.anaconda.com/download/' target="_blank"> https://www.anaconda.com/download/ </a>
 @end html
 @item
 The system requires the library Inspyred: Bio-inspired Algorithms in Python version 1.0:
@@ -222,24 +222,24 @@ For novice users it is recommended that you use Windows since it is the simplest
 @subheading Simple Installation Instructions:
 @enumerate
 @item
-Download and Install Anaconda from 
+Download and Install Anaconda 2.7 from 
 @html
-<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a>
+<a href='https://www.anaconda.com/download/' target="_blank"> https://www.anaconda.com/download/ </a>
 @end html
 @item
 Install MIST into your anaconda directory by typing the following text in a command terminal: @code{conda install mist -c jacob-barhak} 
 @end enumerate
 
-This installation should work on Windows and on Ubuntu 12.04LTS Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
+This installation should work on Windows and on Ubuntu Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
 
 
 
 @subheading Alternative Expert Installation Instructions:
 @enumerate
 @item
-Download and Install Anaconda from 
+Download and Install Anaconda 2.7 from 
 @html
-<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a>
+<a href='https://www.anaconda.com/download/' target="_blank"> https://www.anaconda.com/download/ </a>
 @end html
 @item
 Install the Inspyred library by typing the following text in a command terminal: @code{pip install inspyred} . For additional details see:

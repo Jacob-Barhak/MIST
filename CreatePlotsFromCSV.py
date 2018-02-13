@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013-2014 Jacob Barhak
+# Copyright (C) 2013-2018 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -200,7 +200,7 @@ def CreatePlots(InputFile, OutputFileName, PlotSequence):
                     # end of the plot
                     PlotText = PlotText + "HandleSmallerFont = matplotlib.font_manager.FontProperties(size= DefaultLegendFontSize*" + str(ScaleFactor) + " )\n"
                     PlotText = PlotText + "LineHandles, LabelHandles = HandleAxes.get_legend_handles_labels()\n"
-                    PlotText = PlotText + "TheLegend = HandleAxes.legend(LineHandles, LabelHandles, 0, prop = HandleSmallerFont, handlelength = 2.0/" + str(ScaleFactor) + ")\n"
+                    PlotText = PlotText + "TheLegend = HandleAxes.legend(LineHandles, LabelHandles, loc = 0, prop = HandleSmallerFont, handlelength = 2.0/" + str(ScaleFactor) + ")\n"
                     PlotText = PlotText + "TheLegend.get_frame().set_alpha("+str(PLOT_LEGEND_TRANSPERANCY)+")\n"
                     PlotText = PlotText + "HandlePDF.savefig(HandleFigure)\n"
         return PlotText
@@ -217,7 +217,7 @@ def CreatePlots(InputFile, OutputFileName, PlotSequence):
         raise ValueError, "Create Plots Error: Input file contains no rows - check that the file format is ok"
     PlotText = '################################################################################\n'
     PlotText = PlotText + '# This plot script was automatically Generated on: '+ DB.datetime.datetime.now().isoformat(' ')[:19] + '         #\n'
-    PlotText = PlotText + '# by the Indirect Estimation and Simulation Tool (IEST).                       #\n'
+    PlotText = PlotText + '# by the MIcro Simulation Tool (MIST).                                         #\n'
     PlotText = PlotText + '################################################################################\n'
     PlotText = PlotText + 'from __future__ import division\n'
     PlotText = PlotText + "import matplotlib\n"

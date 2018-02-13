@@ -3,13 +3,13 @@
 <title>MIST over the Cloud - MIcroSimulation Tool (MIST)</title>
 <meta http-equiv="Content-Type" content="text/html">
 <meta name="description" content="MIcroSimulation Tool (MIST)">
-<meta name="generator" content="makeinfo 4.7">
+<meta name="generator" content="makeinfo 4.8">
 <link title="Top" rel="start" href="index.html#Top">
 <link rel="prev" href="Utilities.html#Utilities" title="Utilities">
 <link rel="next" href="Contact-Information-and-Support.html#Contact-Information-and-Support" title="Contact Information and Support">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 2013-2014 Jacob Barhak
+Copyright (C) 2013-2018 Jacob Barhak
 
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 
@@ -73,17 +73,19 @@ Indirect Estimation and Simulation Tool (IEST).-->
   pre.smallformat  { font-family:inherit; font-size:smaller }
   pre.smallexample { font-size:smaller }
   pre.smalllisp    { font-size:smaller }
-  span.sc { font-variant:small-caps }
-  span.roman { font-family: serif; font-weight: normal; } 
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
 --></style>
 </head>
 <body>
 <div class="node">
 <p>
-<a name="MIST-over-the-Cloud"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Contact-Information-and-Support.html#Contact-Information-and-Support">Contact Information and Support</a>,
+<a name="MIST-over-the-Cloud"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Contact-Information-and-Support.html#Contact-Information-and-Support">Contact Information and Support</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="Utilities.html#Utilities">Utilities</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
-<hr><br>
+<hr>
 </div>
 
 <h2 class="chapter">15 MIST over the Cloud</h2>
@@ -96,7 +98,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <ul>
 <li>MIST should be installed on your local PC - for the sake of this tutorial let us assume that you installed MIST on a windows operating system and then copied the MIST directory under the anaconda directory to your desktop. So that you have a copy of MIST in the Desktop\MIST directory under your user account. 
-<li>You should have a MIST model zip file prepared that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file <span class="file">Testing.zip</span> and use the projects of Example5a and Example5b in this tutorial. 
+<li>You should have a MIST model zip file prepared that includes the projects you wish to run. If you wish to run variations of the project, you need to have override populations/models within the zip file and the project should contains all variables that will be overridden in variations in initialization in stage 0 of the simulation rules. For the sake of this example we will use the example file <samp><span class="file">Testing.zip</span></samp> and use the projects of Example5a and Example5b in this tutorial. 
 <li>You should have an Amazon Elastic Compute Cloud Account setup, if you follow the instructions for specialized setup for MIST over the cloud in <a href="Setup.html#Setup">Setup</a> you will get to the
 <a href="http://aws.amazon.com/ " target="_blank"> Amazon EC2 login page </a>where you should create an account. Note that running simulations in Amazon EC2 will cost money - make sure you can pay for the mount of computation you are planning before running any simulations. 
 <li>You should have StarCluster installed. See <a href="Setup.html#Setup">Setup</a> for specialized set up for the cloud
@@ -106,15 +108,15 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
    <p>Once you have setup the system, you should follow several steps to launch a simulation on the cloud. We will show these steps with an example.
 
      <ol type=1 start=1>
-<li>Copy the model file to the <span class="file">InData</span> sub-directory in your working directory on your PC.
+<li>Copy the model file to the <samp><span class="file">InData</span></samp> sub-directory in your working directory on your PC.
 
-     <p>In our example <span class="file">Testing.zip</span> is already in the <span class="file">InData</span> sub-directory. 
+     <p>In our example <samp><span class="file">Testing.zip</span></samp> is already in the <samp><span class="file">InData</span></samp> sub-directory. 
 <li>Modify the file ClusterRun.py to define your run on the cluster. See additional details in <a href="Utilities.html#Utilities">Utilities</a>.
 
      <p>In our example, you can leave the file unchanged. 
 <li>Cleanup the working directory on your PC from temporary and irrelevant data.
 
-     <p>In our example case, delete the <code>Temp</code> directory if it exists and delete the files ending with <span class="file">.pyc</span> if they exist in the Desktop\MIST directory.
+     <p>In our example case, delete the <code>Temp</code> directory if it exists and delete the files ending with <samp><span class="file">.pyc</span></samp> if they exist in the Desktop\MIST directory.
 
      <li>Open a terminal/command line prompt. The command line prompt will start at your user home directory.
 
@@ -136,9 +138,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <p><code>starcluster put mycluster Desktop\MIST /mnt/vol0</code>
 
-     <p>Note that the <span class="file">/mnt/vol0</span> directory must be the destination since it is shared between all cluster machines. Also note that <code>Desktop\MIST</code> is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
+     <p>Note that the <samp><span class="file">/mnt/vol0</span></samp> directory must be the destination since it is shared between all cluster machines. Also note that <code>Desktop\MIST</code> is our working directory relative to the user home directory - if you have chosen another directory or working from a Linux PC you should modify this accordingly. The command will copy the entire MIST working directory environment to the cloud including documentation and your model file - so it may take some time.
 
-     <li>Run the simulations. You will have to access the <span class="file">/mnt/vol0</span> directory on the cloud and then run the python script and this should be done with one command line.
+     <li>Run the simulations. You will have to access the <samp><span class="file">/mnt/vol0</span></samp> directory on the cloud and then run the python script and this should be done with one command line.
 
      <p>To do this, you should run the following command exactly as it appears:
 
@@ -164,7 +166,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
 
      <p><code>starcluster get mycluster /mnt/vol0/MIST/Phase*/Testing_Out* .</code>
 
-     <p>In our example this should retrieve 3 files with results: <span class="file">Testing_Out.csv</span>, <span class="file">Testing_Out_Yearly.pdf</span>, <span class="file">Testing_Out_Yearly.csv</span>. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
+     <p>In our example this should retrieve 3 files with results: <samp><span class="file">Testing_Out.csv</span></samp>, <samp><span class="file">Testing_Out_Yearly.pdf</span></samp>, <samp><span class="file">Testing_Out_Yearly.csv</span></samp>. These files will show the difference between running 100 repetitions of Example5a and 100 repetitions of Example5b.
 
      <li>Very important to stop the cluster - otherwise you keep on paying. This is done using the command:
 

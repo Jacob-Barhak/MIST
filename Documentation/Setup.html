@@ -3,13 +3,13 @@
 <title>Setup - MIcroSimulation Tool (MIST)</title>
 <meta http-equiv="Content-Type" content="text/html">
 <meta name="description" content="MIcroSimulation Tool (MIST)">
-<meta name="generator" content="makeinfo 4.7">
+<meta name="generator" content="makeinfo 4.8">
 <link title="Top" rel="start" href="index.html#Top">
 <link rel="prev" href="About-This-Version.html#About-This-Version" title="About This Version">
 <link rel="next" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST" title="Getting Started with MIST">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 2013-2014 Jacob Barhak
+Copyright (C) 2013-2018 Jacob Barhak
 
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 
@@ -73,17 +73,19 @@ Indirect Estimation and Simulation Tool (IEST).-->
   pre.smallformat  { font-family:inherit; font-size:smaller }
   pre.smallexample { font-size:smaller }
   pre.smalllisp    { font-size:smaller }
-  span.sc { font-variant:small-caps }
-  span.roman { font-family: serif; font-weight: normal; } 
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
 --></style>
 </head>
 <body>
 <div class="node">
 <p>
-<a name="Setup"></a>Next:&nbsp;<a rel="next" accesskey="n" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>,
+<a name="Setup"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="About-This-Version.html#About-This-Version">About This Version</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
-<hr><br>
+<hr>
 </div>
 
 <h2 class="chapter">4 Setup</h2>
@@ -93,7 +95,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
      <ul>
 <li>Microsoft Windows 7 or Linux - Ubuntu 12.04LTS recommended. Note that other environments may work, yet were not fully tested. Linux installation is for experts. Windows environment is recommended for novice users. 
 <li>The system needs scientific Python environment which supports Python 2.7 and includes numpy, matplotlib, and nose. It is recommended to use Anaconda:
-<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a><li>The system requires the library Inspyred: Bio-inspired Algorithms in Python version 1.0:
+<a href='https://www.anaconda.com/download/' target="_blank"> https://www.anaconda.com/download/ </a><li>The system requires the library Inspyred: Bio-inspired Algorithms in Python version 1.0:
 <a href='https://pythonhosted.org/inspyred/overview.html' target="_blank"> https://pythonhosted.org/inspyred/overview.html </a><li>The system requires the WxPython library to use a Graphic User Interface:
 <a href='http://www.wxpython.org/index.php' target="_blank"> http://www.wxpython.org/index.php </a><li>The system can also run simulations in High Performance Computing (HPC) environment using Sun Grid Engine or the Amazon Elastic Compute Cloud. This is highly specialized and requires experts for the setup. 
 </ul>
@@ -106,17 +108,17 @@ For novice users it is recommended that you use Windows since it is the simplest
 <h4 class="subheading">Simple Installation Instructions:</h4>
 
      <ol type=1 start=1>
-<li>Download and Install Anaconda from
-<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a><li>Install MIST into your anaconda directory by typing the following text in a command terminal: <code>conda install mist -c jacob-barhak</code>
+<li>Download and Install Anaconda 2.7 from
+<a href='https://www.anaconda.com/download/' target="_blank"> https://www.anaconda.com/download/ </a><li>Install MIST into your anaconda directory by typing the following text in a command terminal: <code>conda install mist -c jacob-barhak</code>
      </ol>
 
-   <p>This installation should work on Windows and on Ubuntu 12.04LTS Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
+   <p>This installation should work on Windows and on Ubuntu Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
 
 <h4 class="subheading">Alternative Expert Installation Instructions:</h4>
 
      <ol type=1 start=1>
-<li>Download and Install Anaconda from
-<a href='https://store.continuum.io/cshop/anaconda/' target="_blank"> https://store.continuum.io/cshop/anaconda/ </a><li>Install the Inspyred library by typing the following text in a command terminal: <code>pip install inspyred</code> . For additional details see:
+<li>Download and Install Anaconda 2.7 from
+<a href='https://www.anaconda.com/download/' target="_blank"> https://www.anaconda.com/download/ </a><li>Install the Inspyred library by typing the following text in a command terminal: <code>pip install inspyred</code> . For additional details see:
 <a href='https://pythonhosted.org/inspyred/overview.html#installation' target="_blank"> https://pythonhosted.org/inspyred/overview.html#installation </a><li>Install WxPython library by typing the following text in a command terminal:  <code>conda install wxpython</code> . This library is needed for GUI only. For additional details and other ways to install WxPython see:
 <a href='http://www.wxpython.org/download.php#stable' target="_blank"> http://www.wxpython.org/download.php#stable </a><li>Download the file MIST-master.zip from github by typing the following URL in a web browser:
 <a href='https://github.com/Jacob-Barhak/MIST/archive/master.zip' target="_blank"> https://github.com/Jacob-Barhak/MIST/archive/master.zip </a><li>Unzip the file MIST-master.zip in a directory of your choice. This will be your working directory.
@@ -125,9 +127,9 @@ For novice users it is recommended that you use Windows since it is the simplest
 <h4 class="subheading">To Test the Above Installations:</h4>
 
      <ol type=1 start=1>
-<li>Open a command line prompt/terminal and change the directory to your working directory using the command <code>cd &lt;working directory&gt;</code> - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example <span class="file">c:\Anaconda\MIST</span> on windows, yet this can be changed by the user, so be attentive. 
+<li>Open a command line prompt/terminal and change the directory to your working directory using the command <code>cd &lt;working directory&gt;</code> - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example <samp><span class="file">c:\Anaconda\MIST</span></samp> on windows, yet this can be changed by the user, so be attentive. 
 <li>From the command line run the file TestCode.py. It will test the data definitions and algorithms and should take a few minutes. If you got an all caps "OK" at the end, then you installed the python environment correctly. 
-<li>Run MISTGUI.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-&gt;load the file <span class="file">Testing.zip</span> in the <span class="file">InData</span> sub directory to see the examples.
+<li>Run MISTGUI.py to see the Graphic User Interface. If the main window shows up, then the WxPython part is installed correctly. You can try to file-&gt;load the file <samp><span class="file">Testing.zip</span></samp> in the <samp><span class="file">InData</span></samp> sub directory to see the examples.
      </ol>
 
    <p>If you are an expert you can install and setup MIST to work in HPC environment. These expert installations may require professional support. Please feel free to use
@@ -164,7 +166,7 @@ For novice users it is recommended that you use Windows since it is the simplest
      <p>For additional information see the following links:
 <br><a href='http://continuum.io/blog/starcluster-anaconda' target="_blank"> http://continuum.io/blog/starcluster-anaconda </a><br><a href='http://star.mit.edu/cluster/docs/latest/plugins/pypkginstaller.html' target="_blank"> http://star.mit.edu/cluster/docs/latest/plugins/pypkginstaller.html </a><br><a href='https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975' target="_blank"> https://github.com/scrappythekangaroo/StarClusterPlugins/commit/775500618279f2fd83e2b7365b5c86cf07e11975</a>
 
-     <li>Use the StarCluster put command to transfer MIST to the <span class="file">/mnt/vol0</span> directory on the cluster
+     <li>Use the StarCluster put command to transfer MIST to the <samp><span class="file">/mnt/vol0</span></samp> directory on the cluster
      </ol>
 
 <h4 class="subheading">It is also possible to run MIST simulations in Multi-core environment using Sun Grid Engine. If you wish to install Sun-Grid-Engine on a single machine for testing purposes:</h4>
@@ -178,9 +180,9 @@ For novice users it is recommended that you use Windows since it is the simplest
 
 <h3 class="section">4.3 Running the Software - Simple Start</h3>
 
-<p>Open a command terminal and navigate to your working directory using the <code>cd &lt;working directory&gt;</code> - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example <span class="file">c:\Anaconda\MIST</span> on windows, yet this can be changed by the user, so be attentive. Then type <code>python MISTGUI.py</code>. The main form of the system, titled 'MIcroSimulation Tool', will open. This is further described in the next section, <a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>.
+<p>Open a command terminal and navigate to your working directory using the <code>cd &lt;working directory&gt;</code> - with a simple installation your working directory would be MIST subdirectory under your anaconda installation directory - for example <samp><span class="file">c:\Anaconda\MIST</span></samp> on windows, yet this can be changed by the user, so be attentive. Then type <code>python MISTGUI.py</code>. The main form of the system, titled 'MIcroSimulation Tool', will open. This is further described in the next section, <a href="Getting-Started-with-MIST.html#Getting-Started-with-MIST">Getting Started with MIST</a>.
 
-   <p>In some systems you can alternatively open the folder created during installation in a window and double-click <span class="file">MISTGUI.py</span>.
+   <p>In some systems you can alternatively open the folder created during installation in a window and double-click <samp><span class="file">MISTGUI.py</span></samp>.
 
    <p>After you get familiar with the system and use it for a while you may expand to expert use where you can run <a href="MIST-over-the-Cloud.html#MIST-over-the-Cloud">MIST over the Cloud</a>.
 

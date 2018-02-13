@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013-2014 Jacob Barhak
+# Copyright (C) 2013-2018 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -72,7 +72,7 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
                 #  shown in the GUI
                 PopulationToUseID = sorted(DB.PopulationSets.keys())[PopulationSetOverride]
             elif PopulationSetOverride==None:
-                PopulationToUseID = None                
+                PopulationToUseID = None
             elif PopulationSetOverride!=None:
                 # raise the error to show the error message
                 raise ValueError, "Unrecognized input for population"
@@ -102,7 +102,7 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
             (ExceptType, ExceptValue, ExceptTraceback) = sys.exc_info()
             raise ValueError, 'Run Multiple Simulations Error: The system could not figure out the index of the project - please make sure there are projects in your file and that you specified the index correctly. Note that a project index of 0 means the first project and if there are n projects in a file, the index of the last project is n-1. If you specified the project index in bracket, make sure you are not using the project sort order as without brackets. Here are more details regarding the error: ' + str(ExceptValue)
         ProjectToRun = DB.Projects[ProjectID]
-        # Do not continue changing the ptoject if no simulation requested
+        # Do not continue changing the project if no simulation requested
         if NumberOfSimulationStepsOverride != 0:
             # Handle NumberOfSimulationStepsOverride - ignore zero since it 
             # means population generation
@@ -162,12 +162,15 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
     (ProjectToRun, PopulationToUseID) = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)
     for Repetition in range(NumberOfRepeats):
         try:
+            DeleteResultsAfterSave = True
             StartRunningIndex = int(StartRunningIndexStr)
-            FileEnumerationSufix = '_' +('%0'+str(len(str(StartRunningIndex+NumberOfRepeats-1)))+'i')%(StartRunningIndex + Repetition)
+            FileEnumerationSufix = '_' +('%0'+str(len(str(StartRunningIndex+NumberOfRepeats-1)))+'i')%(StartRunningIndex + Repetition)            
         except:
             FileEnumerationSufix = '_' + StartRunningIndexStr + '_' + ('%0'+str(len(str(NumberOfRepeats-1)))+'i')%(Repetition)
             # do not add a number at the end in case of a single repetition
-            # THe user supplies suffix only is used in this case
+            # The user supplies suffix only is used in this case so we
+            # don't delete results since we expect them all in this file
+            DeleteResultsAfterSave = False
             if NumberOfRepeats == 1:
                 FileEnumerationSufix = FileEnumerationSufix[:-2]
         FileNameToUse = FileNameBaseNoPath + FileEnumerationSufix
@@ -184,7 +187,7 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
                 print '!'*70
                 print 'Run Multiple Simulations Error: Reading from TraceBack File failed - Error Detected in  Repetition # '+ str(Repetition) + ' Here are additional details regarding the error: ' + str(ExceptType) + ' : ' + str(ExceptValue)
                 print '!'*70
-                # skip this loop iteraation - try next repetition
+                # skip this loop iteration - try next repetition
                 continue       
         else:
             SimulationTraceBack = None
@@ -203,7 +206,7 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
                 print '# Generating Population Set from Distributions' 
                 OverridePopulationSet = Pop.GenerateDataPopulationFromDistributionPopulation(GeneratedPopulationSize = PopulationSizeToGenerate, GenerationFileNamePrefix = FileNameToUse + '_Gen' +('Rep'*ReconstructFromTraceback) , RecreateFromTraceBack = PopulationTraceBack)
                 # keep the same population name - generation notes are still
-                # avialable - yet the name is important for reference
+                # available - yet the name is important for reference
                 OverridePopulationSet.Name = Pop.Name
                 print '# Population Set Generated' 
                 print '#'*70
@@ -215,17 +218,17 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
                 print '# Expanding Population Set from existing set' 
                 # keep the same population name
                 OverridePopulationSet = DB.PopulationSets.Copy(Pop.ID, Pop.Name)
-                # Figure out how many repclias of the population are needed
+                # Figure out how many replicas of the population are needed
                 if PopulationRepetitionsOverride != None: 
                     # If override defined, use it
                     NumberOfPopulationReplicas = PopulationRepetitionsOverride
                 else:
                     # otherwise, extract it from the project
                     NumberOfPopulationReplicas = ProjectToRun.NumberOfRepetitions
-                # Now Apply the multipler to the data to expand the population
-                # so the simualtion will not need to do it. Note that
-                # in return during simulation using thes population
-                # the repetition number shoudl be adjusted to 1
+                # Now Apply the multiplier to the data to expand the population
+                # so the simulation will not need to do it. Note that
+                # in return during simulation using these population
+                # the repetition number should be adjusted to 1
                 OverridePopulationSet.Data = Pop.Data*NumberOfPopulationReplicas
                 print '# Population Set expanded' 
                 print '#'*70
@@ -241,7 +244,7 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
                 ScriptFileNameFullPath = ProjectToRun.CompileSimulation(SimulationScriptFileNamePrefix = FileNameToUse + '_Sim'+('Rep'*ReconstructFromTraceback), OverrideRepetitionCount = OverrideNumberOfRepetitions, OverridePopulationSet = OverridePopulationSet , RecreateFromTraceBack = SimulationTraceBack)                
                 # Reload data to wipe results from previous run - deprecated 
                 # (ProjectToRun, PopulationToUseID) = LoadDataAndApplyOverrides(InputFileName, ProjectIndex, ModelOverride, PopulationSetOverride, InitializeCoefficientValues)            
-                # Recacluate filename
+                # Recalculate filename
                 ResultsInfo = ProjectToRun.RunSimulationAndCollectResults(ScriptFileNameFullPath)
             NewFileName = PathOnly + DB.os.sep + FileNameToUse + FileNameExt
             print '#'*70
@@ -254,21 +257,26 @@ def RunMultipleSimulations(InputFileName, ProjectIndex, NumberOfRepeats, StartRu
             # Save the new file anyway - if either simulation or generation were executed
             DB.SaveAllData(NewFileName, OverWriteFiles)
             # If not reproduction of previous work write TraceBack file
-            # If this is reprodction, then skip writing the file
+            # If this is reproduction, then skip writing the file
             if not ReconstructFromTraceback:
                 TraceBackFile = open(TraceBackFileNameToUse,'w')
                 # if only population generation, handle traceback differently
                 if NumberOfSimulationStepsOverride != 0:
                     pickle.dump(ResultsInfo.TraceBack,TraceBackFile)
                 else:
-                    # For population generation, the TraceBack infromation
-                    # for the population is stored in the last tuple elelemt
+                    # For population generation, the TraceBack information
+                    # for the population is stored in the last tuple element
                     # Non is used as the first element to signify that no
-                    # simulation took place. Thos was it conforms with the load
+                    # simulation took place. This conforms with the load
                     # TraceBack code for reconstruction regardless if 
                     # Simulation took place.
                     pickle.dump((None,OverridePopulationSet.TraceBack),TraceBackFile)
                 TraceBackFile.close()
+            if DeleteResultsAfterSave:
+                # in case we are saving in multiple consecutive files 
+                # make sure the results are deleted before the next 
+                # result set is generated
+                DB.SimulationResults.Delete(ResultsInfo.ID)
             # write the file name
             print NewFileName
             OutputFileNames = OutputFileNames + [NewFileName]
@@ -333,7 +341,7 @@ if __name__ == "__main__":
         print '  Repetitions: The number of times to repeat the simulation'
         print '  StartIndex: A string that will become a suffix to the filename in output.'
         print '              if it is an integer - it will start the enumerated sequence of'
-        print '              output files.'
+        print '              output files and will not accumulate results in the same file.'
         print '  OverWriteFilesOrReconstructFromTraceback: If y (default), then output'
         print '                                            files will overwrite old ones. '
         print '                                            If r then reconstruct simulation'
@@ -386,7 +394,7 @@ if __name__ == "__main__":
         print
         OverWriteFilesOrReconstructFromTracebackStr = raw_input( 'Should I overwrite files with the same names or reconstruct simulation from TraceBack? Y for Yes t overwrite (Default), R for Reconstruct and overwrite:' )
         # Number of repetitions override
-        NumberOfSimulationStepsOverrideStr = raw_input( 'Please enter the number of simulation steps to override the project defualt. Zero means population generation alone without simulation. Use None for no change (Default):' )
+        NumberOfSimulationStepsOverrideStr = raw_input( 'Please enter the number of simulation steps to override the project default. Zero means population generation alone without simulation. Use None for no change (Default):' )
         if NumberOfSimulationStepsOverrideStr.strip() != '':
             NumberOfSimulationStepsOverride = eval(NumberOfSimulationStepsOverrideStr, DB.EmptyEvalDict)
         # Number of population repetitions override
@@ -412,7 +420,7 @@ if __name__ == "__main__":
         PopulationSetOverrideStr = raw_input( 'Enter a population set number to override the Population set used in the project. 0 Means the first Population in the list, negative means counting Backwards from last. Use None for no replacement (Default):' )
         if PopulationSetOverrideStr.strip() != '':
             PopulationSetOverride = eval(PopulationSetOverrideStr, DB.EmptyEvalDict)
-        # Handle Rule value overides
+        # Handle Rule value overrides
         print
         for SimRule in SimulationProject.SimulationRules:
             print 'Consider the simulation rule: \n' + SimRule.GenerateReport()

@@ -1,4 +1,4 @@
-Copyright (C) 2013-2014 Jacob Barhak
+Copyright (C) 2013-2018 Jacob Barhak
 Copyright (C) 2009-2012 The Regents of the University of Michigan
 License GPL 3 - See full details below
 
@@ -37,12 +37,12 @@ The system can be installed in several fashions in different platforms. There ar
 For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was tested there. For HPC features you will need to use a Linux installation.
 
 Simple Installation Instructions:
-1. Download and Install Anaconda from  https://store.continuum.io/cshop/anaconda/
+1. Download and Install Anaconda 2.7 version from  https://www.anaconda.com/download/
 2. Install MIST into your anaconda directory by typing the following text in a command terminal: conda install mist -c jacob-barhak 
 This installation should work on Windows and on Ubuntu 12.04LTS Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
 
 Alternative Longer Expert Installation Instructions:
-1. Download and Install Anaconda from  https://store.continuum.io/cshop/anaconda/
+1. Download and Install Anaconda 2.7 from  https://www.anaconda.com/download/
 2. Install the Inspyred library by typing the following text in a command terminal: pip install inspyred . For additional details see:  https://pythonhosted.org/inspyred/overview.html#installation
 3. Install WxPython library by typing the following text in a command terminal: conda install wxpython . This library is needed for GUI only. For additional details and other ways to install WxPython see: http://www.wxpython.org/download.php#stable 
 4. Download the file MIST-master.zip from github by typing the following URL in a web browser:  https://github.com/Jacob-Barhak/MIST/archive/master.zip 
@@ -76,7 +76,7 @@ MOUNT_NFS_SETTINGS = vers=3,user,rw,exec,noauto
 [plugin webapp-packages-installer] 
 setup_class = starcluster.plugins.pypkginstaller.PyPkgInstaller 
 packages = inspyred  
-Also, the plugins should be declatred under the scection that has your cluster name using the following line: 
+Also, the plugins should be declared under the section that has your cluster name using the following line: 
 PLUGINS = anaconda_plugin , nfsshare , webapp-packages-installer 
 
 For additional information see the following links: 
@@ -159,7 +159,7 @@ CodeFromDocAndSpreadsheet.py : A python script that converts rule text from a wo
 
 5. KNOWN BUGS AND FEATURES:
 
-This version contains only Simulation capabilities. 
+This version contains only simulation capabilities. Note that there are some versions with more advanced capabilities that are not publicly released.
 
 The examples provided with the system are used for testing the system. 
 
@@ -169,7 +169,9 @@ In addition to the above test script, below is a list of known bugs and issues u
 
 The GUI was tested on Windows environment and on Linux Ubuntu 12.04. Computations were tested on both Windows and Linux environments through the TestCode.py script. Cloud computations were also tested.
 
-Known Bugs:
+Current issue list can be found on Github issues: https://github.com/Jacob-Barhak/MIST/issues
+
+Legacy Known Bugs:
 
 J0100: WXPYTHON ISSUES ON UBUNTU 12.4 
 This issue exists only if trying to build WxPython from source code and not a MIST issue, yet reported here anyway. Fortunately, with conda, there is no need to do this any longer. This issue is resolved on Ubuntu 12.04, Ubuntu 14.04, Fedora 21 Linux distributions. 
@@ -222,34 +224,65 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 6. VERSION HISTORY:
 
-MIST Verion (0,92,0,0,'MIST') - 27-Aug-2014:
+MIST Version (0,92,1,0,'MIST') - 13-Feb-2018:
+	- This version includes back fixes and not the most advanced version of MIST
+	- Fix plot engine to match newer MatPlotLib version
+	- Improved Behavior of MultiRunSimulation.py that conserves disk space and works better with MultiRunSimulationStatisticsAsCSV
+	- Minor GUI Fixes
+	- Minor documentation fixes
+
+MIST Version (0,94,2,0,'MIST') - 16-Jun-2016 - Not Made Public:
+	- Fix plot engine to match newer MatPlotLib version
+
+MIST Version (0,94,1,0,'MIST') - 30-Aug-2015 - Not Made Public:
+	- Minor fix in text in a comment in a generated file
+
+MIST Version (0,94,0,0,'MIST') - 25-Jun-2015 - Not Made Public:
+	- External function interface added
+	- Minor GUI Fixes
+
+MIST Version (0,93,2,0,'MIST') - 29-May-2015 - Not Made Public:
+	- Population naming fixed
+
+MIST Version (0,93,1,0,'MIST') - 28-May-2015 - Not Made Public:
+	- Cluster Run fixed for grouping with multiple repetitions 
+	- Population naming defined for on the fly inheritance 
+	- Fixes in reconstructing file with population inheritance
+
+MIST Version (0,93,0,0,'MIST') - 06-Mar-2015 - Not Made Public:
+	- Added object oriented population inheritance
+	- Table function short form added
+	- Batch job execution optimized and jobs can be gathered together
+	- Limited backwards compatibility due to changes in definitions
+
+MIST Version (0,92,0,0,'MIST') - 27-Aug-2014:
 	- Fix project and rule related issues including undo, occurrence probability and single individual simulation
 	- Installation with dependencies through binstar.org
 	- Fix compatibility issues on Linux - mainly GUI
 
-MIST Verion (0,91,0,0,'MIST') - 08-Apr-2014:
+MIST Version (0,91,0,0,'MIST') - 08-Apr-2014:
 	- Better recovery of cluster runs by rerunning and skipping completed jobs
 	- Fix population generation with bound check warnings dropping individuals and evolutionary optimization
 
 
-MIST Verion (0,90,0,0,'MIST') - 24-Feb-2014:
+MIST Version (0,90,0,0,'MIST') - 24-Feb-2014:
 	- Improved population generation with genetic algorithm optimization towards objectives 
 	- Improved instructions for cloud deployment
 	- Upgrade to higher versions of supporting packages
 
 
-MIST Verion (0,89,0,0,'MIST') - 16-Sep-2013:
+MIST Version (0,89,0,0,'MIST') - 16-Sep-2013:
 	- Speed up by reducing NFS I/O on the cloud, parallelism, auto temp file removals
 	- Reorganization of cluster run script to separate data and code and allow rerunning portions of a run
 	- Documentation and test code adjustments
 
 
-MIST Verion (0,88,0,0,'MIST') - 31-Jul-2013:
+MIST Version (0,88,0,0,'MIST') - 31-Jul-2013:
 	- Redefinition of Table function to improve speed and remove previous issues
 	- Documentation adjusted with additions to running MIST over the cloud
 	- GUI Bug fix 
 
-MIST Verion (0,87,0,0,'MIST') - 16-Jun-2013:
+MIST Version (0,87,0,0,'MIST') - 16-Jun-2013:
 	- Split from IEST : Estimation removed, only Simulation remains
 	- Simplification/improvement of Parameters / Models / Simulation Rules
 	- MIST runs over the cloud and on sun Grid Engine clusters

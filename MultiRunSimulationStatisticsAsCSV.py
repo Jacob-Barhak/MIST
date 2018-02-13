@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (C) 2013-2014 Jacob Barhak
+# Copyright (C) 2013-2018 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).

@@ -1,6 +1,6 @@
 ################################################################################
 ###############################################################################
-# Copyright (C) 2013-2014 Jacob Barhak
+# Copyright (C) 2013-2018 Jacob Barhak
 # Copyright (C) 2009-2012 The Regents of the University of Michigan
 # 
 # This file is part of the MIcroSimulation Tool (MIST).
@@ -285,13 +285,14 @@ class MainFrame(cdml.CDMWindow, wx.Frame):
             else:
                 raise ValueError, 'ASSERTION ERROR, Grid created without notebook pane - can not poperly layout the form'
 
-        sizer_2.Add(self.nb, 0, wx.EXPAND, 0)
-
         sizer_4.Add(self.btn_export, 1, wx.ALL, 3)
         sizer_4.Add(self.btn_import, 1, wx.ALL, 3)
         sizer_4.Add(self.btn_undo, 1, wx.ALL, 3)
         sizer_4.Add(self.btn_ok, 1, wx.ALL, 3)
+
         sizer_2.Add(sizer_4, 0, wx.EXPAND, 0)
+        sizer_2.Add(self.nb, 0, wx.EXPAND, 0)
+
 
         self.panel_1.SetSizer(sizer_2)
         sizer_1.Add(self.panel_1, 0, wx.EXPAND, 0)
