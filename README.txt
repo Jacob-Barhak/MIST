@@ -224,6 +224,10 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 6. VERSION HISTORY:
 
+MIST Version (0,92,2,0,'MIST') - 14-Feb-2018:
+	- This version includes back fixes and not the most advanced version of MIST
+	- This version includes a fix to the conda build on windows
+
 MIST Version (0,92,1,0,'MIST') - 13-Feb-2018:
 	- This version includes back fixes and not the most advanced version of MIST
 	- Fix plot engine to match newer MatPlotLib version

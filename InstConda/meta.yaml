@@ -1,10 +1,10 @@
 package:
   name: mist
-  version: 0.92.1.0
+  version: 0.92.2.0
 
 
 source:
- git_url: git@github.com:Jacob-Barhak/MIST.git
+ git_url: https://github.com/Jacob-Barhak/MIST.git
 
 build:
   # entry_points:
