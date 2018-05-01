@@ -94,7 +94,7 @@ LoadedModuleNames = dir()
 # different revisions of a similar data structure than may or may not be
 # compatible with each other. It is the responsibility of the code to
 # check what code versions and revisions are compatible with it.
-Version = (0,92,4,0,'MIST')
+Version = (0,92,5,0,'MIST')
 
 # DEBUG variables
 # DebugPrints options are ['Table','TBD','Matrix', 'ExprParse','ExprConstruct', 'PrepareSimulation', 'Load' , 'MultiProcess', 'CSV', 'TempDir']

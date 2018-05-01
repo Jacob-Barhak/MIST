@@ -224,6 +224,8 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 6. VERSION HISTORY:
 
+MIST Version (0,92,5,0,'MIST') - 1-May-2018:
+	- Additional fix of meta.yaml to uplaod to Github and version bump
 
 MIST Version (0,92,4,0,'MIST') - 1-May-2018:
 	- Fix meta.yaml to allow conda build

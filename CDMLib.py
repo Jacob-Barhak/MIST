@@ -79,8 +79,8 @@ import HelpInterface
 import copy
 
 # Define the GUI version
-Version = (0,92,4,0,'MIST')
-CompatibleWithDataDefVersion = (0,92,4,0,'MIST')
+Version = (0,92,5,0,'MIST')
+CompatibleWithDataDefVersion = (0,92,5,0,'MIST')
 
 # Check that the Data Version and the GUI version are compatible
 # Currently the Last text identifier in the version is ignored in
