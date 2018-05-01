@@ -224,6 +224,10 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 6. VERSION HISTORY:
 
+
+MIST Version (0,92,4,0,'MIST') - 1-May-2018:
+	- Fix meta.yaml to allow conda build
+
 MIST Version (0,92,3,0,'MIST') - 1-May-2018:
 	- Fix to the conda build to get the proper version of wxpython
 
@@ -435,9 +439,10 @@ Bruce Fields
 Nick Coghlan
 Lyn Gerner
 @scrappythekangaroo at github
-Anna Petrášová
+Anna Petrasova
 Nathan McCorkle
 Werner F. Bruhin
+Matthew Rocklin
 
 MIST was developed independently without financial support.
 
