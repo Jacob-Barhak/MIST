@@ -37,12 +37,12 @@ The system can be installed in several fashions in different platforms. There ar
 For novice users it is recommended that you use Windows since it is the simplest to install and the Graphic User Interface (GUI) was tested there. For HPC features you will need to use a Linux installation.
 
 Simple Installation Instructions:
-1. Download and Install Anaconda 2.7 version from  https://www.anaconda.com/download/
+1. Download and Install Anaconda with python 2.7 version from  https://www.anaconda.com/download/
 2. Install MIST into your anaconda directory by typing the following text in a command terminal: conda install mist -c jacob-barhak 
-This installation should work on Windows and on Ubuntu 12.04LTS Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
+This installation should work on Windows and on Ubuntu Linux. Your working directory in this case would be MIST under the anaconda directory you chose during anaconda installation.
 
 Alternative Longer Expert Installation Instructions:
-1. Download and Install Anaconda 2.7 from  https://www.anaconda.com/download/
+1. Download and Install Anaconda with python 2.7 from https://www.anaconda.com/download/
 2. Install the Inspyred library by typing the following text in a command terminal: pip install inspyred . For additional details see:  https://pythonhosted.org/inspyred/overview.html#installation
 3. Install WxPython library by typing the following text in a command terminal: conda install wxpython . This library is needed for GUI only. For additional details and other ways to install WxPython see: http://www.wxpython.org/download.php#stable 
 4. Download the file MIST-master.zip from github by typing the following URL in a web browser:  https://github.com/Jacob-Barhak/MIST/archive/master.zip 
@@ -152,7 +152,7 @@ InstConda/meta.yaml: Build information meta file for conda
 SimulationExamples.pdf : A document describing the examples in Testing.zip that are used to test the simulation system. It also contains calculations of the expected outcomes and provide a description of tests carried out in TestCode.py.
 SimulationExamples.doc : The original word version from which SimulationExamples.pdf was created.
 TestingResults.mdb : A Microsoft Access Database used to test the report mathematics performing the same calculations as the system and outputs files that can be loaded into TestCode.txt. The file contains visual basic code that generates csv files from InputExample.py results. These csv files can then be converted back to code that is merged into InputExample.py as testing code.
-ClusterRun.py : A Python script for running multiple simulations with variation overrides on a cluster. Very similar to MultiRun.bash, with some enhancements such as creating plots. This file should be modified before use to fit the cluster it is running on - otherwise it will probably not work.
+ClusterRun.py : A Python script for running multiple simulations with variation overrides on a cluster with some enhancements such as creating plots. This file should be modified before use to fit the cluster it is running on - otherwise it will probably not work.
 CodeFromDocAndSpreadsheet.py : A python script that converts rule text from a word document and CSV file from a spreadsheet with populations into code and a model file. This script was created to handle a specific format used with the Michigan model documentation. This file relies on a very specific format of documents and remains undocumented and should be treated as an example for programmers that want to extend the system. 
 
 
@@ -223,6 +223,21 @@ There is a cancel button in the Linux version since version 0.78.0.0.
 
 
 6. VERSION HISTORY:
+
+MIST Version (0,92,3,0,'MIST') - 1-May-2018:
+	- Fix to the conda build to get the proper version of wxpython
+
+MIST Version (0,94,5,0,'MIST') - 18-Apr-2018 - Not Made Public:
+	- Minor Fix to Dask run
+
+MIST Version (0,94,4,0,'MIST') - 14-Apr-2018 - Not Made Public:
+	- Added test for dask parallel execution of multiple simulations
+
+MIST Version (0,94,3,0,'MIST') - 9-Apr-2018 - Not Made Public:
+	- Port back fixes from versions 0,92,1,0 and 0,92,2,0
+	- Added multiprocess execution option using dask
+	- Minor documentation changes, copyright updates, and spelling fixes
+
 
 MIST Version (0,92,2,0,'MIST') - 14-Feb-2018:
 	- This version includes back fixes and not the most advanced version of MIST
